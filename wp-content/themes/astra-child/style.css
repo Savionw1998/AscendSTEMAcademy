@@ -1,0 +1,15 @@
+/*
+Theme Name:   Astra Child
+Theme URI:    https://ascendstemacademy.com
+Description:  Child theme for Ascend STEM Academy. Custom styles and PHP.
+Author:       Ascend STEM Academy
+Author URI:   https://ascendstemacademy.com
+Template:     astra
+Version:      1.1.0
+Text Domain:  astra-child
+*/
+
+/*
+ * Styles live in assets/css/theme.css, which is enqueued from functions.php.
+ * This file exists for the theme header above and is intentionally kept thin.
+ */

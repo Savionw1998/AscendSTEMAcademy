@@ -1,0 +1,35 @@
+# Local environment
+.env
+.env.local
+
+# Database dumps (may contain student/family data — never commit)
+db/
+*.sql
+*.sql.gz
+
+# WordPress core and third-party code live in the Docker volume, not in git.
+# Only our own theme and mu-plugins are tracked.
+wp-content/plugins/
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/cache/
+wp-content/languages/
+wp-content/themes/*
+!wp-content/themes/astra-child/
+wp-config.php
+
+# Logs
+*.log
+debug.log
+wp-content/debug.log
+
+# Dependencies
+node_modules/
+vendor/
+
+# Editors and OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db

@@ -1,0 +1,106 @@
+# Local development stack for ascendstemacademy.com
+# Versions mirror production: WordPress / PHP 8.3 / MySQL 5.7
+#
+#   make up      start the stack and install WordPress
+#   make down    stop the stack (data is preserved)
+#   make destroy stop and delete all local data
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: ascend_db
+    restart: unless-stopped
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_DATABASE: "${DB_NAME:-ascend_local}"
+      MYSQL_USER: "${DB_USER:-ascend}"
+      MYSQL_PASSWORD: "${DB_PASSWORD:-ascend}"
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASSWORD:-root}"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p${DB_ROOT_PASSWORD:-root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+
+  wordpress:
+    image: wordpress:php8.3-apache
+    container_name: ascend_wp
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: "${DB_NAME:-ascend_local}"
+      WORDPRESS_DB_USER: "${DB_USER:-ascend}"
+      WORDPRESS_DB_PASSWORD: "${DB_PASSWORD:-ascend}"
+      WORDPRESS_DEBUG: "1"
+      # Production runs 512M / 600s; mirror it so we hit the same limits.
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_DEBUG_LOG', true );
+        define( 'WP_DEBUG_DISPLAY', false );
+        define( 'SCRIPT_DEBUG', true );
+        define( 'WP_MEMORY_LIMIT', '512M' );
+        define( 'DISALLOW_FILE_EDIT', true );
+        define( 'AUTOMATIC_UPDATER_DISABLED', true );
+    volumes:
+      - wp_core:/var/www/html
+      # Only our own code is version-controlled and bind-mounted. Core,
+      # third-party plugins and uploads live in the wp_core volume.
+      - ./wp-content/themes/astra-child:/var/www/html/wp-content/themes/astra-child
+      - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins
+      - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
+
+  # Runs `make install` / `make wp ...`. Shares the webroot with the web container.
+  wpcli:
+    image: wordpress:cli-php8.3
+    container_name: ascend_wpcli
+    profiles: ["cli"]
+    depends_on:
+      db:
+        condition: service_healthy
+    user: "33:33"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: "${DB_NAME:-ascend_local}"
+      WORDPRESS_DB_USER: "${DB_USER:-ascend}"
+      WORDPRESS_DB_PASSWORD: "${DB_PASSWORD:-ascend}"
+    volumes:
+      - wp_core:/var/www/html
+      - ./wp-content/themes/astra-child:/var/www/html/wp-content/themes/astra-child
+      - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins
+      - ./scripts:/scripts:ro
+
+  # Database browser. Opt in with: make adminer
+  adminer:
+    image: adminer:latest
+    container_name: ascend_adminer
+    profiles: ["tools"]
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${ADMINER_PORT:-8081}:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+
+  # Catches every outbound wp_mail() so local testing never emails a real family.
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: ascend_mail
+    profiles: ["tools"]
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_PORT:-8025}:8025"
+
+volumes:
+  db_data:
+  wp_core:
