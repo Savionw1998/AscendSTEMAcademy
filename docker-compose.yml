@@ -52,9 +52,11 @@ services:
         define( 'AUTOMATIC_UPDATER_DISABLED', true );
     volumes:
       - wp_core:/var/www/html
-      # Only our own code is version-controlled and bind-mounted. Core,
-      # third-party plugins and uploads live in the wp_core volume.
-      - ./wp-content/themes/astra-child:/var/www/html/wp-content/themes/astra-child
+      # Code dirs are bind-mounted so first-party plugins and the child theme
+      # live in the repo. Third-party code lands here too but is git-ignored.
+      # Uploads stay in the wp_core volume.
+      - ./wp-content/themes:/var/www/html/wp-content/themes
+      - ./wp-content/plugins:/var/www/html/wp-content/plugins
       - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins
       - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro
 
@@ -66,7 +68,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    user: "33:33"
+    # Runs as root so it can write into the bind-mounted code dirs regardless
+    # of host ownership. `make fix-perms` hands the files back to you.
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_NAME: "${DB_NAME:-ascend_local}"
@@ -74,7 +77,8 @@ services:
       WORDPRESS_DB_PASSWORD: "${DB_PASSWORD:-ascend}"
     volumes:
       - wp_core:/var/www/html
-      - ./wp-content/themes/astra-child:/var/www/html/wp-content/themes/astra-child
+      - ./wp-content/themes:/var/www/html/wp-content/themes
+      - ./wp-content/plugins:/var/www/html/wp-content/plugins
       - ./wp-content/mu-plugins:/var/www/html/wp-content/mu-plugins
       - ./scripts:/scripts:ro
 

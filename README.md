@@ -3,9 +3,13 @@
 Umbrella school — website code and local development environment for
 [ascendstemacademy.com](https://ascendstemacademy.com).
 
-This repository tracks **only the code we write**: the `astra-child` theme and
-our must-use plugins. WordPress core, third-party plugins and uploads are not
-version-controlled — they are provided by the Docker image and local volumes.
+This repository tracks **only first-party code**: the `astra-child` theme and
+the `ascend-*` plugins we author. WordPress core, the Astra parent theme and
+third-party plugins are installed by `make up` and are not version-controlled.
+
+> **Local is not yet a full copy of the live site.** The child theme is here,
+> but the seven first-party `ascend-*` plugins and the site's content are not.
+> See [What's still missing](#whats-still-missing).
 
 ## Requirements
 
@@ -23,8 +27,9 @@ cp .env.example .env     # optional; `make up` does this for you
 make up
 ```
 
-First run downloads the images and installs WordPress (a few minutes).
-When it finishes:
+First run downloads the images, installs WordPress, pins the Astra parent
+theme to 4.13.11, activates `astra-child`, and installs the third-party
+plugins the site needs to render (a few minutes). When it finishes:
 
 | | |
 |---|---|
@@ -39,6 +44,8 @@ Change the port or credentials in `.env` before the first `make up`.
 
 ```bash
 make up          # start the stack (installs WordPress on first run)
+make plugins     # (re)install the third-party plugins production runs
+make fix-perms   # hand bind-mounted files back to your user after wp-cli writes
 make down        # stop; database and uploads are preserved
 make logs        # tail WordPress and MySQL logs
 make shell       # shell inside the WordPress container
@@ -70,7 +77,8 @@ Local mirrors production so bugs reproduce rather than hide:
 |---|---|---|
 | PHP | 8.3.33 | 8.3 |
 | MySQL | 5.7.44 | 5.7 |
-| Theme | Astra Child 1.1.0 (parent: Astra) | same |
+| Theme | Astra Child 1.1.0 | same |
+| Parent theme | Astra 4.13.11 | pinned to 4.13.11 |
 | Permalinks | `/%postname%/` | same |
 | Timezone | America/New_York | same |
 | Memory limit | 512M | 512M |
@@ -81,9 +89,36 @@ Local additionally enables `WP_DEBUG`, `WP_DEBUG_LOG` and `SCRIPT_DEBUG`, and
 sets `DISALLOW_FILE_EDIT` so the admin theme editor cannot be used to make
 changes that bypass version control.
 
-Production runs **39 active plugins**, which this repository does not track.
-See [docs/parity.md](docs/parity.md) for how to bring the local install closer
-to production when you need to debug a plugin interaction.
+Production runs **38 active plugins**. `make up` installs the twelve that the
+site needs in order to render (Elementor and its addons, WooCommerce, Ultimate
+Member, bbPress and friends), pinned to production's versions. Plugins that
+only talk to external services — W3 Total Cache, Cloudflare, Wordfence,
+Jetpack, Site Kit, UpdraftPlus, WooPayments — are skipped on purpose, because
+locally they either need credentials or actively hide your changes.
+`scripts/plugins.sh` lists every skip and why.
+
+## What's still missing
+
+Three things stand between this and a faithful local copy of the live site.
+
+**1. The seven first-party `ascend-*` plugins.** These are your own code and
+they are the site's actual application — enrollment, time cards, the student
+dashboard, the living transcript, lead capture, referrals, the games, the PWA.
+None are in this repository. Copy each from `wp-content/plugins/` on the server
+and commit it; `wp-content/plugins/README.md` lists all seven with the versions
+production runs. `make up` activates any it finds automatically.
+
+**2. The real child-theme `functions.php`.** `style.css` is the genuine
+production file. `functions.php` is a *reconstruction* — it reproduces only the
+priority-15 stylesheet enqueue that `style.css` documents. If the live child
+theme has other PHP overrides, they are not here. Replace the file wholesale
+with the real one rather than merging.
+
+**3. Content.** The site has 28 pages and 26 posts, all Elementor-built and
+stored in the database. A fresh `make up` gives you an empty site with the
+right theme and plugins, not your pages. See [docs/parity.md](docs/parity.md)
+for importing a database dump — and the warnings that go with it, since the
+production database contains student and family data.
 
 ## Repository layout
 
@@ -92,12 +127,14 @@ docker-compose.yml              Local stack: MySQL, WordPress, wp-cli, Adminer, 
 Makefile                        Developer commands (run `make` for the list)
 php/uploads.ini                 PHP limits matching production
 scripts/install.sh              Idempotent WordPress provisioning
+scripts/plugins.sh              Third-party plugin install, pinned to prod versions
 wp-content/
-  themes/astra-child/           The child theme — our styles and PHP
-    style.css                   Theme header only
-    functions.php               Bootstrap: enqueues styles, auto-loads inc/
-    assets/css/theme.css        Custom styles go here
-    inc/                        Feature modules; any .php here loads automatically
+  themes/astra-child/           The child theme
+    style.css                   Production file: theme header + all custom CSS
+    functions.php               RECONSTRUCTED — enqueues style.css at priority 15
+  plugins/
+    README.md                   The seven first-party plugins and how to add them
+    ascend-*/                   First-party plugins (tracked; none present yet)
   mu-plugins/
     ascend-local-dev.php        Local-only safety rails (inert elsewhere)
 docs/parity.md                  Syncing local with production
@@ -109,13 +146,22 @@ Edit files under `wp-content/themes/astra-child/` on your machine — they are
 bind-mounted into the container, so a browser refresh shows the change. No
 rebuild or restart needed.
 
-Two conventions worth keeping:
+Two things to know before editing `style.css`:
 
-- **Put styles in `assets/css/theme.css`, not the Customizer's "Additional
-  CSS" box.** The live site's Additional CSS is currently empty, and keeping it
-  that way means every style change is reviewable in a diff.
-- **Add features as separate files in `inc/`.** They are included
-  automatically, so `functions.php` stays readable.
+- **Cascade order is load-bearing.** The CSS in `style.css` was migrated out of
+  the Customizer on 2026-09-09. Customizer CSS printed inline very late
+  (priority ~101); this stylesheet is enqueued at priority **15**, so it now
+  loads *earlier*. The migrated rules survive that move only because they use
+  `!important` or target unique classes. Read the note at the top of
+  `style.css` before adding a rule that relies on simply being last.
+- **Keep the Customizer's "Additional CSS" box empty.** It is empty in
+  production today (confirmed via the site's MCP connection). Keeping styles in
+  `style.css` is what makes them reviewable in a diff.
+
+One block was deliberately left in the Customizer and is *not* in this file:
+the Program Enhancements page (post 2782) workaround. It intentionally avoids
+`!important` so Elementor wins once that page's CSS file is generated, and it
+should disappear when post 2782 is re-saved in the Elementor editor.
 
 ## Safety notes
 

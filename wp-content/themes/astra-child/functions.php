@@ -1,67 +1,69 @@
 <?php
 /**
- * Ascend STEM Academy — child theme bootstrap.
+ * Astra Child — theme bootstrap for Ascend STEM Academy.
+ *
+ * ---------------------------------------------------------------------------
+ * RECONSTRUCTED, NOT THE LIVE FILE.
+ *
+ * The production child theme's functions.php was not available when this
+ * repository was set up (the file supplied was the Astra *parent* theme's
+ * functions.php). This file reproduces only the behaviour that style.css
+ * documents: the child stylesheet is enqueued on wp_enqueue_scripts at
+ * priority 15, so it lands earlier than the Customizer's inline CSS did.
+ *
+ * If the live site has additional PHP overrides, replace this file wholesale
+ * with the real one from wp-content/themes/astra-child/ on the server. Do not
+ * merge the two — assume this file is the incomplete one.
+ * ---------------------------------------------------------------------------
  *
  * @package astra-child
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Child theme version. Keep in step with the Version: header in style.css.
+ */
 define( 'ASCEND_CHILD_VERSION', '1.1.0' );
 
 /**
- * Load the parent and child stylesheets.
+ * Enqueue the child stylesheet.
  *
- * The child stylesheet is versioned by file modification time in local
- * development so browser caching never hides a change.
+ * Astra does not serve its own style.css to the front end — it compiles and
+ * enqueues 'astra-theme-css' instead — so the child theme depends on that
+ * handle rather than enqueueing the parent's style.css by hand.
+ *
+ * Priority 15 is deliberate and is relied upon by the rules in style.css.
+ * See the cascade-order note at the top of that file before changing it.
  */
 function ascend_child_enqueue_styles() {
+	$dependencies = wp_style_is( 'astra-theme-css', 'registered' )
+		? array( 'astra-theme-css' )
+		: array();
+
 	wp_enqueue_style(
-		'astra-parent-style',
-		get_template_directory_uri() . '/style.css',
-		array(),
-		ASCEND_CHILD_VERSION
+		'astra-child-style',
+		get_stylesheet_uri(),
+		$dependencies,
+		ascend_child_style_version()
 	);
-
-	$theme_css = '/assets/css/theme.css';
-	$theme_css_path = get_stylesheet_directory() . $theme_css;
-
-	if ( file_exists( $theme_css_path ) ) {
-		wp_enqueue_style(
-			'ascend-child-style',
-			get_stylesheet_directory_uri() . $theme_css,
-			array( 'astra-parent-style' ),
-			ascend_child_asset_version( $theme_css_path )
-		);
-	}
 }
 add_action( 'wp_enqueue_scripts', 'ascend_child_enqueue_styles', 15 );
 
 /**
- * Version string for a theme asset.
+ * Cache-busting version for style.css.
  *
- * Uses the file's modification time while debugging so edits show up
- * immediately, and the stable theme version in production.
+ * Uses the file's modification time locally so edits appear on refresh, and
+ * the declared theme version everywhere else.
  *
- * @param string $path Absolute path to the asset.
  * @return string Version string.
  */
-function ascend_child_asset_version( $path ) {
-	if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG && file_exists( $path ) ) {
-		return (string) filemtime( $path );
+function ascend_child_style_version() {
+	$stylesheet = get_stylesheet_directory() . '/style.css';
+
+	if ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG && file_exists( $stylesheet ) ) {
+		return (string) filemtime( $stylesheet );
 	}
 
 	return ASCEND_CHILD_VERSION;
 }
-
-/**
- * Load optional feature modules from inc/.
- *
- * Drop a file in inc/ and it is included automatically — no edit needed here.
- */
-function ascend_child_load_includes() {
-	foreach ( glob( get_stylesheet_directory() . '/inc/*.php' ) as $module ) {
-		require_once $module;
-	}
-}
-ascend_child_load_includes();

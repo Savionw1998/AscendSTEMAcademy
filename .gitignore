@@ -2,21 +2,31 @@
 .env
 .env.local
 
-# Database dumps (may contain student/family data — never commit)
+# Database dumps (contain student and family data — never commit)
 db/
 *.sql
 *.sql.gz
 
-# WordPress core and third-party code live in the Docker volume, not in git.
-# Only our own theme and mu-plugins are tracked.
-wp-content/plugins/
+# ---------------------------------------------------------------------------
+# Only FIRST-PARTY code is tracked. WordPress core, the Astra parent theme and
+# third-party plugins are installed into the Docker volume by scripts/, so they
+# are deliberately absent here.
+# ---------------------------------------------------------------------------
+
+wp-config.php
 wp-content/uploads/
 wp-content/upgrade/
 wp-content/cache/
 wp-content/languages/
+
+# Themes: ignore everything except our child theme.
 wp-content/themes/*
 !wp-content/themes/astra-child/
-wp-config.php
+
+# Plugins: ignore everything except the plugins we author.
+wp-content/plugins/*
+!wp-content/plugins/ascend-*/
+!wp-content/plugins/README.md
 
 # Logs
 *.log

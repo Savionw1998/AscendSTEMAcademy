@@ -12,7 +12,7 @@ export
 endif
 
 .DEFAULT_GOAL := help
-.PHONY: help up down destroy install reload logs shell wp db-export db-import adminer mail lint theme-watch status
+.PHONY: help up down destroy install plugins reload logs shell wp db-export db-import adminer mail lint status fix-perms
 
 help: ## Show this help
 	@echo "Ascend STEM Academy — local development"
@@ -31,6 +31,8 @@ up: .env ## Start the stack (first run also installs WordPress)
 	  curl -sf -o /dev/null "http://localhost:$(WP_PORT)" && break || sleep 2; \
 	done
 	@$(MAKE) --no-print-directory install
+	@$(MAKE) --no-print-directory plugins
+	@$(MAKE) --no-print-directory fix-perms
 	@echo
 	@echo "  Site:  http://localhost:$(WP_PORT)"
 	@echo "  Admin: http://localhost:$(WP_PORT)/wp-admin"
@@ -39,6 +41,16 @@ install: ## Install/repair the WordPress install (idempotent)
 	$(COMPOSE) run --rm \
 	  -e WP_URL=http://localhost:$(WP_PORT) \
 	  wpcli bash /scripts/install.sh
+
+plugins: ## Install the third-party plugins production runs
+	$(COMPOSE) run --rm wpcli bash /scripts/plugins.sh
+
+fix-perms: ## Give bind-mounted files back to your user after wp-cli writes
+	$(COMPOSE) run --rm --user 0:0 wpcli \
+	  chown -R $(shell id -u):$(shell id -g) \
+	  /var/www/html/wp-content/themes \
+	  /var/www/html/wp-content/plugins \
+	  /var/www/html/wp-content/mu-plugins 2>/dev/null || true
 
 down: ## Stop the stack (database and uploads are preserved)
 	$(COMPOSE) --profile cli --profile tools down
@@ -62,7 +74,7 @@ shell: ## Open a shell in the WordPress container
 
 wp: ## Run a wp-cli command, e.g. make wp CMD="plugin list"
 	@test -n "$(CMD)" || { echo 'Usage: make wp CMD="plugin list"'; exit 1; }
-	$(COMPOSE) run --rm wpcli wp --path=/var/www/html $(CMD)
+	$(COMPOSE) run --rm wpcli wp --path=/var/www/html --allow-root $(CMD)
 
 adminer: ## Start the database browser on http://localhost:8081
 	$(COMPOSE) --profile tools up -d adminer
@@ -74,7 +86,7 @@ mail: ## Start Mailpit to catch outbound email on http://localhost:8025
 
 db-export: ## Dump the local database to db/local.sql
 	@mkdir -p db
-	$(COMPOSE) run --rm wpcli wp --path=/var/www/html db export /var/www/html/_dump.sql
+	$(COMPOSE) run --rm wpcli wp --path=/var/www/html --allow-root db export /var/www/html/_dump.sql
 	$(COMPOSE) cp wordpress:/var/www/html/_dump.sql db/local.sql
 	$(COMPOSE) exec wordpress rm -f /var/www/html/_dump.sql
 	@echo "Wrote db/local.sql"
@@ -82,7 +94,7 @@ db-export: ## Dump the local database to db/local.sql
 db-import: ## Import db/local.sql into the local database
 	@test -f db/local.sql || { echo "db/local.sql not found"; exit 1; }
 	$(COMPOSE) cp db/local.sql wordpress:/var/www/html/_import.sql
-	$(COMPOSE) run --rm wpcli wp --path=/var/www/html db import /var/www/html/_import.sql
+	$(COMPOSE) run --rm wpcli wp --path=/var/www/html --allow-root db import /var/www/html/_import.sql
 	$(COMPOSE) exec wordpress rm -f /var/www/html/_import.sql
 
 lint: ## Check theme PHP files for syntax errors

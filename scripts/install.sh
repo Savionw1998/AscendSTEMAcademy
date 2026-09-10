@@ -9,7 +9,9 @@ WP_ADMIN_USER="${WP_ADMIN_USER:-admin}"
 WP_ADMIN_PASSWORD="${WP_ADMIN_PASSWORD:-admin}"
 WP_ADMIN_EMAIL="${WP_ADMIN_EMAIL:-dev@ascendstemacademy.test}"
 
-wp() { command wp --path=/var/www/html "$@"; }
+# Runs as root inside the container so it can write to the bind-mounted
+# code directories; --allow-root keeps wp-cli from refusing.
+wp() { command wp --path=/var/www/html --allow-root "$@"; }
 
 # wp-cli reads the database credentials out of wp-config.php, which the web
 # container generates on first boot. Wait for that, not just for core files.
@@ -43,9 +45,16 @@ wp rewrite structure '/%postname%/' --hard
 wp option update timezone_string 'America/New_York'
 wp option update blogdescription 'Ascend STEM'
 
-echo "==> Ensuring the Astra parent theme is present..."
+# Production runs Astra 4.13.11 (confirmed from the parent theme's
+# functions.php). Pin it so local renders identically.
+ASTRA_VERSION="${ASTRA_VERSION:-4.13.11}"
+
+echo "==> Ensuring the Astra parent theme ($ASTRA_VERSION) is present..."
 if ! wp theme is-installed astra; then
-  wp theme install astra
+  if ! wp theme install astra --version="$ASTRA_VERSION"; then
+    echo "!! Astra $ASTRA_VERSION unavailable; falling back to the latest release." >&2
+    wp theme install astra
+  fi
 fi
 
 echo "==> Activating the Astra Child theme..."
@@ -54,6 +63,26 @@ if wp theme is-installed astra-child; then
 else
   echo "!! astra-child not found. Is wp-content/themes/astra-child mounted?" >&2
   exit 1
+fi
+
+# Activate any first-party Ascend plugins that have been added to the repo.
+# They are the site's actual application code; without them the child theme's
+# styles have nothing to attach to.
+echo "==> Activating first-party Ascend plugins..."
+ascend_found=0
+for plugin_dir in /var/www/html/wp-content/plugins/ascend-*/; do
+  [ -d "$plugin_dir" ] || continue
+  slug="$(basename "$plugin_dir")"
+  ascend_found=1
+  if wp plugin activate "$slug" 2>/dev/null; then
+    echo "    activated: $slug"
+  else
+    echo "    !! could not activate $slug (check its main plugin file)"
+  fi
+done
+if [ "$ascend_found" -eq 0 ]; then
+  echo "    none found — see wp-content/plugins/README.md for the seven"
+  echo "    first-party plugins production runs and how to add them."
 fi
 
 # Keep the local site out of search results and off the real internet's radar.

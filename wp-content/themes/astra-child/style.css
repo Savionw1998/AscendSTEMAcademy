@@ -1,15 +1,101 @@
-/*
-Theme Name:   Astra Child
-Theme URI:    https://ascendstemacademy.com
-Description:  Child theme for Ascend STEM Academy. Custom styles and PHP.
-Author:       Ascend STEM Academy
-Author URI:   https://ascendstemacademy.com
-Template:     astra
-Version:      1.1.0
-Text Domain:  astra-child
-*/
-
-/*
- * Styles live in assets/css/theme.css, which is enqueued from functions.php.
- * This file exists for the theme header above and is intentionally kept thin.
+/**
+ * Theme Name:   Astra Child
+ * Theme URI:    https://ascendstemacademy.com/
+ * Description:  Child theme for Ascend STEM Academy. Custom styles and PHP
+ *               overrides live here so the Astra parent theme can be updated
+ *               safely without losing customizations.
+ * Author:       Ascend STEM Academy
+ * Author URI:   https://ascendstemacademy.com/
+ * Template:     astra
+ * Version:      1.1.0
+ * License:      GNU General Public License v2 or later
+ * License URI:  http://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain:  astra-child
  */
+
+/* ===========================================================================
+ * Migrated from Customizer > Additional CSS (custom_css post 15) on 2026-09-09.
+ *
+ * NOTE ON CASCADE ORDER: Customizer CSS is printed inline in wp_head very late
+ * (priority ~101), after nearly everything. This stylesheet is enqueued at
+ * priority 15 instead, so it loads EARLIER. The rules below survive that move
+ * because they either use !important or target unique classes with no
+ * competing declarations. Keep that in mind before adding rules that rely on
+ * simply being last.
+ *
+ * The "Program Enhancements page (post 2782)" block was deliberately NOT
+ * migrated. It is a documented temporary workaround for an Elementor CSS file
+ * that was never generated, it intentionally avoids !important so Elementor
+ * wins once that file exists, and it should disappear when post 2782 is
+ * re-saved in the Elementor editor. It remains in the Customizer.
+ * ======================================================================== */
+
+/* STEM Path Finder widget recolor to match school brand (blue #009CDE / green #1D4010-#BFE0B4) */
+.spf-wrap{background:#F3F8F1 !important;border-color:#CFE3C7 !important;}
+.spf-eyebrow{color:#026C94 !important;}
+.spf-title{color:#009CDE !important;}
+.spf-track-bar{background:#DCEAD3 !important;}
+.spf-track-fill{background:#4C8A3F !important;}
+.spf-card{border-color:#CFE3C7 !important;}
+.spf-q{color:#009CDE !important;}
+.spf-opt{background:#F3F8F1 !important;border-color:#CFE3C7 !important;}
+.spf-opt:hover{border-color:#009CDE !important;background:#E6F4FB !important;}
+.spf-id-card{background:#1D4010 !important;color:#F3F8F1 !important;}
+.spf-id-tag{color:#BFE0B4 !important;}
+.spf-id-desc{color:#DCEAD3 !important;}
+.spf-id-list li{color:#EDF5E9 !important;}
+.spf-id-list li:before{background:#009CDE !important;}
+.spf-cta-primary{background:#009CDE !important;color:#FFFFFF !important;}
+.spf-cta-primary:hover{background:#026C94 !important;color:#FFFFFF !important;}
+.spf-cta-secondary{color:#BFE0B4 !important;border-color:rgba(191,224,180,0.4) !important;}
+
+/* Florida Homeschool Compliance Wizard: match outer section background to the site's actual page background green (confirmed via computed body background rgb(237,251,226)); tightened top spacing; removed the "Games & Quizzes" eyebrow badge */
+#ascend-compliance-wizard{background:#EDFBE2 !important;padding-top:16px !important;}
+#ascend-compliance-wizard .acw-eyebrow{display:none !important;}
+
+/* Withdrawal Letter Generator (Enrollment page): match card background to this page's actual body background (confirmed #f8f9fa via live fetch of /enrollment/) and drop the shadow so it sits flush with the Required Information section instead of floating as a separate white card */
+.wlg-wrap{background:#f8f9fa !important;box-shadow:none !important;}
+
+/* Dashboard Announcements panel (/user/, Elementor HTML widget 10daa1b7).
+   Collapsible details card, 2026-27 Florida deadline calendar. */
+.ascend-ann{background:#FFFFFF;border:1px solid #BFE0B4;border-radius:12px;margin:0 0 22px;overflow:hidden;}
+.ascend-ann > summary{list-style:none;cursor:pointer;padding:14px 18px;font-weight:700;font-size:17px;color:#1D4010;background:#EDFBE2;display:flex;align-items:center;gap:10px;}
+.ascend-ann > summary::-webkit-details-marker{display:none;}
+.ascend-ann > summary::after{content:"▾";margin-left:auto;font-size:14px;color:#1D4010;transition:transform .2s ease;}
+.ascend-ann[open] > summary::after{transform:rotate(180deg);}
+.ascend-ann-count{background:#009CDE;color:#FFFFFF;border-radius:999px;font-size:12px;font-weight:700;padding:2px 9px;line-height:1.6;}
+.ascend-ann-body{padding:6px 18px 16px;}
+.ascend-ann-item{border-left:3px solid #009CDE;padding:12px 0 12px 14px;margin-top:12px;}
+.ascend-ann-item:first-child{margin-top:6px;}
+.ascend-ann-title{font-weight:700;font-size:15.5px;color:#1D4010;margin:0 0 4px;line-height:1.35;}
+.ascend-ann-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 6px;}
+.ascend-ann-when{font-size:13px;font-weight:600;color:#037CAF;}
+.ascend-ann-tag{font-size:11.5px;font-weight:600;background:#BFE0B4;color:#1D4010;border-radius:999px;padding:2px 9px;}
+.ascend-ann-text{font-size:14px;line-height:1.55;color:#3A4A3A;margin:0;}
+.ascend-ann-foot{font-size:12.5px;color:#5B6572;margin:16px 0 0;padding-top:12px;border-top:1px solid #E4EFDD;line-height:1.5;}
+@media (max-width:480px){.ascend-ann > summary{font-size:16px;padding:13px 15px;}.ascend-ann-body{padding:6px 15px 15px;}}
+
+
+/* === Mobile off-canvas menu — match desktop nav (Sep 2026) === */
+#ast-hf-mobile-menu > li > .menu-link {
+  font-weight: 700;
+  font-size: 15px;
+  padding-top: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #D5EAD8;
+}
+#ast-hf-mobile-menu > li > .menu-link:hover,
+#ast-hf-mobile-menu > li.current-menu-item > .menu-link {
+  color: #379237;
+  background-color: #EDFBE2;
+}
+#ast-hf-mobile-menu > li.current-menu-item > .menu-link {
+  box-shadow: inset 4px 0 0 #54B435;
+}
+#ast-hf-mobile-menu .sub-menu .menu-link {
+  font-weight: 600;
+  padding-top: 11px;
+  padding-bottom: 11px;
+  padding-left: 34px;
+  background-color: #F7FDF3;
+}
