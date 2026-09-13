@@ -1888,15 +1888,15 @@ function ascend_axc_admin_students_page() {
     }
     if (isset($_POST['axc_reset_today']) && check_admin_referer('axc_reset_today')) {
         ascend_axc_reset_today((int) $_POST['axc_reset_today']);
-        echo '<div class="notice notice-success"><p>Today\u2019s attempt cleared for that student \u2014 they can play again today. Overall progress and streak were left untouched.</p></div>';
+        echo '<div class="notice notice-success"><p>Today’s attempt cleared for that student — they can play again today. Overall progress and streak were left untouched.</p></div>';
     }
     if (isset($_POST['axc_reset_all']) && check_admin_referer('axc_reset_all')) {
         $users = get_users(['fields' => ['ID']]);
         foreach ($users as $u) ascend_axc_reset_user($u->ID);
-        echo '<div class="notice notice-success"><p><strong>Every student\u2019s progress has been reset.</strong> Puzzle bank and settings are untouched \u2014 only per-student progress, streaks, and history were cleared.</p></div>';
+        echo '<div class="notice notice-success"><p><strong>Every student’s progress has been reset.</strong> Puzzle bank and settings are untouched — only per-student progress, streaks, and history were cleared.</p></div>';
     }
 
-    echo '<div class="wrap"><h1>Connect-a-lotl \u2014 student roster</h1>';
+    echo '<div class="wrap"><h1>Connect-a-lotl — student roster</h1>';
 
     echo '<form method="post" onsubmit="return confirm(\'Reset EVERY student\u2019s progress, streak, and puzzle history? This cannot be undone.\');" style="margin-bottom:14px;">';
     wp_nonce_field('axc_reset_all');
@@ -1921,13 +1921,13 @@ function ascend_axc_admin_students_page() {
         $log_list = '(none yet)';
         if (!empty($log)) {
             $rows = array_map(function ($e) {
-                $flawless = !empty($e['found_largest']) ? ' \u2014 flawless' : '';
+                $flawless = !empty($e['found_largest']) ? ' — flawless' : '';
                 return esc_html('Puzzle ' . $e['puzzle'] . ': solved' . $flawless);
             }, $log);
             $log_list = '<details><summary>' . count($log) . ' puzzle' . (count($log) !== 1 ? 's' : '') . '</summary>' . implode('<br>', $rows) . '</details>';
         }
 
-        echo '<tr><td>' . esc_html($u->display_name) . '</td><td>' . $level . '</td><td>' . $streak . '</td><td>' . $progress . ' / ' . $total . '</td><td>' . ($last ? esc_html($last) : '\u2014') . '</td><td>' . $log_list . '</td><td>';
+        echo '<tr><td>' . esc_html($u->display_name) . '</td><td>' . $level . '</td><td>' . $streak . '</td><td>' . $progress . ' / ' . $total . '</td><td>' . ($last ? esc_html($last) : '—') . '</td><td>' . $log_list . '</td><td>';
 
         echo '<form method="post" onsubmit="return confirm(\'Clear TODAY\u2019s attempt only for ' . esc_js($u->display_name) . '? Their overall progress and streak stay as-is.\');" style="margin:0 0 4px;">';
         wp_nonce_field('axc_reset_today');
@@ -1975,10 +1975,10 @@ function ascend_axc_admin_settings_page() {
             update_option('ascend_axc_puzzles', $clean);
             $dropped = $submitted_count - count($clean);
             $notice = 'Saved. ' . count($clean) . ' valid puzzle' . (count($clean) !== 1 ? 's' : '') . ' in the bank.';
-            if ($dropped > 0) $notice .= ' (' . $dropped . ' puzzle' . ($dropped !== 1 ? 's were' : ' was') . ' skipped \u2014 each puzzle needs exactly 4 groups of exactly 4 unique words, with no word repeated across groups.)';
+            if ($dropped > 0) $notice .= ' (' . $dropped . ' puzzle' . ($dropped !== 1 ? 's were' : ' was') . ' skipped — each puzzle needs exactly 4 groups of exactly 4 unique words, with no word repeated across groups.)';
             echo '<div class="notice notice-success"><p>' . esc_html($notice) . '</p></div>';
         } else {
-            echo '<div class="notice notice-error"><p>No valid puzzles found \u2014 the puzzle bank was left unchanged. Each puzzle needs exactly 4 groups of exactly 4 unique words.</p></div>';
+            echo '<div class="notice notice-error"><p>No valid puzzles found — the puzzle bank was left unchanged. Each puzzle needs exactly 4 groups of exactly 4 unique words.</p></div>';
         }
     }
 
@@ -1986,8 +1986,8 @@ function ascend_axc_admin_settings_page() {
     $mascot  = get_option('ascend_axc_mascot_url', '');
     $maxm    = ascend_axc_max_mistakes();
 
-    echo '<div class="wrap"><h1>Connect-a-lotl \u2014 puzzle bank &amp; settings</h1>';
-    echo '<p>Students only ever see the 16 words on the board \u2014 which words belong together is never sent until a group is correctly guessed.</p>';
+    echo '<div class="wrap"><h1>Connect-a-lotl — puzzle bank &amp; settings</h1>';
+    echo '<p>Students only ever see the 16 words on the board — which words belong together is never sent until a group is correctly guessed.</p>';
     echo '<form method="post">';
     wp_nonce_field('ascend_axc_settings');
 
@@ -4184,15 +4184,15 @@ function ascend_axh_admin_students_page() {
     }
     if (isset($_POST['axh_reset_current']) && check_admin_referer('axh_reset_current')) {
         ascend_axh_reset_current_puzzle((int) $_POST['axh_reset_current']);
-        echo '<div class="notice notice-success"><p>Current pond\u2019s found words cleared for that student. Overall progress, streak, and solved-pond history were left untouched.</p></div>';
+        echo '<div class="notice notice-success"><p>Current pond’s found words cleared for that student. Overall progress, streak, and solved-pond history were left untouched.</p></div>';
     }
     if (isset($_POST['axh_reset_all']) && check_admin_referer('axh_reset_all')) {
         $users = get_users(['fields' => ['ID']]);
         foreach ($users as $u) ascend_axh_reset_user($u->ID);
-        echo '<div class="notice notice-success"><p><strong>Every student\u2019s progress has been reset.</strong> Puzzles and settings are untouched \u2014 only per-student progress, streaks, and history were cleared.</p></div>';
+        echo '<div class="notice notice-success"><p><strong>Every student’s progress has been reset.</strong> Puzzles and settings are untouched — only per-student progress, streaks, and history were cleared.</p></div>';
     }
 
-    echo '<div class="wrap"><h1>Hex-a-lotl \u2014 student roster</h1>';
+    echo '<div class="wrap"><h1>Hex-a-lotl — student roster</h1>';
 
     echo '<form method="post" onsubmit="return confirm(\'Reset EVERY student\u2019s progress, streak, and history? This cannot be undone.\');" style="margin-bottom:14px;">';
     wp_nonce_field('axh_reset_all');
@@ -4223,7 +4223,7 @@ function ascend_axh_admin_students_page() {
         $career = ascend_axh_career_stats($u->ID);
         $rank = ascend_axh_rank_for($career['score'], $career['max'], $unlocked);
         $pond_label = $puzzle ? ($progress + 1) . ' / ' . $total : 'All complete';
-        $score_label = $puzzle ? $score . ' / ' . $required . ($found_longest ? ' (discount applied)' : '') : '\u2014';
+        $score_label = $puzzle ? $score . ' / ' . $required . ($found_longest ? ' (discount applied)' : '') : '—';
 
         echo '<tr><td>' . esc_html($u->display_name) . '</td><td>' . esc_html($pond_label) . '</td><td>' . esc_html($rank) . '</td><td>' . esc_html($score_label) . '</td><td>' . count($found) . '</td><td>' . ($unlocked ? 'Yes' : 'No') . '</td><td>' . $lifetime . '</td><td>' . $streak . '</td><td>' . ($last ? esc_html($last) : '—') . '</td><td>';
 
@@ -4317,7 +4317,7 @@ function ascend_axh_admin_settings_page() {
         $discount_pct = (int) ($_POST['longest_discount_pct'] ?? 10);
         update_option('ascend_axh_longest_discount_pct', ($discount_pct >= 0 && $discount_pct <= 100) ? $discount_pct : 10);
 
-        echo '<div class="notice notice-success"><p>Saved. ' . count($clean) . ' pond' . (count($clean) === 1 ? '' : 's') . ' saved.' . ($dropped_total > 0 ? ' ' . $dropped_total . ' word' . ($dropped_total === 1 ? ' was' : 's were') . ' dropped for not fitting that pond\u2019s letters (too short, missing the center letter, or using a letter outside the 7).' : '') . '</p></div>';
+        echo '<div class="notice notice-success"><p>Saved. ' . count($clean) . ' pond' . (count($clean) === 1 ? '' : 's') . ' saved.' . ($dropped_total > 0 ? ' ' . $dropped_total . ' word' . ($dropped_total === 1 ? ' was' : 's were') . ' dropped for not fitting that pond’s letters (too short, missing the center letter, or using a letter outside the 7).' : '') . '</p></div>';
     }
 
     $puzzles = ascend_axh_get_puzzles();
@@ -4325,7 +4325,7 @@ function ascend_axh_admin_settings_page() {
     $unlock_pct = ascend_axh_unlock_pct();
     $discount_pct = ascend_axh_longest_discount_pct();
 
-    echo '<div class="wrap"><h1>Hex-a-lotl \u2014 puzzles &amp; settings</h1>';
+    echo '<div class="wrap"><h1>Hex-a-lotl — puzzles &amp; settings</h1>';
     $pool_total = 0; $pool_ponds = 0;
     foreach ($puzzles as $pz) { $n = count(ascend_axh_pool($pz)); $pool_total += $n; if ($n > 0) $pool_ponds++; }
 
@@ -4337,8 +4337,8 @@ function ascend_axh_admin_settings_page() {
     wp_nonce_field('ascend_axh_settings');
 
     echo '<h2>Pond unlock rules</h2>';
-    echo '<p class="description">Students can freely revisit any pond they\u2019ve already unlocked, but the next NEW pond stays locked until their active pond\u2019s score meets this threshold.</p>';
-    echo '<p><label><strong>Points needed to unlock the next pond</strong> (% of that pond\u2019s max possible score)<br>';
+    echo '<p class="description">Students can freely revisit any pond they’ve already unlocked, but the next NEW pond stays locked until their active pond’s score meets this threshold.</p>';
+    echo '<p><label><strong>Points needed to unlock the next pond</strong> (% of that pond’s max possible score)<br>';
     echo '<input type="number" name="unlock_pct" min="1" max="100" value="' . esc_attr($unlock_pct) . '" style="width:80px;"> %</label></p>';
     echo '<p><label><strong>Discount for finding the longest word early</strong> (percentage points off the threshold above, if the longest word is found before reaching it)<br>';
     echo '<input type="number" name="longest_discount_pct" min="0" max="100" value="' . esc_attr($discount_pct) . '" style="width:80px;"> percentage points</label></p>';
@@ -4419,7 +4419,7 @@ function ascend_axh_puzzle_block_html($idx, $center, $outer, $words) {
       <input type="text" class="axh-outer-input" name="puzzles[<?php echo esc_attr($idx); ?>][outer]" style="width:220px;text-transform:uppercase;" placeholder="A, D, P, O, L, E" value="<?php echo esc_attr(implode(', ', $outer)); ?>">
     </label>
   </p>
-  <p style="margin:0;"><strong>Valid words</strong> (one per line \u2014 4+ letters, must include the center letter, must only use these 7 letters; anything else is dropped automatically on save)</p>
+  <p style="margin:0;"><strong>Valid words</strong> (one per line — 4+ letters, must include the center letter, must only use these 7 letters; anything else is dropped automatically on save)</p>
   <textarea class="axh-words-input" name="puzzles[<?php echo esc_attr($idx); ?>][words]" rows="6" style="width:100%;margin-top:6px;"><?php echo esc_textarea($words); ?></textarea>
   <p style="margin:10px 0 0;"><button type="button" class="button button-small axh-remove-btn" style="color:#a00;">Remove this pond</button></p>
 </div>
@@ -5523,15 +5523,15 @@ function ascend_axx_admin_students_page() {
     }
     if (isset($_POST['axx_reset_puzzle']) && check_admin_referer('axx_reset_puzzle')) {
         ascend_axx_reset_current_puzzle((int) $_POST['axx_reset_puzzle']);
-        echo '<div class="notice notice-success"><p>Current theme progress cleared for that student \u2014 overall level and streak stay as-is.</p></div>';
+        echo '<div class="notice notice-success"><p>Current theme progress cleared for that student — overall level and streak stay as-is.</p></div>';
     }
     if (isset($_POST['axx_reset_all']) && check_admin_referer('axx_reset_all')) {
         $users = get_users(['fields' => ['ID']]);
         foreach ($users as $u) ascend_axx_reset_user($u->ID);
-        echo '<div class="notice notice-success"><p><strong>Every student\u2019s progress has been reset.</strong> Puzzle bank and settings are untouched.</p></div>';
+        echo '<div class="notice notice-success"><p><strong>Every student’s progress has been reset.</strong> Puzzle bank and settings are untouched.</p></div>';
     }
 
-    echo '<div class="wrap"><h1>Cross-a-lotl \u2014 student roster</h1>';
+    echo '<div class="wrap"><h1>Cross-a-lotl — student roster</h1>';
 
     echo '<form method="post" onsubmit="return confirm(\'Reset EVERY student\u2019s progress, streak, and theme history? This cannot be undone.\');" style="margin-bottom:14px;">';
     wp_nonce_field('axx_reset_all');
@@ -5554,14 +5554,14 @@ function ascend_axx_admin_students_page() {
 
         $puzzle = ($progress < $total) ? ascend_axx_get_puzzles()[$progress] : null;
         $current_total = $puzzle ? count($puzzle['words']) + 1 : 0;
-        $current_str = $puzzle ? (count($found) . ' / ' . $current_total . ' words on "' . esc_html($puzzle['theme']) . '"') : '\u2014';
+        $current_str = $puzzle ? (count($found) . ' / ' . $current_total . ' words on "' . esc_html($puzzle['theme']) . '"') : '—';
 
         $log = get_user_meta($u->ID, 'axx_puzzle_log', true);
         $log = is_array($log) ? $log : [];
         $log_list = '(none yet)';
         if (!empty($log)) {
             $rows = array_map(function ($e) {
-                $flawless = !empty($e['found_largest']) ? ' \u2014 flawless (no hints)' : '';
+                $flawless = !empty($e['found_largest']) ? ' — flawless (no hints)' : '';
                 return esc_html('Theme ' . $e['puzzle'] . ': solved' . $flawless);
             }, $log);
             $log_list = '<details><summary>' . count($log) . ' theme' . (count($log) !== 1 ? 's' : '') . '</summary>' . implode('<br>', $rows) . '</details>';
@@ -5617,11 +5617,11 @@ function ascend_axx_admin_settings_page() {
             update_option('ascend_axx_puzzles', $result['puzzles']);
             $notice = 'Saved. ' . count($result['puzzles']) . ' theme' . (count($result['puzzles']) !== 1 ? 's' : '') . ' in the bank.';
             if (!empty($result['failed'])) {
-                $notice .= ' Could not build a grid for: ' . esc_html(implode(', ', $result['failed'])) . ' \u2014 check that the spangram is exactly 6 or 8 letters and doesn\u2019t repeat a theme word, and that the theme words aren\u2019t too long or too numerous to fit a 6\u00d78 grid.';
+                $notice .= ' Could not build a grid for: ' . esc_html(implode(', ', $result['failed'])) . ' — check that the spangram is exactly 6 or 8 letters and doesn’t repeat a theme word, and that the theme words aren’t too long or too numerous to fit a 6×8 grid.';
             }
             echo '<div class="notice notice-' . (empty($result['failed']) ? 'success' : 'warning') . '"><p>' . $notice . '</p></div>';
         } else {
-            echo '<div class="notice notice-error"><p>No valid themes could be built \u2014 the puzzle bank was left unchanged. Each spangram must be exactly 6 or 8 letters, and each theme needs at least 3 other words.</p></div>';
+            echo '<div class="notice notice-error"><p>No valid themes could be built — the puzzle bank was left unchanged. Each spangram must be exactly 6 or 8 letters, and each theme needs at least 3 other words.</p></div>';
         }
     }
 
@@ -5629,8 +5629,8 @@ function ascend_axx_admin_settings_page() {
     $mascot  = get_option('ascend_axx_mascot_url', '');
     $maxh    = ascend_axx_max_hints();
 
-    echo '<div class="wrap"><h1>Cross-a-lotl \u2014 puzzle bank &amp; settings</h1>';
-    echo '<p>The full letter grid is always visible to students \u2014 only the mapping from letters to theme words is kept server-side until a student traces it correctly. Grids are generated automatically on save from the words you enter below.</p>';
+    echo '<div class="wrap"><h1>Cross-a-lotl — puzzle bank &amp; settings</h1>';
+    echo '<p>The full letter grid is always visible to students — only the mapping from letters to theme words is kept server-side until a student traces it correctly. Grids are generated automatically on save from the words you enter below.</p>';
     echo '<form method="post">';
     wp_nonce_field('ascend_axx_settings');
 
@@ -5643,7 +5643,7 @@ function ascend_axx_admin_settings_page() {
     echo '<button type="button" class="button" id="axx_mascot_btn">Choose image</button> <button type="button" class="button" id="axx_mascot_clear">Remove</button>';
 
     echo '<h2 style="margin-top:24px;">Puzzle bank</h2>';
-    echo '<p class="description">Each theme needs a <strong>spangram</strong> (a word that sums up the theme \u2014 must be exactly 6 or 8 letters, since it\u2019s the one that spans the grid) and at least 3 other theme words (comma-separated). The grid is 6 rows \u00d7 8 columns (48 letters). Currently ' . count($puzzles) . ' theme' . (count($puzzles) !== 1 ? 's' : '') . '.</p>';
+    echo '<p class="description">Each theme needs a <strong>spangram</strong> (a word that sums up the theme — must be exactly 6 or 8 letters, since it’s the one that spans the grid) and at least 3 other theme words (comma-separated). The grid is 6 rows × 8 columns (48 letters). Currently ' . count($puzzles) . ' theme' . (count($puzzles) !== 1 ? 's' : '') . '.</p>';
     echo '<div id="axx-puzzle-list"></div>';
     echo '<p><button type="button" class="button" id="axx-add-puzzle">+ Add another theme</button></p>';
     echo '<textarea name="puzzles_json" id="axx-puzzles-hidden" style="display:none;"></textarea>';
