@@ -174,12 +174,177 @@ function ascend_games_overview_page() {
    credential is exposed here.
    ---------------------------------------------------------------------- */
 
+/* ======================================================================
+   PASSES
+
+   The games stay one-puzzle-a-day. A pass is what lifts that limit, and
+   it is sold through the WooCommerce store already on this site.
+
+   Three things are deliberately simple here:
+
+   - No recurring billing. WooCommerce Subscriptions is not installed, so
+     a "monthly" pass is a one-off purchase that grants 30 days. Nothing
+     auto-renews and nothing can fail to renew.
+   - Time is stored as one expiry timestamp per student, with -1 meaning
+     a lifetime unlock. Buying more time extends from whichever is later,
+     now or the current expiry, so a renewal bought early is never lost.
+   - Fulfilment is idempotent. Woo fires the status hooks more than once
+     in normal operation, so processed order IDs are recorded per student
+     and a repeat firing grants nothing.
+   ====================================================================== */
+
+define('ASCEND_PASS_UNTIL_META',  'ascend_games_pass_until');
+define('ASCEND_PASS_SKIPS_META',  'ascend_games_skips');
+define('ASCEND_PASS_ORDERS_META', 'ascend_games_pass_orders');
+
+/**
+ * The sellable passes, each mapped to the option holding its Woo product ID.
+ * Setting a product ID is what switches a pass on; ones left at 0 are simply
+ * never offered, so the store can be built up a product at a time.
+ */
+function ascend_games_pass_products() {
+    return [
+        'skip'  => ['option' => 'ascend_games_product_skip',  'label' => 'Next Puzzle',  'grant' => 'skip'],
+        'month' => ['option' => 'ascend_games_product_month', 'label' => '30-Day Pass',  'grant' => 'days', 'days' => 30],
+        'year'  => ['option' => 'ascend_games_product_year',  'label' => 'Annual Pass',  'grant' => 'days', 'days' => 365],
+        'life'  => ['option' => 'ascend_games_product_life',  'label' => 'Full Unlock',  'grant' => 'life'],
+    ];
+}
+
+/* An unlimited pass: lifetime, or time-based and not yet expired. */
+function ascend_games_has_pass($user_id) {
+    if (!$user_id) return false;
+    $until = get_user_meta($user_id, ASCEND_PASS_UNTIL_META, true);
+    if ($until === '' || $until === null) return false;
+    if ((int) $until === -1) return true;
+    return (int) $until > time();
+}
+
+function ascend_games_pass_expires($user_id) {
+    $until = (int) get_user_meta($user_id, ASCEND_PASS_UNTIL_META, true);
+    return ($until === -1 || $until > time()) ? $until : 0;
+}
+
+/* Single-use "open the next puzzle" credits, bought one at a time. */
+function ascend_games_skips($user_id) {
+    return $user_id ? max(0, (int) get_user_meta($user_id, ASCEND_PASS_SKIPS_META, true)) : 0;
+}
+
+function ascend_games_consume_skip($user_id) {
+    $n = ascend_games_skips($user_id);
+    if ($n < 1) return false;
+    update_user_meta($user_id, ASCEND_PASS_SKIPS_META, $n - 1);
+    return true;
+}
+
+function ascend_games_grant_skips($user_id, $qty = 1) {
+    update_user_meta($user_id, ASCEND_PASS_SKIPS_META, ascend_games_skips($user_id) + max(1, (int) $qty));
+}
+
+function ascend_games_grant_days($user_id, $days) {
+    $current = (int) get_user_meta($user_id, ASCEND_PASS_UNTIL_META, true);
+    if ($current === -1) return; // lifetime already; time cannot improve on it
+    $base = max(time(), $current);
+    update_user_meta($user_id, ASCEND_PASS_UNTIL_META, $base + ((int) $days * DAY_IN_SECONDS));
+}
+
+function ascend_games_grant_life($user_id) {
+    update_user_meta($user_id, ASCEND_PASS_UNTIL_META, -1);
+}
+
+/**
+ * The pass products created in this site's store, seeded once so the feature
+ * works on upload with nothing to wire up by hand.
+ *
+ * add_option() only writes when the key is absent, so an ID changed later
+ * (in wp-admin or over MCP) is never clobbered by this. Point an option at a
+ * different product to swap what a pass sells, or set it to 0 to withdraw
+ * that pass — the games stop offering anything they cannot link to.
+ */
+function ascend_games_seed_pass_products() {
+    $seed = [
+        'ascend_games_product_skip'  => 6988,
+        'ascend_games_product_month' => 6989,
+        'ascend_games_product_year'  => 6990,
+        'ascend_games_product_life'  => 6991,
+    ];
+    foreach ($seed as $option => $product_id) {
+        if (get_option($option, null) === null) add_option($option, $product_id);
+    }
+}
+add_action('admin_init', 'ascend_games_seed_pass_products');
+
+/* All four buy links at once, for handing to a game's front end. */
+function ascend_games_pass_urls() {
+    $urls = [];
+    foreach (array_keys(ascend_games_pass_products()) as $key) {
+        $urls[$key] = ascend_games_pass_url($key);
+    }
+    return $urls;
+}
+
+/* Where to send a student who wants to buy. Empty when that product has not
+   been created yet, which is the signal not to offer it at all. */
+function ascend_games_pass_url($key) {
+    $all = ascend_games_pass_products();
+    if (!isset($all[$key])) return '';
+    $pid = (int) get_option($all[$key]['option']);
+    if ($pid < 1) return '';
+    $url = get_permalink($pid);
+    return $url ? $url : '';
+}
+
+/**
+ * Turn a paid order into access. Bound to both 'processing' and 'completed'
+ * because a digital order can settle on either depending on the gateway.
+ */
+function ascend_games_fulfil_order($order_id) {
+    if (!function_exists('wc_get_order')) return;
+    $order = wc_get_order($order_id);
+    if (!$order) return;
+
+    $user_id = $order->get_user_id();
+    if (!$user_id) return; // guest checkout has no account to unlock
+
+    $processed = get_user_meta($user_id, ASCEND_PASS_ORDERS_META, true);
+    $processed = is_array($processed) ? $processed : [];
+    if (in_array((int) $order_id, $processed, true)) return;
+
+    $by_product = [];
+    foreach (ascend_games_pass_products() as $pass) {
+        $pid = (int) get_option($pass['option']);
+        if ($pid > 0) $by_product[$pid] = $pass;
+    }
+    if (empty($by_product)) return;
+
+    $granted = false;
+    foreach ($order->get_items() as $item) {
+        $pid = (int) $item->get_product_id();
+        if (!isset($by_product[$pid])) continue;
+        $pass = $by_product[$pid];
+        $qty  = max(1, (int) $item->get_quantity());
+
+        if ($pass['grant'] === 'skip')      ascend_games_grant_skips($user_id, $qty);
+        elseif ($pass['grant'] === 'days')  ascend_games_grant_days($user_id, $pass['days'] * $qty);
+        else                                ascend_games_grant_life($user_id);
+        $granted = true;
+    }
+
+    if ($granted) {
+        $processed[] = (int) $order_id;
+        update_user_meta($user_id, ASCEND_PASS_ORDERS_META, $processed);
+    }
+}
+add_action('woocommerce_order_status_processing', 'ascend_games_fulfil_order');
+add_action('woocommerce_order_status_completed',  'ascend_games_fulfil_order');
+
 function ascend_games_mcp_options() {
     $keys = [];
     foreach (ascend_games_registry() as $g) {
         $keys[] = $g['bank'];
         foreach ($g['settings'] as $s) $keys[] = $s;
     }
+    foreach (ascend_games_pass_products() as $pass) $keys[] = $pass['option'];
     return $keys;
 }
 
@@ -3327,6 +3492,9 @@ add_action('wp_ajax_ascend_axh_get_state', function () {
         'puzzleIndex'   => $progress,
         'viewIndex'     => $view_index,
         'isPast'        => $view_index < $progress,
+        'hasPass'       => ascend_games_has_pass($user_id),
+        'skips'         => ascend_games_skips($user_id),
+        'passUrls'      => ascend_games_pass_urls(),
         'totalPuzzles'  => $total,
         'allComplete'   => $complete,
         'streak'        => (int) get_user_meta($user_id, 'axh_streak', true),
@@ -3457,8 +3625,20 @@ add_action('wp_ajax_ascend_axh_advance_puzzle', function () {
     $required = ascend_axh_required_score($puzzle, $found_longest);
     $score = ascend_axh_score_words($found, $puzzle);
 
-    if ($score < $required) {
-        wp_send_json_error(['reason' => 'threshold_not_met', 'score' => $score, 'requiredScore' => $required]);
+    /* A pass opens ponds outright. Without one, a single-use credit can be
+       spent instead — but only when the student asks for it by name, so a
+       stray click on "next pond" can never silently burn one. */
+    if ($score < $required && !ascend_games_has_pass($user_id)) {
+        $spend = !empty($_POST['use_skip']);
+        if (!$spend || !ascend_games_consume_skip($user_id)) {
+            wp_send_json_error([
+                'reason'        => 'threshold_not_met',
+                'score'         => $score,
+                'requiredScore' => $required,
+                'skips'         => ascend_games_skips($user_id),
+                'passUrls'      => ascend_games_pass_urls(),
+            ]);
+        }
     }
 
     $log = get_user_meta($user_id, 'axh_solved_log', true);
@@ -3571,6 +3751,10 @@ add_shortcode('ascend_hex_a_lotl', function () {
 .axh-found-list{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:10px;}
 .axh-found-chip{background:#fff;border:1px solid #e4e1da;border-radius:14px;padding:5px 11px;font-size:12px;font-weight:700;}
 .axh-found-chip.axh-pangram-chip{background:var(--darkpink);color:#fff;border-color:var(--darkpink);}
+.axh-pass-offer{margin-top:14px;text-align:center;}
+.axh-pass-line{margin:0 0 8px;font-size:13px;color:#5F5E5A;}
+.axh-pass-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;}
+.axh-btn.axh-pass-btn{text-decoration:none;display:inline-block;}
 .axh-found-chip.axh-bonus-chip{background:var(--lgreen,#BFE0B4);color:var(--green,#1D4010);border-color:var(--green,#1D4010);font-weight:700;}
 .axh-pangram-banner{margin-top:16px;background:var(--green);color:#fff;border-radius:12px;padding:16px;text-align:center;font-size:15px;font-weight:700;}
 .axh-pangram-banner p{margin:0 0 10px;}
@@ -3690,7 +3874,8 @@ function renderPlayArea(){
     '</div>' +
     '<div class="axh-row"><button type="button" id="axh-found-toggle" class="axh-locked-toggle">Show found words &#9662;</button></div>' +
     '<div id="axh-found-list" class="axh-found-list" style="display:none;"></div>' +
-    '<div id="axh-pangram-area"></div>';
+    '<div id="axh-pangram-area"></div>' +
+    '<div id="axh-pass-offer" class="axh-pass-offer"></div>';
 
   currentWord = "";
   buildHive();
@@ -3814,6 +3999,8 @@ function renderProgress(){
     note.textContent = (required - score) + ' more point' + ((required - score) === 1 ? '' : 's') + ' to unlock the next pond' + (state.foundLongest ? ' (discount already applied)' : '') + '.';
   }
 
+  renderPassOffer(score, required, allFound);
+
   if (state.foundLongest){
     badge.textContent = '\u2b50 Longest word in this pond \u2014 found!';
     badge.classList.add('axh-found');
@@ -3821,6 +4008,55 @@ function renderProgress(){
   } else {
     badge.textContent = '\u2b50 Find this pond\u2019s longest word for a discount + a highlight here';
     badge.classList.remove('axh-found', 'axh-gold');
+  }
+}
+
+/* Shown only to a student who is short of the threshold on their active
+   pond and has no pass. A held credit is offered as a button; otherwise the
+   passes that exist in the store are offered as links. */
+function renderPassOffer(score, required, allFound){
+  var host = document.getElementById('axh-pass-offer');
+  if (!host) return;
+
+  var eligible = !state.hasPass && !allFound &&
+                 state.viewIndex === state.puzzleIndex &&
+                 !state.unlocked && score < required;
+  if (!eligible){ host.innerHTML = ''; return; }
+
+  var urls = state.passUrls || {};
+  var html = '';
+
+  if (state.skips > 0){
+    html += '<button type="button" id="axh-skip-btn" class="axh-btn">' +
+              'Open the next pond now (' + state.skips + ' left)' +
+            '</button>';
+  } else {
+    var buys = [];
+    if (urls.skip)  buys.push(['skip',  'Next pond']);
+    if (urls.month) buys.push(['month', '30-day pass']);
+    if (urls.year)  buys.push(['year',  'Annual pass']);
+    if (urls.life)  buys.push(['life',  'Unlock everything']);
+    if (buys.length){
+      html += '<p class="axh-pass-line">In a hurry? Open the next pond without waiting:</p>' +
+              '<div class="axh-pass-row">' + buys.map(function(b){
+                return '<a class="axh-btn axh-pass-btn" href="' + encodeURI(urls[b[0]]) + '">' + b[1] + '</a>';
+              }).join('') + '</div>';
+    }
+  }
+
+  host.innerHTML = html;
+
+  var skipBtn = document.getElementById('axh-skip-btn');
+  if (skipBtn){
+    skipBtn.onclick = function(){
+      skipBtn.disabled = true;
+      api('ascend_axh_advance_puzzle', {use_skip: 1}).then(function(resp){
+        if (!resp.success){ skipBtn.disabled = false; message('Could not open the next pond.', false); return; }
+        var d = resp.data;
+        if (d.allComplete){ state.puzzleIndex = d.puzzleIndex; state.allComplete = true; renderPlayArea(); return; }
+        loadState(d.puzzleIndex);
+      });
+    };
   }
 }
 
@@ -4524,6 +4760,7 @@ add_action('wp_ajax_ascend_axx_get_state', function () {
     check_ajax_referer('ascend_axx_nonce', 'nonce');
 
     $user_id  = get_current_user_id();
+    $today    = ascend_axx_today_key();
     $total    = count(ascend_axx_get_puzzles());
     $progress = (int) get_user_meta($user_id, 'axx_progress', true);
     $complete = ascend_axx_is_complete($user_id);
@@ -4546,6 +4783,13 @@ add_action('wp_ajax_ascend_axx_get_state', function () {
 
     $target_words = array_merge([$puzzle['spangram']], $puzzle['words']);
     $puzzle_solved = count($found) >= count($target_words);
+
+    /* One theme a day, unless the student holds a pass. A single-use skip is
+       offered here rather than spent: spending it stays an explicit action. */
+    $has_pass  = ascend_games_has_pass($user_id);
+    $skips     = ascend_games_skips($user_id);
+    $last_done = get_user_meta($user_id, 'axx_last_complete_date', true);
+    $locked_for_today = !$has_pass && empty($found) && $last_done === $today && !$puzzle_solved;
 
     $found_detail = [];
     foreach ($found as $w) {
@@ -4581,6 +4825,10 @@ add_action('wp_ajax_ascend_axx_get_state', function () {
         'hintsUsed'      => $hints_used,
         'hintsMax'       => ascend_axx_max_hints(),
         'puzzleSolved'   => $puzzle_solved,
+        'lockedForToday' => $locked_for_today,
+        'hasPass'        => $has_pass,
+        'skips'          => $skips,
+        'passUrls'       => ascend_games_pass_urls(),
     ]);
 });
 
@@ -4603,6 +4851,11 @@ add_action('wp_ajax_ascend_axx_submit_guess', function () {
     $found = is_array($found) ? $found : [];
     $target_words = array_merge([$puzzle['spangram']], $puzzle['words']);
     if (count($found) >= count($target_words)) wp_send_json_error('You’ve already solved this theme.');
+
+    if (!ascend_games_has_pass($user_id) && empty($found)
+        && get_user_meta($user_id, 'axx_last_complete_date', true) === $today) {
+        wp_send_json_error('This theme unlocks tomorrow — you already finished one today!');
+    }
 
     $raw_cells = isset($_POST['cells']) && is_array($_POST['cells']) ? $_POST['cells'] : [];
     $cells = [];
@@ -4693,6 +4946,30 @@ add_action('wp_ajax_ascend_axx_submit_guess', function () {
 });
 
 /* ============================================================
+   AJAX: SPEND A NEXT-PUZZLE CREDIT
+
+   Clearing the completion date is what lifts the lock: the gate is
+   "did you already finish one today", so forgetting today is exactly
+   equivalent to opening the next theme, and it needs no second flag
+   that could drift out of step with the gate itself.
+   ============================================================ */
+add_action('wp_ajax_ascend_axx_use_skip', function () {
+    if (!is_user_logged_in()) wp_send_json_error('Not logged in.');
+    check_ajax_referer('ascend_axx_nonce', 'nonce');
+
+    $user_id = get_current_user_id();
+    if (ascend_axx_is_complete($user_id)) wp_send_json_error('You’ve solved every theme!');
+
+    $found = get_user_meta($user_id, 'axx_found', true);
+    if (!empty($found) && is_array($found)) wp_send_json_error('You’re already partway through this theme.');
+
+    if (!ascend_games_consume_skip($user_id)) wp_send_json_error('No next-puzzle passes left.');
+
+    delete_user_meta($user_id, 'axx_last_complete_date');
+    wp_send_json_success(['skips' => ascend_games_skips($user_id)]);
+});
+
+/* ============================================================
    AJAX: USE HINT
    ============================================================ */
 add_action('wp_ajax_ascend_axx_use_hint', function () {
@@ -4709,6 +4986,11 @@ add_action('wp_ajax_ascend_axx_use_hint', function () {
     $found = is_array($found) ? $found : [];
     $target_words = array_merge([$puzzle['spangram']], $puzzle['words']);
     if (count($found) >= count($target_words)) wp_send_json_error('You’ve already solved this theme.');
+
+    if (!ascend_games_has_pass($user_id) && empty($found)
+        && get_user_meta($user_id, 'axx_last_complete_date', true) === ascend_axx_today_key()) {
+        wp_send_json_error('This theme unlocks tomorrow.');
+    }
 
     $hints_used = (int) get_user_meta($user_id, 'axx_hints_used', true);
     $max = ascend_axx_max_hints();
@@ -4810,6 +5092,12 @@ add_shortcode('ascend_cross_a_lotl', function () {
 .axx-tip{margin-top:16px;border-radius:12px;padding:12px 16px;background:#eef6fb;border:1px solid #d4e7f2;color:#1474aa;font-size:13px;text-align:center;}
 .axx-done{margin-top:16px;border-radius:12px;padding:16px;background:#f4f2ec;border:1px solid #e0dccf;color:#5f5a4d;font-size:14px;text-align:center;}
 @media(max-width:420px){.axx-grid{gap:4px;}}
+.axx-locked{margin-top:16px;border-radius:12px;padding:20px 16px;background:#eef6fb;border:1px solid #d4e7f2;color:#1474aa;font-size:14px;text-align:center;}
+.axx-locked-title{font-family:'Baloo 2',Roboto,Arial,sans-serif;font-size:20px;color:#173e63;font-weight:700;}
+.axx-locked-sub{margin:6px 0 14px;color:#62676c;}
+.axx-pass-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px;}
+.axx-btn.pass{background:var(--dblue);color:#fff;text-decoration:none;display:inline-block;}
+.axx-btn.pass:hover{background:var(--blue);color:#fff;}
 .axx-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(9,32,48,.55);opacity:0;transition:opacity .35s ease;pointer-events:none;}
 .axx-overlay.show{opacity:1;}
 .axx-congrats{position:relative;background:#fff;border-radius:20px;padding:26px 34px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.28);transform:scale(.85);transition:transform .35s cubic-bezier(.2,.9,.3,1.4);max-width:88vw;}
@@ -4905,7 +5193,14 @@ function renderPlayArea(){
     return;
   }
 
-  badge.textContent = '';
+  if (state.lockedForToday){
+    area.innerHTML = renderLocked();
+    badge.textContent = 'Played today \u2014 a new theme opens tomorrow';
+    wireLocked();
+    return;
+  }
+
+  badge.textContent = state.hasPass ? 'Pass active \u2014 play as many as you like' : '';
 
   area.innerHTML =
     '<div class="axx-board">' +
@@ -4919,7 +5214,10 @@ function renderPlayArea(){
       '<div id="axx-found-list" class="axx-found-list"></div>' +
       '<div class="axx-actions"><button type="button" id="axx-hint-btn" class="axx-btn primary">Use a hint (' + (state.hintsMax - state.hintsUsed) + ' left)</button></div>' +
     '</div>' +
-    '<div class="axx-tip">Find every word in the theme and the next board opens straight away.</div>';
+    '<div class="axx-tip">' + (state.hasPass
+      ? 'Your pass is active \u2014 finish this theme and the next one opens straight away.'
+      : 'One new theme unlocks per day \u2014 but take as many days as you need to finish the one you\u2019re on.') +
+    '</div>';
 
   buildGrid();
   renderFoundList();
@@ -4981,6 +5279,51 @@ function renderFoundList(){
   wrap.innerHTML = state.foundWords.map(function(fw){
     return '<span class="axx-found-tag' + (fw.isSpangram ? ' spangram' : '') + '">' + escapeHtml(fw.word) + '</span>';
   }).join(' ');
+}
+
+/* The locked screen. Only passes that actually have a product behind them
+   are offered, so the store can be built up one product at a time without
+   ever showing a student a dead link. */
+function renderLocked(){
+  var urls = state.passUrls || {};
+  var out = '<div class="axx-locked">' +
+    '<div class="axx-locked-title">Today\u2019s theme is done \ud83c\udf89</div>' +
+    '<p class="axx-locked-sub">A new one opens tomorrow \u2014 or keep playing now.</p>';
+
+  if (state.skips > 0){
+    out += '<button type="button" id="axx-use-skip" class="axx-btn primary">' +
+             'Open the next theme (' + state.skips + ' left)' +
+           '</button>';
+  }
+
+  var buys = [];
+  if (urls.skip)  buys.push(['skip',  'Next theme']);
+  if (urls.month) buys.push(['month', '30-day pass']);
+  if (urls.year)  buys.push(['year',  'Annual pass']);
+  if (urls.life)  buys.push(['life',  'Unlock everything']);
+
+  if (buys.length){
+    out += '<div class="axx-pass-row">' + buys.map(function(b){
+      return '<a class="axx-btn pass" href="' + encodeURI(urls[b[0]]) + '">' + b[1] + '</a>';
+    }).join('') + '</div>';
+  }
+
+  return out + '</div>';
+}
+
+function wireLocked(){
+  var btn = document.getElementById('axx-use-skip');
+  if (!btn) return;
+  btn.onclick = function(){
+    if (busy) return;
+    busy = true;
+    btn.disabled = true;
+    api('ascend_axx_use_skip', {}).then(function(resp){
+      busy = false;
+      if (!resp.success){ btn.disabled = false; alert(resp.data || 'Could not open the next theme.'); return; }
+      loadState();
+    });
+  };
 }
 
 function tileAt(r,c){
@@ -5098,8 +5441,11 @@ function flashCells(path){
 var AXX_CONFETTI = ['#009CDE', '#045C82', '#1D4010', '#BFE0B4', '#F5B9CF', '#E07FA3'];
 
 /* Board finished: hold the completed grid on screen for a beat, celebrate,
-   then pull the next theme. loadState() re-reads progress, streak and level
-   from the server, so the header and the dashboard badge data stay in step. */
+   then re-read from the server. Whether that lands on the next theme or on
+   the locked screen is the server's call, not this function's \u2014 which is
+   why it always reloads rather than assuming either outcome. loadState()
+   also refreshes progress, streak and level so the header and the dashboard
+   badge data stay in step. */
 function celebrate(){
   var host = document.getElementById('axx-game');
   if (!host) { loadState(); return; }
@@ -5115,14 +5461,15 @@ function celebrate(){
   }
 
   var last = (state.progress >= state.total);
+  var next = last ? 'That was the last theme \u2014 nice work!'
+                  : (state.hasPass ? 'Opening the next board\u2026'
+                                   : 'Your next theme unlocks tomorrow.');
   overlay.innerHTML =
     '<div class="axx-confetti">' + bits + '</div>' +
     '<div class="axx-congrats">' +
       '<div class="axx-congrats-title">Theme solved! \ud83c\udf89</div>' +
       '<div class="axx-congrats-sub">' + escapeHtml(state.theme || '') + '</div>' +
-      '<div class="axx-congrats-next">' +
-        (last ? 'That was the last theme \u2014 nice work!' : 'Opening the next board\u2026') +
-      '</div>' +
+      '<div class="axx-congrats-next">' + next + '</div>' +
     '</div>';
 
   host.appendChild(overlay);

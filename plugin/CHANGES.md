@@ -39,21 +39,21 @@ shows the selection colour again; previously the found colour won and you got no
 feedback tracing across solved letters. Each newly found word pops briefly as it
 locks in.
 
-### Completion animation, then straight to the next board
+### Completion animation
 
 Finishing a board plays a confetti burst over a "Theme solved!" card naming the
-theme, holds for 2.6 seconds, then loads the next puzzle automatically.
+theme. It then re-reads from the server and shows whatever comes back — the next
+board for a pass holder, the locked screen otherwise. The card says which is
+coming before it happens.
 
-`loadState()` re-reads progress, streak and level from the server on the way in,
-so the header counters and the dashboard's badge data (`axx_puzzle_log`) stay in
-step with the new board.
+`loadState()` re-reads progress, streak and level on the way in, so the header
+counters and the dashboard's badge data (`axx_puzzle_log`) stay in step.
 
-### The one-per-day lock is gone
+### Still one theme a day
 
-Auto-advance and "come back tomorrow" cannot both be true. The daily gate was
-removed from all three endpoints that enforced it — `get_state`, `submit_guess`
-and `use_hint`. Students can now play as many themes in a row as they like.
-Streaks still count calendar days, so a streak is unaffected.
+The daily limit is intact on all three endpoints that enforce it — `get_state`,
+`submit_guess` and `use_hint`. A pass lifts it; nothing else does. Streaks still
+count calendar days.
 
 ---
 
@@ -106,6 +106,72 @@ Sourced from SCOWL/ENABLE. Filtered to 4+ letters, A–Z only, and screened
 against a profanity blocklist plus a stem list covering inflections — 411 words
 removed. Swap in your own list any time: replace the `.txt`, then tick the
 rebuild box.
+
+---
+
+---
+
+## Passes
+
+Both games stay one-puzzle-a-day. A pass is what lifts that, sold through the
+WooCommerce store already on this site.
+
+| Pass | Price | What it does |
+| --- | --- | --- |
+| Next Puzzle | $0.99 | Opens one more puzzle now. Stacks if bought several. |
+| 30-Day Pass | $3.25 | 30 days unlimited |
+| Annual Pass | $38.99 | 365 days unlimited |
+| Full Unlock | $79.99 | Permanent, includes everything added later |
+
+Priced from NYT Games — $4.25/month and $39.99/year — less about a dollar. The
+two prices with no NYT equivalent (the single puzzle and the lifetime unlock)
+are a judgement call and easy to change.
+
+### How it works
+
+- **No recurring billing.** WooCommerce Subscriptions is not installed, so a
+  "monthly" pass is a one-off purchase granting 30 days. Nothing auto-renews,
+  nothing can fail to renew, and there is nothing for a parent to cancel.
+- **Time extends, it does not reset.** Buying more time adds to whatever is
+  left, so renewing early never costs a student days.
+- **Lifetime wins.** Once someone holds Full Unlock, later time purchases
+  cannot downgrade it.
+- **Fulfilment is idempotent.** WooCommerce fires its status hooks more than
+  once in normal operation; processed order IDs are recorded per student so a
+  repeat firing grants nothing.
+- **Credits are never spent by accident.** Holding a next-puzzle credit does
+  not consume it; only pressing the button does.
+- **Guest checkout grants nothing** — there is no account to unlock. Both
+  product descriptions tell buyers to be logged in.
+
+### What students see
+
+- **Cross-a-lotl** — the locked screen offers "Open the next theme" if they
+  hold a credit, otherwise buy links for whichever passes exist.
+- **Hex-a-lotl** — a student short of the pond threshold sees the same offer
+  under the progress bar. A pass opens ponds outright.
+
+Only passes with a real product behind them are ever shown, so the store can
+be built up one product at a time without exposing a dead link.
+
+### The products
+
+Created as **drafts** in your store, so nothing is on sale until you publish:
+
+| ID | Product |
+| --- | --- |
+| 6988 | Next Puzzle Pass |
+| 6989 | 30-Day Games Pass |
+| 6990 | Annual Games Pass |
+| 6991 | Full Unlock |
+
+Set up as simple virtual products, in stock, Full Unlock limited to one per
+order. Their IDs are seeded into the plugin, so the link-up happens on upload
+with nothing to configure.
+
+**Two things left for you:** publish the four products when the prices look
+right, and check their tax setting. I left tax at the WooCommerce default
+(taxable) rather than decide how digital goods should be taxed for you.
 
 ---
 
