@@ -327,24 +327,74 @@ def play_badge_overlay(clip, first_frame_png, badge_path, outdir):
     return p, dx, dy
 
 
-def find_garment(frame, window, lum_max=150, sat_max=60):
-    """Bbox of the dark, low-saturation garment inside `window` (full-frame coords).
+def garment_components(png, window, thresh="42%", min_area=8000):
+    """Connected dark components inside `window` → [(w, h, x, y, area)] in full-frame coords.
 
-    The welcome-packet shirt is the only neutral-dark object in that shot — the door
-    and the mat are both strongly coloured — so thresholding on luminance AND
-    saturation isolates it without touching anything else.
+    A plain dark-pixel bounding box also swallows the shirt's drop shadow, which is
+    dark and neutral too; components separate the garment from its shadow.
     """
     x0, y0, x1, y1 = window
-    crop = frame.crop(window)
-    lum = crop.convert("L").point(lambda v: 255 if v < lum_max else 0)
-    sat = crop.convert("HSV").getchannel("S").point(lambda v: 255 if v < sat_max else 0)
-    bb = ImageChops.darker(lum, sat).getbbox()
-    if not bb:
+    out = subprocess.run(
+        ["convert", png, "-crop", f"{x1 - x0}x{y1 - y0}+{x0}+{y0}", "+repage",
+         "-colorspace", "Gray", "-threshold", thresh, "-negate",
+         "-define", "connected-components:verbose=true",
+         "-define", f"connected-components:area-threshold={min_area}",
+         "-connected-components", "8", "null:"],
+        capture_output=True, text=True).stdout
+    comps = []
+    for line in out.splitlines()[1:]:
+        f = line.split()
+        if len(f) < 5 or f[-1] != "gray(255)":
+            continue
+        wh, off = f[1].split("+", 1)
+        w, h = map(int, wh.split("x"))
+        ox, oy = map(int, off.split("+"))
+        comps.append((w, h, x0 + ox, y0 + oy, int(f[3])))
+    return comps
+
+
+def track_garment(src, window, size_hint, n=24, tol=0.35):
+    """Sample the clip and follow the component whose size matches `size_hint`.
+
+    Returns {frame_index: (x0, y0, x1, y1)}; frames before the garment appears are absent.
+    """
+    d = os.path.join(WORK, "_track")
+    shutil.rmtree(d, ignore_errors=True)
+    os.makedirs(d)
+    dur = probe_dur(src)
+    times = [k * dur / (n - 1) for k in range(n)]
+    hw, hh = size_hint
+    track = {}
+    for t in times:
+        p = os.path.join(d, f"t{t:07.3f}.png")
+        sh("ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t:.3f}", "-i", src, "-frames:v", "1", p)
+        best, bd = None, None
+        for (w, h, x, y, _a) in garment_components(p, window):
+            if abs(w - hw) / hw > tol or abs(h - hh) / hh > tol:
+                continue
+            dist = abs(w - hw) + abs(h - hh)
+            if bd is None or dist < bd:
+                best, bd = (x, y, x + w, y + h), dist
+        if best:
+            track[int(round(t * FPS))] = best
+    shutil.rmtree(d, ignore_errors=True)
+    return track
+
+
+def _interp_box(track, i):
+    """Box at frame i: exact, interpolated between samples, or clamped to the ends."""
+    keys = sorted(track)
+    if not keys or i < keys[0]:
         return None
-    w, h = bb[2] - bb[0], bb[3] - bb[1]
-    if not (140 <= w <= 420 and 140 <= h <= 420):
-        return None
-    return x0 + bb[0], y0 + bb[1], x0 + bb[2], y0 + bb[3]
+    if i >= keys[-1]:
+        return track[keys[-1]]
+    lo = max(k for k in keys if k <= i)
+    hi = min(k for k in keys if k >= i)
+    if lo == hi:
+        return track[lo]
+    f = (i - lo) / (hi - lo)
+    a, b = track[lo], track[hi]
+    return tuple(int(a[j] + (b[j] - a[j]) * f) for j in range(4))
 
 
 def apply_tracked_badge(src, dst, badge_path, cfg):
@@ -357,10 +407,18 @@ def apply_tracked_badge(src, dst, badge_path, cfg):
     size_frac = cfg.get("size_frac", 0.42)
     cy_frac = cfg.get("cy_frac", 0.42)
     fade = cfg.get("fade", 0.4)
+    hint = tuple(cfg.get("size_hint", (272, 255)))
     badge = Image.open(badge_path).convert("RGBA")
     if badge.getbbox():
         badge = badge.crop(badge.getbbox())
-    dur = probe_dur(src)
+    track = track_garment(src, window, hint)
+    if not track:
+        print("  shirt badge: garment not found — clip left unchanged")
+        shutil.copy(src, dst)
+        return dst
+    first_idx = min(track)
+    print(f"  shirt badge: tracked {len(track)} samples, appears at {first_idx / FPS:.2f}s, "
+          f"parked at {track[max(track)]}")
     dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", src, "-f", "rawvideo",
                             "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
     enc = subprocess.Popen(["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
@@ -368,22 +426,18 @@ def apply_tracked_badge(src, dst, badge_path, cfg):
                             "-crf", "16", "-preset", "fast", "-pix_fmt", "yuv420p", dst],
                            stdin=subprocess.PIPE)
     nbytes = W * H * 3
-    last, first_seen, n, hits = None, None, 0, 0
-    cache = {}
+    n, hits, cache = 0, 0, {}
     while True:
         buf = dec.stdout.read(nbytes)
         if len(buf) < nbytes:
             break
         fr = Image.frombytes("RGB", (W, H), buf)
-        bb = find_garment(fr, window) or last
+        bb = _interp_box(track, n)
         if bb:
-            last = bb
-            if first_seen is None:
-                first_seen = n
             hits += 1
             gw, gh = bb[2] - bb[0], bb[3] - bb[1]
             bs = max(24, int(gw * size_frac))
-            a = min(1.0, (n - first_seen) / max(1e-6, fade * FPS))
+            a = min(1.0, (n - first_idx) / max(1e-6, fade * FPS))
             if bs not in cache:
                 cache[bs] = badge.resize((bs, bs), Image.LANCZOS)
             b = cache[bs]
@@ -395,8 +449,7 @@ def apply_tracked_badge(src, dst, badge_path, cfg):
         n += 1
     enc.stdin.close()
     dec.wait(); enc.wait()
-    print(f"  shirt badge: {hits}/{n} frames printed, first at "
-          f"{(first_seen or 0) / FPS:.2f}s, last box {last}")
+    print(f"  shirt badge: printed on {hits}/{n} frames")
     return dst
 
 
