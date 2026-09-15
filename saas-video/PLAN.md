@@ -199,3 +199,26 @@ cannot be pulled into this container. Consequences for the pipeline in §5:
   `8fd7bd2`. Unreviewed by me (CDN blocked) — awaiting your notes.
 - OPEN: your review of the 12 AI clips → retakes; 9:16 Shorts cut; 15 s bumper; thumbnail.
 
+## 9. QA pass (2026-09-15) and what it changed
+
+`scripts/qa.py` measures the things a viewer notices, per scene: obstruction
+(content + 2x motion) under every candidate caption position, where each VO line
+actually stops speaking against the scene length, the mascot's extent across a
+whole clip, and overlay drift. Findings and fixes, all in **v3**:
+
+| Finding | Fix |
+|---|---|
+| **No VO line is cut off.** Every line has exactly 0.90 s of picture after its last word, and none bleeds into the next scene. | Kept; added a 60 ms tail fade so no line stops on a hard edge. |
+| 6 captions sat on busy areas. Worst: sc02 enrollment 0.50, sc05 packet 0.55, sc06 dashboard 0.49, sc10 app 0.45, sc08 transcript 0.31 — where the caption covered the phone. | Moved: sc00→tl, sc02→tc (0.50→0.26), sc05→tl, sc06→br, sc08→br then bc (0.31→0.06), sc10→tl (the Play badge now owns the bottom). |
+| **End card overlap.** Layout used Lucas's frame-0 box (y 784) but he rises to **y 576** as he waves, so the logo stack overlapped him. | `lucas_extent()` scans the whole clip; band is now 120..536. |
+| **Play badge drift.** Badge pinned to frame 0 while the phone drifts 8–18 px, leaving the dark pill peeking out. | `pill_track()` + a drifting overlay. |
+| End card held 1.46 s of frozen picture after the wave. | `min` 9.5 → 8.2 s. |
+| Time card stacked rows into a fixed card until it read as a cramped list. | Left column rebuilt as a **scrolling page**: rows arrive into clear space, the scroll settles on the confirm-and-sign block. |
+
+Clip fit is otherwise clean: every clip is 24 fps, and trims/pads are under 0.4 s
+everywhere except the end card, now fixed.
+
+- 2026-09-15 · **v3 master**: 103.6 s, 1080p24, 37 MB. Built from commit `5628e76`.
+  URLs in `jobs.json › renders_v3`.
+- OPEN: your review of v3; 9:16 Shorts cut; 15 s bumper; thumbnail.
+

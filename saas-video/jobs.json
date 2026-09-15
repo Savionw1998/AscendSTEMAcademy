@@ -82,5 +82,17 @@
   "preview_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/b7405b35-a372-4db3-a091-582c402022c3.mp4",
   "duration_s": 104.963,
   "commit": "8fd7bd2f4adb73b59f6e597a84b6eae8d1b138ed"
+ },
+ "renders_v3": {
+  "master_media": "a012ff32-9887-4871-a0f3-4f04071230ff",
+  "preview_media": "17f50627-5a09-452b-bf21-a2fe8ebcba90",
+  "master_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/a012ff32-9887-4871-a0f3-4f04071230ff.mp4",
+  "preview_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/17f50627-5a09-452b-bf21-a2fe8ebcba90.mp4",
+  "duration_s": 103.63,
+  "commit": "5628e7635ce5fa6978bceb36fe3deaa726517e23",
+  "timecard_stills": [
+   "90bfc095-6f8d-41ab-a24d-20771301f6dd",
+   "3a16689f-6847-4cf2-8e71-898255e9f740"
+  ]
  }
 }
