@@ -1,16 +1,54 @@
 {
-  "style_frames_v1": {
-    "model": "gpt_image_2",
-    "quality": "low (model default; re-render approved frames at high before animating)",
-    "sc00_paperwork": "da578845-0b49-4971-9e9b-d8940669eef0",
-    "sc02_enroll":    "4f9c89d5-dc92-431f-ad4a-7d9446538713",
-    "sc08_transcript":"1f456eaa-a31a-4097-a150-a2debdaa76e1",
-    "sc10_app":       "266ba779-9d7e-44b6-856e-cf6c0fc35c4a"
-  },
-  "elements": {
-    "Lucas-2D":    "3efa6ccf-924b-4f6b-a849-ab6a8ba76ee7",
-    "Lucas-3D":    "23d25af7-8f2c-44c8-9aac-d27de804dd36",
-    "Ascend-Logo": "450b499b-03f2-48f8-9c25-95e0dd6e7d65"
-  },
-  "voice": { "Helena": "3c2b83c0-2e0a-5ae8-998a-a5fe71b7eccd" }
+ "style_frames_v1": {
+  "model": "gpt_image_2",
+  "quality": "low (model default; re-render approved frames at high before animating)",
+  "sc00_paperwork": "da578845-0b49-4971-9e9b-d8940669eef0",
+  "sc02_enroll": "4f9c89d5-dc92-431f-ad4a-7d9446538713",
+  "sc08_transcript": "1f456eaa-a31a-4097-a150-a2debdaa76e1",
+  "sc10_app": "266ba779-9d7e-44b6-856e-cf6c0fc35c4a",
+  "sc01_dashboard_hero": "9b3a1c6b-c0b7-4fac-8d8c-44ec1a93c5eb",
+  "sc03_documents": "cbf7da84-6cfc-400c-a1ae-870cd2e35346",
+  "sc04_reply": "6bd02ed0-30a7-45e7-8dc8-e0b58e2ae7ac",
+  "sc05_welcome_packet": "15ca03d4-fca6-4e98-ba3a-add7de7b97d9",
+  "sc06_dashboard_scroll": "b1deedd7-4b36-4e72-8bb5-407e76b89434",
+  "sc09_games_lucas": "de417f7a-1dcd-4852-bac5-01e06814afc8",
+  "sc11_partners": "64bab4d6-da98-49c2-ab8d-28c2f40102fb",
+  "sc12_endcard_lucas": "f47cb820-a35d-466b-9a8f-ce27ac526c39",
+  "sc07_timecard": "code-built in sandbox from the real /time-card-tracker/ UI (no AI frame)",
+  "note": "sc01-sc12 batch rendered at quality=high; sc00/02/08/10 remain the approved low-quality v1"
+ },
+ "elements": {
+  "Lucas-2D": "3efa6ccf-924b-4f6b-a849-ab6a8ba76ee7",
+  "Lucas-3D": "23d25af7-8f2c-44c8-9aac-d27de804dd36",
+  "Ascend-Logo": "450b499b-03f2-48f8-9c25-95e0dd6e7d65"
+ },
+ "voice": {
+  "Helena": "3c2b83c0-2e0a-5ae8-998a-a5fe71b7eccd"
+ },
+ "vo_helena": {
+  "model": "seed_audio",
+  "preset": "3c2b83c0-2e0a-5ae8-998a-a5fe71b7eccd",
+  "00": "aeb106ff-94d9-4cf0-9a46-c36127749ca1",
+  "01": "8579c43b-5ba8-461a-a4d9-7644b58a6bb9",
+  "02": "77a54e89-d172-4c53-a0d5-5bea6ccff389",
+  "03": "3162f7fd-c563-4566-81e3-d57f547f9ddf",
+  "04": "8e5e082d-72e4-403d-8d2c-54be268f0a12",
+  "05": "7bce61aa-9fcd-493d-902d-f1252a94bf29",
+  "06": "bed6a0e6-eb4e-44af-89b0-416e24f8c00a",
+  "07": "0a211e6b-3660-43d2-a419-1c0b56101627",
+  "08": "a6f017e1-30a6-48df-8c91-5db94fd0a0b0",
+  "09": "b2741bf4-81ce-4a1d-9b43-4383b292a053",
+  "10": "ae52a672-dde1-4901-af3e-b77100b20c43",
+  "11": "8b9a00b4-fb2d-43d8-a37b-7954558009cb",
+  "12": "0c3dd6a5-d09f-42b4-996e-9346ea612f3c"
+ },
+ "music": {
+  "higgsfield_media_id_pending_upload": "61620156-739d-4d94-bab4-765d2ca93445",
+  "source": "user-supplied m4a, 2.77 MB"
+ },
+ "site_assets": {
+  "badge": "https://ascendstemacademy.com/wp-content/uploads/2024/08/cropped-cropped-Ascend-stem.png",
+  "diploma": "https://ascendstemacademy.com/wp-content/uploads/2026/07/Diploma-Image.png",
+  "lucas2d_sheet": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/6446aaf7-81ea-4179-a9dc-9ae9d802a507.png"
+ }
 }
