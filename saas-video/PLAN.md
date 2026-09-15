@@ -222,3 +222,29 @@ everywhere except the end card, now fixed.
   URLs in `jobs.json › renders_v3`.
 - OPEN: your review of v3; 9:16 Shorts cut; 15 s bumper; thumbnail.
 
+## 10. v4 — captions in the bottom band (2026-09-15)
+
+v3 moved six captions to the top of the frame. Wrong call: a caption card is
+opaque, so at the top it still hid the animation, just in a different place.
+v4 keeps every caption in the bottom band and lowers it — the card now sits
+7.5 % of frame height off the bottom edge instead of 10 % of frame *width*
+(192 px), which was riding it up into the action.
+
+Re-measured all thirteen clips against bottom-left / bottom-centre /
+bottom-right only. With the lower band, **eleven of thirteen scenes score 0.000
+obstruction in all three slots** — the text no longer covers anything, so the
+choice became editorial rather than forced:
+
+| | position | why |
+|---|---|---|
+| sc00–sc06, sc08, sc09, sc11 | **bottom-centre** | bottom strip measures clear; centre is the strongest read, and it is what the games clip wanted |
+| sc07 time card | bottom-right | the scrolling page fills the left and centre of the viewport |
+| sc10 app | bottom-right | the Google Play badge owns bottom-centre (bc scored 0.961); caption wraps to two lines at 46 px to clear it |
+| sc12 end card | bottom-left | Lucas waves in the bottom-right (measured 0.083 bl vs 0.224 br) |
+
+AI clips unchanged — the animation itself was fine.
+
+- 2026-09-15 · **v4 master**: 103.6 s, 1080p24, 37 MB, commit `42264e3`.
+  URLs in `jobs.json › renders_v4`.
+- OPEN: 9:16 Shorts cut; 15 s bumper; thumbnail.
+

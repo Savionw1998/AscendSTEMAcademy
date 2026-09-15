@@ -94,5 +94,14 @@
    "90bfc095-6f8d-41ab-a24d-20771301f6dd",
    "3a16689f-6847-4cf2-8e71-898255e9f740"
   ]
+ },
+ "renders_v4": {
+  "master_media": "c78864af-bce5-4bf3-9cdd-cb69e086b147",
+  "preview_media": "28728bcc-6d20-4c52-bc9c-0e2d63b82af4",
+  "master_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/c78864af-bce5-4bf3-9cdd-cb69e086b147.mp4",
+  "preview_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/28728bcc-6d20-4c52-bc9c-0e2d63b82af4.mp4",
+  "duration_s": 103.63,
+  "commit": "42264e333cbca9519ff4009aa69cd3dffa831819",
+  "note": "captions bottom-only; AI clips unchanged from v3"
  }
 }
