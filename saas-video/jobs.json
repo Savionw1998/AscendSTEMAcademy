@@ -74,5 +74,13 @@
    "b0f6ce72-73d9-4fd3-b641-2eee97e6de57",
    "8c762895-4763-446a-b36e-200042a98c9d"
   ]
+ },
+ "renders_v2": {
+  "master_media": "463fcbe6-f887-457e-a85f-328ff79865f3",
+  "preview_media": "b7405b35-a372-4db3-a091-582c402022c3",
+  "master_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/463fcbe6-f887-457e-a85f-328ff79865f3.mp4",
+  "preview_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/b7405b35-a372-4db3-a091-582c402022c3.mp4",
+  "duration_s": 104.963,
+  "commit": "8fd7bd2f4adb73b59f6e597a84b6eae8d1b138ed"
  }
 }

@@ -193,3 +193,9 @@ cannot be pulled into this container. Consequences for the pipeline in §5:
   container was declined; drop it in the Higgsfield upload widget or re-approve the PUT and
   `assemble.py` mixes it with ducking); your review of the 12 AI clips; 9:16 cut; thumbnail.
 - 2026-09-15 · Music bed uploaded through the Higgsfield widget (media `7240cb78`). Play Store link confirmed. → v2 render: music ducked under VO + official Google Play badge on sc10.
+- 2026-09-15 · **v2 master rendered**: 105.0 s, 1080p24, 37 MB — music bed (gain 0.16, sidechain-ducked
+  under Helena, 1 s in / 3 s out) + official Google Play badge fitted over the sc10 placeholder
+  (pill detected at 732..1094 × 792..1042). URLs in `renders/timeline_v2.json`. Built from commit
+  `8fd7bd2`. Unreviewed by me (CDN blocked) — awaiting your notes.
+- OPEN: your review of the 12 AI clips → retakes; 9:16 Shorts cut; 15 s bumper; thumbnail.
+
