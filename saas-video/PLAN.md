@@ -300,3 +300,26 @@ clears the box), parked at (730, 86)–(1002, 341).
   URLs in `jobs.json › renders_v6`.
 - OPEN: 9:16 Shorts cut; 15 s bumper; thumbnail.
 
+## 13. Publishing (2026-09-15)
+
+**v5 is the cut to publish** — confirmed by the user; the welcome-packet T-shirt is
+intentionally blank in it. v6 (badge printed on the shirt) exists but is NOT the
+public cut.
+
+**YouTube upload cannot be done from this session.** There is no YouTube connector
+installed (available: Ascend STEM Academy, Canva, Cloudflare, Gmail, Google
+Calendar, Google Drive, Higgsfield, Notion, WordPress.com), and the container's
+egress proxy blocks youtube.com. The upload is a manual step.
+
+`Drive › 04 Brand and Marketing › Videos › SaaS Explainer › YouTube upload kit -
+SaaS Explainer v5.md` carries the download link and copy-paste title, description,
+YouTube-legal chapter marks, tags and settings.
+
+Once the watch URL exists, the site embed IS doable from here through the
+WordPress connector (`wp_update_page` / `wp_update_seo_meta`). The user expressed
+no preference on which surface "the ad" means; default is a page embed on
+ascendstemacademy.com, pending their call on which page.
+
+- OPEN: YouTube upload (manual) → send back the URL → site embed; 9:16 Shorts cut;
+  15 s bumper; thumbnail.
+
