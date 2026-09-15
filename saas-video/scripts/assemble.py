@@ -82,32 +82,26 @@ def caption_png(text, path, size=54, maxw=980):
     return lines, f, lh, cw, ch, pad_x, pad_y
 
 
-CAPTION_POSITIONS = ("bl", "br", "bc", "tl", "tr", "tc")
+# Captions live in the bottom band only — a card over the middle of the frame
+# hides the animation it is describing.
+CAPTION_POSITIONS = ("bl", "br", "bc")
+MX = int(W * 0.10)          # 10 % side margin (title-safe)
+MY = int(H * 0.075)         # lower than the sides, so the card hugs the bottom edge
 
 
 def caption_box(text, pos, size=54, maxw=980):
-    """(x0, y0, cw, ch) of the caption card for a position code, 10 % title-safe margins."""
+    """(x0, y0, cw, ch) of the caption card for a position code."""
     lines, f, lh, cw, ch, pad_x, pad_y = caption_png(text, None, size, maxw)
-    m = int(W * 0.10)
-    if pos == "bl":
-        return m, H - m - ch, cw, ch
+    y0 = H - MY - ch
     if pos == "br":
-        return W - m - cw, H - m - ch, cw, ch
+        return W - MX - cw, y0, cw, ch
     if pos == "bc":
-        return (W - cw) // 2, H - m - ch, cw, ch
-    if pos == "tl":
-        return m, m, cw, ch
-    if pos == "tr":
-        return W - m - cw, m, cw, ch
-    if pos == "tc":
-        return (W - cw) // 2, m, cw, ch
-    if pos == "cc":
-        return (W - cw) // 2, (H - ch) // 2, cw, ch
-    return m, H - m - ch, cw, ch
+        return (W - cw) // 2, y0, cw, ch
+    return MX, y0, cw, ch       # bl, and the default for anything else
 
 
 def render_caption(text, pos, path, size=54, maxw=980):
-    lines, f, lh, cw, ch, pad_x, pad_y = caption_png(text, path, size, maxw)
+    lines, f, lh, _cw, _ch, pad_x, pad_y = caption_png(text, path, size, maxw)
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     x0, y0, cw, ch = caption_box(text, pos, size, maxw)
     sh_ = Image.new("RGBA", (W, H), (0, 0, 0, 0))
