@@ -109,7 +109,18 @@
      "pos": "bc"
     }
    ],
-   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_472e91c0-44f2-4a0f-b2df-abff9bc85847.mp4"
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_472e91c0-44f2-4a0f-b2df-abff9bc85847.mp4",
+   "shirt_badge": {
+    "window": [
+     600,
+     40,
+     1160,
+     460
+    ],
+    "size_frac": 0.42,
+    "cy_frac": 0.42,
+    "fade": 0.4
+   }
   },
   {
    "id": "sc06",

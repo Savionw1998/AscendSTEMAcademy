@@ -327,6 +327,79 @@ def play_badge_overlay(clip, first_frame_png, badge_path, outdir):
     return p, dx, dy
 
 
+def find_garment(frame, window, lum_max=150, sat_max=60):
+    """Bbox of the dark, low-saturation garment inside `window` (full-frame coords).
+
+    The welcome-packet shirt is the only neutral-dark object in that shot — the door
+    and the mat are both strongly coloured — so thresholding on luminance AND
+    saturation isolates it without touching anything else.
+    """
+    x0, y0, x1, y1 = window
+    crop = frame.crop(window)
+    lum = crop.convert("L").point(lambda v: 255 if v < lum_max else 0)
+    sat = crop.convert("HSV").getchannel("S").point(lambda v: 255 if v < sat_max else 0)
+    bb = ImageChops.darker(lum, sat).getbbox()
+    if not bb:
+        return None
+    w, h = bb[2] - bb[0], bb[3] - bb[1]
+    if not (140 <= w <= 420 and 140 <= h <= 420):
+        return None
+    return x0 + bb[0], y0 + bb[1], x0 + bb[2], y0 + bb[3]
+
+
+def apply_tracked_badge(src, dst, badge_path, cfg):
+    """Print the official badge onto a moving garment, frame by frame.
+
+    The shirt floats up out of the box before settling, so a fixed overlay would
+    slide off it. Frames stream through rawvideo pipes — no PNG sequence on disk.
+    """
+    window = tuple(cfg["window"])
+    size_frac = cfg.get("size_frac", 0.42)
+    cy_frac = cfg.get("cy_frac", 0.42)
+    fade = cfg.get("fade", 0.4)
+    badge = Image.open(badge_path).convert("RGBA")
+    if badge.getbbox():
+        badge = badge.crop(badge.getbbox())
+    dur = probe_dur(src)
+    dec = subprocess.Popen(["ffmpeg", "-v", "error", "-i", src, "-f", "rawvideo",
+                            "-pix_fmt", "rgb24", "-"], stdout=subprocess.PIPE)
+    enc = subprocess.Popen(["ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24",
+                            "-s", f"{W}x{H}", "-r", str(FPS), "-i", "-", "-c:v", "libx264",
+                            "-crf", "16", "-preset", "fast", "-pix_fmt", "yuv420p", dst],
+                           stdin=subprocess.PIPE)
+    nbytes = W * H * 3
+    last, first_seen, n, hits = None, None, 0, 0
+    cache = {}
+    while True:
+        buf = dec.stdout.read(nbytes)
+        if len(buf) < nbytes:
+            break
+        fr = Image.frombytes("RGB", (W, H), buf)
+        bb = find_garment(fr, window) or last
+        if bb:
+            last = bb
+            if first_seen is None:
+                first_seen = n
+            hits += 1
+            gw, gh = bb[2] - bb[0], bb[3] - bb[1]
+            bs = max(24, int(gw * size_frac))
+            a = min(1.0, (n - first_seen) / max(1e-6, fade * FPS))
+            if bs not in cache:
+                cache[bs] = badge.resize((bs, bs), Image.LANCZOS)
+            b = cache[bs]
+            if a < 1.0:
+                b = b.copy()
+                b.putalpha(b.getchannel("A").point(lambda v: int(v * a)))
+            fr.paste(b, (bb[0] + gw // 2 - bs // 2, bb[1] + int(gh * cy_frac) - bs // 2), b)
+        enc.stdin.write(fr.tobytes())
+        n += 1
+    enc.stdin.close()
+    dec.wait(); enc.wait()
+    print(f"  shirt badge: {hits}/{n} frames printed, first at "
+          f"{(first_seen or 0) / FPS:.2f}s, last box {last}")
+    return dst
+
+
 # ---------------------------------------------------------------- per-scene build
 def fit_clip(src, dst, target):
     """Scale/pad to 1920x1080@24, then trim or freeze-pad to `target` seconds."""
@@ -387,6 +460,10 @@ def build_scene(s, assets, only):
     else:
         raise SystemExit(f"{sid}: no clip and no build")
     fit_clip(raw, fit, target)
+    if s.get("shirt_badge") and assets.get("badge"):
+        printed = os.path.join(WORK, f"{sid}_shirt.mp4")
+        apply_tracked_badge(fit, printed, assets["badge"], s["shirt_badge"])
+        fit = printed
 
     items = []
     if build == "endcard":
