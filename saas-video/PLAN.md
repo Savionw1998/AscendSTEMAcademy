@@ -178,3 +178,17 @@ cannot be pulled into this container. Consequences for the pipeline in §5:
   the model's default *low* quality as a first look at the SaaS register. Job IDs in
   `jobs.json`. Unreviewed by me — CDN blocked (§7). Awaiting your read before rendering the
   remaining nine at high quality.
+- 2026-09-15 · Frames approved ("look good"), Helena locked, end-card URL = ascendstemacademy.com.
+  Real time-card + app screenshots supplied → sc07 rebuilt in code from the real tracker UI
+  (`scripts/scenes.py`); in-device UI in the AI frames matched to the app's mint/green look.
+- 2026-09-15 · 13 Helena takes (87.2 s of VO). 8 remaining frames at high quality. 12 scenes
+  animated with Seedance 2.5 (`omni_reference`, 1080p, no audio); sc03 took 25 min so a hedge
+  job was submitted and left unused. `jobs.json` has every id.
+- 2026-09-15 · **v1 master rendered in the Higgsfield sandbox**: `assemble.py` on
+  `manifest.json` → 105.0 s, 1080p24, 37 MB, VO + caption cards, **no music yet**. End-card
+  overlays auto-placed (card 134..1749 × 80..899, Lucas at 1160..1544 × 780..896, content
+  band 120..750). URLs in `renders/timeline_v1.json`. Scripts fetched by commit SHA — the
+  branch URL on raw.githubusercontent is cached ~5 min and served a stale manifest once.
+- OPEN: music bed (the m4a you attached never made it to Higgsfield — the upload from this
+  container was declined; drop it in the Higgsfield upload widget or re-approve the PUT and
+  `assemble.py` mixes it with ducking); your review of the 12 AI clips; 9:16 cut; thumbnail.
