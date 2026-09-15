@@ -345,8 +345,9 @@ def main():
         amap = "[mix]"
     else:
         amap = "[vo]"
-    cmd += ["-filter_complex", ";".join(fc), "-map", "0:v", "-map", amap, "-t", f"{total:.3f}",
-            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", a.master]
+    fc.append(f"{amap}apad=whole_dur={total:.3f}[aout]")   # picture length wins, never -shortest
+    cmd += ["-filter_complex", ";".join(fc), "-map", "0:v", "-map", "[aout]", "-t", f"{total:.3f}",
+            "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", a.master]
     sh(*cmd)
     sh("ffmpeg", "-y", "-loglevel", "error", "-i", a.master, "-vf", "scale=1280:720", "-c:v", "libx264",
        "-crf", "26", "-preset", "fast", "-c:a", "aac", "-b:a", "128k", a.preview)
