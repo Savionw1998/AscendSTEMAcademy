@@ -203,6 +203,50 @@ def endcard_overlays(first_frame_png, badge_path, wordmark_path, diploma_path, o
     return items
 
 
+def dark_pill_bbox(img, y_min_frac=0.5):
+    """Bounding box of the dark app-store placeholder pill in the lower half of a frame."""
+    g = img.convert("L")
+    px = g.load()
+    W_, H_ = img.size
+    rows = [y for y in range(int(H_ * y_min_frac), H_, 2)
+            if sum(1 for x in range(0, W_, 4) if px[x, y] < 70) > 25]
+    if not rows:
+        return None
+    y0, y1 = min(rows), max(rows)
+    cols = [x for x in range(0, W_, 2)
+            if sum(1 for y in range(y0, y1 + 1, 4) if px[x, y] < 70) > max(3, (y1 - y0) // 12)]
+    if not cols or (max(cols) - min(cols)) < 120 or (y1 - y0) < 40:
+        return None
+    return min(cols), y0, max(cols), y1
+
+
+def play_badge_overlay(first_frame_png, badge_path, outdir):
+    """Fit the official Google Play badge over the placeholder pill in scene 10."""
+    base = Image.open(first_frame_png).convert("RGB")
+    bb = dark_pill_bbox(base)
+    if bb is None:
+        bb = (760, 850, 1160, 970)          # fallback: centred under a centred phone
+    x0, y0, x1, y1 = bb
+    print(f"  play badge: pill={bb}")
+    badge = Image.open(badge_path).convert("RGBA")
+    bbox = badge.getbbox()
+    badge = badge.crop(bbox) if bbox else badge
+    ph = int((y1 - y0) * 1.12)
+    pw = int(badge.width * ph / badge.height)
+    if pw > (x1 - x0) * 1.15:
+        pw = int((x1 - x0) * 1.15); ph = int(badge.height * pw / badge.width)
+    badge = badge.resize((pw, ph), Image.LANCZOS)
+    layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
+    # Soft mask hides the pill's own edges around the badge.
+    ImageDraw.Draw(layer).rounded_rectangle((cx - pw // 2 - 8, cy - ph // 2 - 8, cx + pw // 2 + 8, cy + ph // 2 + 8),
+                                            18, fill=(247, 250, 252, 255))
+    layer.paste(badge, (cx - pw // 2, cy - ph // 2), badge)
+    p = os.path.join(outdir, "ov_playbadge.png")
+    layer.save(p)
+    return p
+
+
 # ---------------------------------------------------------------- per-scene build
 def fit_clip(src, dst, target):
     """Scale/pad to 1920x1080@24, then trim or freeze-pad to `target` seconds."""
@@ -264,6 +308,10 @@ def build_scene(s, assets, only):
         sh("ffmpeg", "-y", "-loglevel", "error", "-i", fit, "-frames:v", "1", ff)
         for png, st, en in endcard_overlays(ff, assets["badge"], assets["wordmark"], assets.get("diploma"), WORK):
             items.append((png, st, en, 0.5))
+    if s.get("play_badge") and assets.get("play_badge"):
+        ff = os.path.join(WORK, f"{sid}_f0.png")
+        sh("ffmpeg", "-y", "-loglevel", "error", "-i", fit, "-frames:v", "1", ff)
+        items.append((play_badge_overlay(ff, assets["play_badge"], WORK), s["play_badge"], None, 0.4))
     caps = s.get("captions", [])
     for i, c in enumerate(caps):
         png = render_caption(c["text"], c.get("pos", "bl"), os.path.join(WORK, f"{sid}_cap{i}.png"),
@@ -307,6 +355,8 @@ def main():
               "wordmark": fetch(m["assets"]["wordmark"], os.path.join(WORK, "wordmark.png"))}
     if m["assets"].get("diploma"):
         assets["diploma"] = fetch(m["assets"]["diploma"], os.path.join(WORK, "diploma.png"))
+    if m["assets"].get("play_badge"):
+        assets["play_badge"] = fetch(m["assets"]["play_badge"], os.path.join(WORK, "play_badge.png"))
     music = fetch(m["assets"]["music"], os.path.join(WORK, "music.bin")) if m["assets"].get("music") else None
 
     # Video: build scenes, concat.

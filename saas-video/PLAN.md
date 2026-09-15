@@ -35,7 +35,7 @@ All feature claims below were pulled from the live site through the WordPress MC
 | Tuition products | 9-12 New Student $200 · 9-12 Re-Enrollment $175 |
 
 **Not verifiable from this container** (egress proxy blocks the open web — see §7):
-- The Google Play Store listing. Taken on your word; the video says "now on Google Play."
+- ~~The Google Play Store listing.~~ Confirmed 2026-09-15: https://play.google.com/store/apps/details?id=com.ascendstemacademy.twa — official badge composited over the placeholder pill in scene 10 by `assemble.py`.
 - The two YouTube reference links you sent (`M8tXsQ34f30`, `aSte18D2_YE`) — youtube.com is
   blocked here. Style below is my read of "SaaS marketing video"; tell me what those two are
   and I'll re-cut the look to match.
@@ -192,3 +192,4 @@ cannot be pulled into this container. Consequences for the pipeline in §5:
 - OPEN: music bed (the m4a you attached never made it to Higgsfield — the upload from this
   container was declined; drop it in the Higgsfield upload widget or re-approve the PUT and
   `assemble.py` mixes it with ducking); your review of the 12 AI clips; 9:16 cut; thumbnail.
+- 2026-09-15 · Music bed uploaded through the Higgsfield widget (media `7240cb78`). Play Store link confirmed. → v2 render: music ducked under VO + official Google Play badge on sc10.

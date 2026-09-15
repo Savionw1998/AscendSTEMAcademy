@@ -3,9 +3,11 @@
   "badge": "https://ascendstemacademy.com/wp-content/uploads/2024/08/cropped-cropped-Ascend-stem.png",
   "wordmark": "https://ascendstemacademy.com/wp-content/uploads/2024/12/ascend-stem-wordmark-2.png",
   "diploma": "https://ascendstemacademy.com/wp-content/uploads/2026/07/Diploma-Image.png",
-  "music": null,
+  "music": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/7240cb78-0cad-4d27-9957-1d0ac72327a1.mp3",
   "font_medium": "https://raw.githubusercontent.com/JulietaUla/Montserrat/master/fonts/ttf/Montserrat-Medium.ttf",
-  "font_semibold": "https://raw.githubusercontent.com/JulietaUla/Montserrat/master/fonts/ttf/Montserrat-SemiBold.ttf"
+  "font_semibold": "https://raw.githubusercontent.com/JulietaUla/Montserrat/master/fonts/ttf/Montserrat-SemiBold.ttf",
+  "play_badge": "https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png",
+  "play_store_url": "https://play.google.com/store/apps/details?id=com.ascendstemacademy.twa"
  },
  "vo_base": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/",
  "scenes": [
@@ -190,7 +192,8 @@
      "pos": "bl"
     }
    ],
-   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125933_1626a696-2b6d-46f1-9596-aea7247aff88.mp4"
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125933_1626a696-2b6d-46f1-9596-aea7247aff88.mp4",
+   "play_badge": 0.9
   },
   {
    "id": "sc11",
