@@ -9,31 +9,222 @@
  },
  "vo_base": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/",
  "scenes": [
-  {"id": "sc00", "clip_job": "aa7c3573-fe34-49c5-b8a8-491ba4aecc8b", "vo": "hf_20260915_125020_aeb106ff-94d9-4cf0-9a46-c36127749ca1.wav", "vo_dur": 3.76, "min": 4.8,
-   "captions": [{"text": "Florida homeschooling comes with paperwork.", "at": 0.5, "pos": "bl"}]},
-  {"id": "sc01", "clip_job": "de4538c2-157f-402c-b073-24a856eea084", "vo": "hf_20260915_125019_8579c43b-5ba8-461a-a4d9-7644b58a6bb9.wav", "vo_dur": 4.14,
-   "captions": [{"text": "Ascend STEM Academy", "at": 0.4, "pos": "bl"}, {"text": "Your umbrella school, in one place.", "at": 2.3, "pos": "bl"}]},
-  {"id": "sc02", "clip_job": "a24d37c2-ef5c-456c-86f3-71b7506f6050", "vo": "hf_20260915_125019_77a54e89-d172-4c53-a0d5-5bea6ccff389.wav", "vo_dur": 6.5,
-   "captions": [{"text": "Enroll in about five minutes.", "at": 0.8, "pos": "bl"}]},
-  {"id": "sc03", "clip_job": "fa93b587-8970-48c8-a5e8-d4b65efb0318", "vo": "hf_20260915_125020_3162f7fd-c563-4566-81e3-d57f547f9ddf.wav", "vo_dur": 6.08,
-   "captions": [{"text": "Notice of intent. Withdrawal letters.", "at": 0.5, "pos": "bl"}, {"text": "We handle the documents.", "at": 4.0, "pos": "bl"}]},
-  {"id": "sc04", "clip_job": "4182abab-1a25-4602-b636-ab684bc3cc44", "vo": "hf_20260915_125019_8e5e082d-72e4-403d-8d2c-54be268f0a12.wav", "vo_dur": 5.84,
-   "captions": [{"text": "Questions? Real people answer.", "at": 0.5, "pos": "br"}, {"text": "Usually same day.", "at": 3.8, "pos": "br"}]},
-  {"id": "sc05", "clip_job": "472e91c0-44f2-4a0f-b2df-abff9bc85847", "vo": "hf_20260915_125020_7bce61aa-9fcd-493d-902d-f1252a94bf29.wav", "vo_dur": 9.02,
-   "captions": [{"text": "Days later: your welcome packet.", "at": 1.0, "pos": "bl"}]},
-  {"id": "sc06", "clip_job": "8248b29d-6fed-4d44-b3e3-d88803148425", "vo": "hf_20260915_125020_bed6a0e6-eb4e-44af-89b0-416e24f8c00a.wav", "vo_dur": 4.4,
-   "captions": [{"text": "One dashboard. Everything in it.", "at": 0.5, "pos": "bl"}]},
-  {"id": "sc07", "build": "timecard", "vo": "hf_20260915_125019_0a211e6b-3660-43d2-a419-1c0b56101627.wav", "vo_dur": 8.18,
-   "captions": [{"text": "Log hours by subject.", "at": 1.2, "pos": "br", "size": 44, "maxw": 520}, {"text": "Florida requirements, tracked automatically.", "at": 5.2, "pos": "br", "size": 40, "maxw": 520}]},
-  {"id": "sc08", "clip_job": "03fe93a7-5324-4eb7-83af-c0a592edd795", "vo": "hf_20260915_125019_a6f017e1-30a6-48df-8c91-5db94fd0a0b0.wav", "vo_dur": 12.07,
-   "captions": [{"text": "Type a sentence. Or send a photo.", "at": 0.6, "pos": "bl"}, {"text": "It becomes a real transcript.", "at": 7.0, "pos": "bl"}]},
-  {"id": "sc09", "clip_job": "3c83b7a2-f7b9-4f7c-a475-e7ee1ab744f3", "vo": "hf_20260915_125020_b2741bf4-81ce-4a1d-9b43-4383b292a053.wav", "vo_dur": 5.68,
-   "captions": [{"text": "Daily puzzles. Streaks. Badges.", "at": 0.6, "pos": "bl"}]},
-  {"id": "sc10", "clip_job": "1626a696-2b6d-46f1-9596-aea7247aff88", "vo": "hf_20260915_125020_ae52a672-dde1-4901-af3e-b77100b20c43.wav", "vo_dur": 6.01,
-   "captions": [{"text": "Now on the Google Play Store.", "at": 0.8, "pos": "bl"}]},
-  {"id": "sc11", "clip_job": "f0f80a29-85c8-4ae1-bb28-02f393842c6e", "vo": "hf_20260915_125020_8b9a00b4-fb2d-43d8-a37b-7954558009cb.wav", "vo_dur": 8.6,
-   "captions": [{"text": "FLVS courses. CF dual enrollment.", "at": 0.6, "pos": "bl"}, {"text": "College credit in high school.", "at": 5.4, "pos": "bl"}]},
-  {"id": "sc12", "build": "endcard", "clip_job": "0a6a0944-0d7a-45fb-ada6-41b902af2f16", "vo": "hf_20260915_125153_0c3dd6a5-d09f-42b4-996e-9346ea612f3c.wav", "vo_dur": 6.9, "min": 9.5,
-   "captions": [{"text": "A real diploma.", "at": 0.4, "end": 3.0, "pos": "bl"}]}
+  {
+   "id": "sc00",
+   "clip_job": "aa7c3573-fe34-49c5-b8a8-491ba4aecc8b",
+   "vo": "hf_20260915_125020_aeb106ff-94d9-4cf0-9a46-c36127749ca1.wav",
+   "vo_dur": 3.76,
+   "min": 4.8,
+   "captions": [
+    {
+     "text": "Florida homeschooling comes with paperwork.",
+     "at": 0.5,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125844_aa7c3573-fe34-49c5-b8a8-491ba4aecc8b.mp4"
+  },
+  {
+   "id": "sc01",
+   "clip_job": "de4538c2-157f-402c-b073-24a856eea084",
+   "vo": "hf_20260915_125019_8579c43b-5ba8-461a-a4d9-7644b58a6bb9.wav",
+   "vo_dur": 4.14,
+   "captions": [
+    {
+     "text": "Ascend STEM Academy",
+     "at": 0.4,
+     "pos": "bl"
+    },
+    {
+     "text": "Your umbrella school, in one place.",
+     "at": 2.3,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_de4538c2-157f-402c-b073-24a856eea084.mp4"
+  },
+  {
+   "id": "sc02",
+   "clip_job": "a24d37c2-ef5c-456c-86f3-71b7506f6050",
+   "vo": "hf_20260915_125019_77a54e89-d172-4c53-a0d5-5bea6ccff389.wav",
+   "vo_dur": 6.5,
+   "captions": [
+    {
+     "text": "Enroll in about five minutes.",
+     "at": 0.8,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125844_a24d37c2-ef5c-456c-86f3-71b7506f6050.mp4"
+  },
+  {
+   "id": "sc03",
+   "clip_job": "fa93b587-8970-48c8-a5e8-d4b65efb0318",
+   "vo": "hf_20260915_125020_3162f7fd-c563-4566-81e3-d57f547f9ddf.wav",
+   "vo_dur": 6.08,
+   "captions": [
+    {
+     "text": "Notice of intent. Withdrawal letters.",
+     "at": 0.5,
+     "pos": "bl"
+    },
+    {
+     "text": "We handle the documents.",
+     "at": 4.0,
+     "pos": "bl"
+    }
+   ]
+  },
+  {
+   "id": "sc04",
+   "clip_job": "4182abab-1a25-4602-b636-ab684bc3cc44",
+   "vo": "hf_20260915_125019_8e5e082d-72e4-403d-8d2c-54be268f0a12.wav",
+   "vo_dur": 5.84,
+   "captions": [
+    {
+     "text": "Questions? Real people answer.",
+     "at": 0.5,
+     "pos": "br"
+    },
+    {
+     "text": "Usually same day.",
+     "at": 3.8,
+     "pos": "br"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125845_4182abab-1a25-4602-b636-ab684bc3cc44.mp4"
+  },
+  {
+   "id": "sc05",
+   "clip_job": "472e91c0-44f2-4a0f-b2df-abff9bc85847",
+   "vo": "hf_20260915_125020_7bce61aa-9fcd-493d-902d-f1252a94bf29.wav",
+   "vo_dur": 9.02,
+   "captions": [
+    {
+     "text": "Days later: your welcome packet.",
+     "at": 1.0,
+     "pos": "bl"
+    }
+   ]
+  },
+  {
+   "id": "sc06",
+   "clip_job": "8248b29d-6fed-4d44-b3e3-d88803148425",
+   "vo": "hf_20260915_125020_bed6a0e6-eb4e-44af-89b0-416e24f8c00a.wav",
+   "vo_dur": 4.4,
+   "captions": [
+    {
+     "text": "One dashboard. Everything in it.",
+     "at": 0.5,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_8248b29d-6fed-4d44-b3e3-d88803148425.mp4"
+  },
+  {
+   "id": "sc07",
+   "build": "timecard",
+   "vo": "hf_20260915_125019_0a211e6b-3660-43d2-a419-1c0b56101627.wav",
+   "vo_dur": 8.18,
+   "captions": [
+    {
+     "text": "Log hours by subject.",
+     "at": 1.2,
+     "pos": "br",
+     "size": 44,
+     "maxw": 520
+    },
+    {
+     "text": "Florida requirements, tracked automatically.",
+     "at": 5.2,
+     "pos": "br",
+     "size": 40,
+     "maxw": 520
+    }
+   ]
+  },
+  {
+   "id": "sc08",
+   "clip_job": "03fe93a7-5324-4eb7-83af-c0a592edd795",
+   "vo": "hf_20260915_125019_a6f017e1-30a6-48df-8c91-5db94fd0a0b0.wav",
+   "vo_dur": 12.07,
+   "captions": [
+    {
+     "text": "Type a sentence. Or send a photo.",
+     "at": 0.6,
+     "pos": "bl"
+    },
+    {
+     "text": "It becomes a real transcript.",
+     "at": 7.0,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_03fe93a7-5324-4eb7-83af-c0a592edd795.mp4"
+  },
+  {
+   "id": "sc09",
+   "clip_job": "3c83b7a2-f7b9-4f7c-a475-e7ee1ab744f3",
+   "vo": "hf_20260915_125020_b2741bf4-81ce-4a1d-9b43-4383b292a053.wav",
+   "vo_dur": 5.68,
+   "captions": [
+    {
+     "text": "Daily puzzles. Streaks. Badges.",
+     "at": 0.6,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125844_3c83b7a2-f7b9-4f7c-a475-e7ee1ab744f3.mp4"
+  },
+  {
+   "id": "sc10",
+   "clip_job": "1626a696-2b6d-46f1-9596-aea7247aff88",
+   "vo": "hf_20260915_125020_ae52a672-dde1-4901-af3e-b77100b20c43.wav",
+   "vo_dur": 6.01,
+   "captions": [
+    {
+     "text": "Now on the Google Play Store.",
+     "at": 0.8,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125933_1626a696-2b6d-46f1-9596-aea7247aff88.mp4"
+  },
+  {
+   "id": "sc11",
+   "clip_job": "f0f80a29-85c8-4ae1-bb28-02f393842c6e",
+   "vo": "hf_20260915_125020_8b9a00b4-fb2d-43d8-a37b-7954558009cb.wav",
+   "vo_dur": 8.6,
+   "captions": [
+    {
+     "text": "FLVS courses. CF dual enrollment.",
+     "at": 0.6,
+     "pos": "bl"
+    },
+    {
+     "text": "College credit in high school.",
+     "at": 5.4,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_f0f80a29-85c8-4ae1-bb28-02f393842c6e.mp4"
+  },
+  {
+   "id": "sc12",
+   "build": "endcard",
+   "clip_job": "0a6a0944-0d7a-45fb-ada6-41b902af2f16",
+   "vo": "hf_20260915_125153_0c3dd6a5-d09f-42b4-996e-9346ea612f3c.wav",
+   "vo_dur": 6.9,
+   "min": 9.5,
+   "captions": [
+    {
+     "text": "A real diploma.",
+     "at": 0.4,
+     "end": 3.0,
+     "pos": "bl"
+    }
+   ],
+   "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125844_0a6a0944-0d7a-45fb-ada6-41b902af2f16.mp4"
+  }
  ]
 }

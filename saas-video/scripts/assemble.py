@@ -250,7 +250,8 @@ def build_scene(s, assets, only):
     print(f"[{sid}] target {target:.2f}s", flush=True)
     build = s.get("build")
     if build == "timecard":
-        scenes.render(scenes.timecard_frame, raw, target)
+        if not (os.path.exists(raw) and abs(probe_dur(raw) - target) < 0.2):
+            scenes.render(scenes.timecard_frame, raw, target)
     elif s.get("clip"):
         fetch(s["clip"], raw)
     else:
