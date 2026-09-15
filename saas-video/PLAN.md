@@ -273,3 +273,30 @@ at +1.7 s.
   URLs in `jobs.json › renders_v5`.
 - OPEN: 9:16 Shorts cut; 15 s bumper; thumbnail.
 
+## 12. v6 — the badge on the welcome-packet shirt (2026-09-15)
+
+The T-shirt in scene 5 came out blank: its style-frame prompt said "no logos, no
+brand marks", so nothing was ever printed on it.
+
+The shirt also *moves* — it floats up out of the box from t=2.0 and parks at
+t=3.5 — so a fixed overlay would slide off. `apply_tracked_badge()` follows it:
+
+1. **Isolate the garment.** It is the only neutral-dark object in the shot
+   (measured saturation 22.7 vs 101.9 for the door and 66.3 for the mat), so a
+   luminance + saturation threshold finds it and nothing else.
+2. **Take connected components, not a dark-pixel bounding box.** The first
+   attempt measured the shirt at 342x352 because it swallowed the shirt's own
+   drop shadow, which is dark and neutral too; components separate them. Tracking
+   now reports the true 272x255.
+3. **Sample and interpolate.** 19 samples across the clip, interpolated per
+   frame, so the print rides the shirt through its rise and settles with it.
+4. **Composite** at chest height, scaled to 42 % of the shirt's width, streaming
+   through rawvideo pipes rather than a PNG sequence on disk.
+
+Result: badge printed on 203 of 246 frames (it appears at 1.79 s, when the shirt
+clears the box), parked at (730, 86)–(1002, 341).
+
+- 2026-09-15 · **v6 master**: 103.6 s, 1080p24, 37 MB, commit `3c11a8a`.
+  URLs in `jobs.json › renders_v6`.
+- OPEN: 9:16 Shorts cut; 15 s bumper; thumbnail.
+

@@ -116,5 +116,18 @@
    "5a82b2e8-47cd-4cc3-9a8d-a18c5f254c03"
   ],
   "note": "end card only: logo as a horizontal lockup, badge 114px -> 300px. Everything else identical to v4."
+ },
+ "renders_v6": {
+  "master_media": "953fb2bb-d902-4a43-a086-ba60664b412f",
+  "preview_media": "04768579-aafa-4de4-aaea-0f227ea0a347",
+  "master_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/953fb2bb-d902-4a43-a086-ba60664b412f.mp4",
+  "preview_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/04768579-aafa-4de4-aaea-0f227ea0a347.mp4",
+  "duration_s": 103.588,
+  "commit": "3c11a8afa175970d38c865bd033e89e8b3e9501a",
+  "shirt_stills": [
+   "3e91f8d1-92ee-4a33-8bb2-8452fa24dedf",
+   "ea426067-5719-4422-945d-f323c7292bd2"
+  ],
+  "note": "welcome-packet shirt now carries the official badge, tracked; everything else identical to v5."
  }
 }
