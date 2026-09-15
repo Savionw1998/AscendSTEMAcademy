@@ -210,28 +210,53 @@ def endcard_overlays(clip, first_frame_png, badge_path, wordmark_path, diploma_p
         l.paste(dip, (mid - dw // 2, top + (avail - dh) // 2), dip)
         p = os.path.join(outdir, "ov_diploma.png"); l.save(p); items.append((p, 0.2, 3.0))
     t0 = 3.2 if diploma_path else 0.5
-    # Beat 2: badge → wordmark → URL → enroll line, stacked and scaled to fit `avail`.
+    # Beat 2: the logo as a HORIZONTAL lockup — badge beside wordmark — then URL and the
+    # enroll line under it.
+    #
+    # Stacking badge / wordmark / URL / enroll vertically forced everything through the
+    # narrow band above Lucas (~416 px) and scaled the badge down to ~114 px. Setting the
+    # mark across the card's width instead spends the axis we have plenty of, so the badge
+    # renders around 280 px — roughly 2.5x — with the wordmark at full strength beside it.
     badge = Image.open(badge_path).convert("RGBA")
     wm = Image.open(wordmark_path).convert("RGBA")
-    bs = int(min(260, avail * 0.36))
-    ww = int(min(700, (cx1 - cx0) * 0.55))
-    wh = int(wm.height * ww / wm.width)
-    url_s, en_s = 56, 34
-    total = bs + 26 + wh + 30 + url_s + 18 + en_s
-    scale = min(1.0, avail / total)
-    bs, ww, wh = int(bs * scale), int(ww * scale), int(wh * scale)
-    url_s, en_s = int(url_s * scale), int(en_s * scale)
-    y = top + (avail - int(total * scale)) // 2
-    l = layer(); b = badge.resize((bs, bs), Image.LANCZOS); l.paste(b, (mid - bs // 2, y), b)
-    p = os.path.join(outdir, "ov_badge.png"); l.save(p); items.append((p, t0, None)); y += bs + int(26 * scale)
-    l = layer(); w = wm.resize((ww, wh), Image.LANCZOS); l.paste(w, (mid - ww // 2, y), w)
-    p = os.path.join(outdir, "ov_wordmark.png"); l.save(p); items.append((p, t0 + 0.6, None)); y += wh + int(30 * scale)
+    if badge.getbbox():
+        badge = badge.crop(badge.getbbox())     # trim transparent margin so the mark fills its box
+    if wm.getbbox():
+        wm = wm.crop(wm.getbbox())
+    url_s, en_s = 58, 36
+    gap_lock, gap_url, gap_en = 30, 16, 0
+    # Height budget: lockup row + URL + enroll must fit the band above Lucas.
+    lock_h = avail - (url_s + en_s + gap_lock + gap_url + gap_en)
+    lock_h = max(150, min(lock_h, int(avail * 0.70)))
+    bs = lock_h                                  # badge is square and sets the row height
+    wm_h = int(lock_h * 0.56)                    # wordmark reads at ~56 % of the badge's height
+    wm_w = int(wm.width * wm_h / wm.height)
+    inner = 44                                   # space between badge and wordmark
+    lock_w = bs + inner + wm_w
+    max_w = cx1 - cx0 - 120
+    if lock_w > max_w:                           # too wide for the card → scale the row down
+        k = max_w / lock_w
+        bs, wm_w, wm_h, lock_w = int(bs * k), int(wm_w * k), int(wm_h * k), max_w
+    total = bs + gap_lock + url_s + gap_url + en_s
+    y = top + max(0, (avail - total) // 2)
+    lx = mid - lock_w // 2
+    print(f"  endcard logo: badge {bs}px  wordmark {wm_w}x{wm_h}  lockup {lock_w}px @ x{lx} y{y}")
+    # Badge lands first, wordmark joins it, then the two text lines.
+    l = layer()
+    b = badge.resize((bs, bs), Image.LANCZOS)
+    l.paste(b, (lx, y), b)
+    p = os.path.join(outdir, "ov_badge.png"); l.save(p); items.append((p, t0, None))
+    l = layer()
+    w = wm.resize((wm_w, wm_h), Image.LANCZOS)
+    l.paste(w, (lx + bs + inner, y + (bs - wm_h) // 2), w)      # optically centred on the badge
+    p = os.path.join(outdir, "ov_wordmark.png"); l.save(p); items.append((p, t0 + 0.5, None))
+    y += bs + gap_lock
     l = layer(); ImageDraw.Draw(l).text((mid, y + url_s // 2), "ascendstemacademy.com",
                                         font=scenes.font("bold", url_s), fill=scenes.INK + (255,), anchor="mm")
-    p = os.path.join(outdir, "ov_url.png"); l.save(p); items.append((p, t0 + 1.3, None)); y += url_s + int(18 * scale)
+    p = os.path.join(outdir, "ov_url.png"); l.save(p); items.append((p, t0 + 1.1, None)); y += url_s + gap_url
     l = layer(); ImageDraw.Draw(l).text((mid, y + en_s // 2), "Enroll in about five minutes.",
                                         font=scenes.font("semi", en_s), fill=scenes.DEEP + (255,), anchor="mm")
-    p = os.path.join(outdir, "ov_enroll.png"); l.save(p); items.append((p, t0 + 2.0, None))
+    p = os.path.join(outdir, "ov_enroll.png"); l.save(p); items.append((p, t0 + 1.7, None))
     return items
 
 
