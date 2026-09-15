@@ -82,24 +82,34 @@ def caption_png(text, path, size=54, maxw=980):
     return lines, f, lh, cw, ch, pad_x, pad_y
 
 
+CAPTION_POSITIONS = ("bl", "br", "bc", "tl", "tr", "tc")
+
+
+def caption_box(text, pos, size=54, maxw=980):
+    """(x0, y0, cw, ch) of the caption card for a position code, 10 % title-safe margins."""
+    lines, f, lh, cw, ch, pad_x, pad_y = caption_png(text, None, size, maxw)
+    m = int(W * 0.10)
+    if pos == "bl":
+        return m, H - m - ch, cw, ch
+    if pos == "br":
+        return W - m - cw, H - m - ch, cw, ch
+    if pos == "bc":
+        return (W - cw) // 2, H - m - ch, cw, ch
+    if pos == "tl":
+        return m, m, cw, ch
+    if pos == "tr":
+        return W - m - cw, m, cw, ch
+    if pos == "tc":
+        return (W - cw) // 2, m, cw, ch
+    if pos == "cc":
+        return (W - cw) // 2, (H - ch) // 2, cw, ch
+    return m, H - m - ch, cw, ch
+
+
 def render_caption(text, pos, path, size=54, maxw=980):
     lines, f, lh, cw, ch, pad_x, pad_y = caption_png(text, path, size, maxw)
     layer = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-    m = int(W * 0.10)  # 10 % title-safe
-    if pos == "bl":
-        x0, y0 = m, H - m - ch
-    elif pos == "br":
-        x0, y0 = W - m - cw, H - m - ch
-    elif pos == "bc":
-        x0, y0 = (W - cw) // 2, H - m - ch
-    elif pos == "tl":
-        x0, y0 = m, m
-    elif pos == "tc":
-        x0, y0 = (W - cw) // 2, m
-    elif pos == "cc":
-        x0, y0 = (W - cw) // 2, (H - ch) // 2
-    else:
-        x0, y0 = m, H - m - ch
+    x0, y0, cw, ch = caption_box(text, pos, size, maxw)
     sh_ = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     ImageDraw.Draw(sh_).rounded_rectangle((x0, y0 + 14, x0 + cw, y0 + ch + 14), 22, fill=(23, 62, 99, 60))
     sh_ = sh_.filter(ImageFilter.GaussianBlur(18))
