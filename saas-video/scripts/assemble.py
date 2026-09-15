@@ -158,18 +158,46 @@ def white_card_bbox(img):
     return x0, y0, x1, y1
 
 
-def endcard_overlays(first_frame_png, badge_path, wordmark_path, diploma_path, outdir):
+def sample_frames(clip, n, size=(960, 540)):
+    """n evenly spaced RGB frames from a clip, in one ffmpeg pass."""
+    d = os.path.join(WORK, "_scan")
+    shutil.rmtree(d, ignore_errors=True)
+    os.makedirs(d)
+    dur = probe_dur(clip)
+    times = [min(dur - 0.05, k * dur / max(1, n - 1)) for k in range(n)]
+    sel = "+".join(f"lt(abs(t-{t:.3f}),0.021)" for t in times)
+    sh("ffmpeg", "-y", "-loglevel", "error", "-i", clip, "-vf",
+       f"select='{sel}',scale={size[0]}:{size[1]}", "-vsync", "0", os.path.join(d, "f%04d.png"))
+    return [Image.open(os.path.join(d, f)).convert("RGB") for f in sorted(os.listdir(d))]
+
+
+def lucas_extent(clip, n=40):
+    """Lucas's bounding box across the WHOLE clip, in full-frame coordinates.
+
+    Frame 0 is not enough: he rises as he waves, so anything placed using only
+    his starting position gets overlapped later in the shot.
+    """
+    boxes = [pink_bbox(f) for f in sample_frames(clip, n)]
+    boxes = [b for b in boxes if b]
+    if not boxes:
+        return None
+    return (min(b[0] for b in boxes) * 2, min(b[1] for b in boxes) * 2,
+            max(b[2] for b in boxes) * 2, max(b[3] for b in boxes) * 2)
+
+
+def endcard_overlays(clip, first_frame_png, badge_path, wordmark_path, diploma_path, outdir):
     """Lay the diploma beat, then the official badge, wordmark, URL and enroll line on the
-    AI end-card clip, inside its white card and above Lucas. Returns [(png, start, end)]."""
+    AI end-card clip, inside its white card and clear of Lucas's full wave.
+    Returns [(png, start, end)]."""
     base = Image.open(first_frame_png).convert("RGB")
     cx0, cy0, cx1, cy1 = white_card_bbox(base)
     if cx1 - cx0 < 600 or cy1 - cy0 < 300:   # detection failed → assume 70 % card
         cx0, cy0, cx1, cy1 = int(W * 0.15), int(H * 0.15), int(W * 0.85), int(H * 0.85)
-    lb = pink_bbox(base)
-    floor = (lb[1] - 30) if lb else cy1 - 40
+    lb = lucas_extent(clip) or pink_bbox(base)
+    floor = (lb[1] - 40) if lb else cy1 - 40
     top = cy0 + 40
-    avail = max(420, floor - top)
-    print(f"  endcard: card=({cx0},{cy0},{cx1},{cy1}) lucas={lb} content band {top}..{floor}")
+    avail = max(360, floor - top)
+    print(f"  endcard: card=({cx0},{cy0},{cx1},{cy1}) lucas_full={lb} content band {top}..{floor}")
     items = []
     def layer():
         return Image.new("RGBA", (W, H), (0, 0, 0, 0))
@@ -230,14 +258,36 @@ def dark_pill_bbox(img, y_min_frac=0.5):
     return min(cols), y0, max(cols), y1
 
 
-def play_badge_overlay(first_frame_png, badge_path, outdir):
-    """Fit the official Google Play badge over the placeholder pill in scene 10."""
+def pill_track(clip, n=24):
+    """The placeholder pill's bbox at the clip's start and end, in full-frame coords.
+
+    The phone drifts, so a badge pinned to frame 0 lets the dark pill peek out
+    from under it later in the shot. Returns (first, last) or None.
+    """
+    fr = sample_frames(clip, n)
+    found = [(k, dark_pill_bbox(f)) for k, f in enumerate(fr)]
+    found = [(k, tuple(v * 2 for v in b)) for k, b in found if b]
+    if not found:
+        return None
+    return found[0][1], found[-1][1]
+
+
+def play_badge_overlay(clip, first_frame_png, badge_path, outdir):
+    """Fit the official Google Play badge over the placeholder pill in scene 10.
+    Returns (png, dx, dy) — the drift the overlay must follow across the clip."""
     base = Image.open(first_frame_png).convert("RGB")
+    track = pill_track(clip)
     bb = dark_pill_bbox(base)
+    if track:
+        bb = track[0]
+        dx, dy = track[1][0] - track[0][0], track[1][1] - track[0][1]
+    else:
+        dx = dy = 0
     if bb is None:
         bb = (760, 850, 1160, 970)          # fallback: centred under a centred phone
+        dx = dy = 0
     x0, y0, x1, y1 = bb
-    print(f"  play badge: pill={bb}")
+    print(f"  play badge: pill={bb} drift=({dx},{dy})")
     badge = Image.open(badge_path).convert("RGBA")
     bbox = badge.getbbox()
     badge = badge.crop(bbox) if bbox else badge
@@ -254,7 +304,7 @@ def play_badge_overlay(first_frame_png, badge_path, outdir):
     layer.paste(badge, (cx - pw // 2, cy - ph // 2), badge)
     p = os.path.join(outdir, "ov_playbadge.png")
     layer.save(p)
-    return p
+    return p, dx, dy
 
 
 # ---------------------------------------------------------------- per-scene build
@@ -273,19 +323,25 @@ def fit_clip(src, dst, target):
 
 
 def overlay_pngs(src, dst, items, target):
-    """items = [(png, start, end|None, fade)] → one ffmpeg pass with fades."""
+    """items = [(png, start, end|None, fade)] or [(png, start, end, fade, dx, dy)] for an
+    overlay that tracks a drifting element → one ffmpeg pass with fades."""
     if not items:
         shutil.copy(src, dst)
         return dst
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", src]
-    for png, *_ in items:
-        cmd += ["-loop", "1", "-i", png]
+    for it in items:
+        cmd += ["-loop", "1", "-i", it[0]]
     fc, last = [], "[0:v]"
-    for i, (png, st, en, fade) in enumerate(items, start=1):
+    for i, it in enumerate(items, start=1):
+        png, st, en, fade = it[:4]
+        dx, dy = (it[4], it[5]) if len(it) > 5 else (0, 0)
         en = target if en is None else en
         fc.append(f"[{i}:v]format=rgba,fade=t=in:st={st:.3f}:d={fade:.3f}:alpha=1,"
                   f"fade=t=out:st={max(st, en - 0.25):.3f}:d=0.25:alpha=1[o{i}]")
-        fc.append(f"{last}[o{i}]overlay=0:0:enable='between(t,{st:.3f},{en:.3f})'[v{i}]")
+        # Linear drift so the overlay stays locked to what it covers.
+        ox = "0" if not dx else f"'{dx}*min(1,t/{max(0.001, target):.3f})'"
+        oy = "0" if not dy else f"'{dy}*min(1,t/{max(0.001, target):.3f})'"
+        fc.append(f"{last}[o{i}]overlay={ox}:{oy}:enable='between(t,{st:.3f},{en:.3f})'[v{i}]")
         last = f"[v{i}]"
     cmd += ["-filter_complex", ";".join(fc), "-map", last, "-t", f"{target:.3f}",
             "-c:v", "libx264", "-crf", "16", "-preset", "fast", "-pix_fmt", "yuv420p", dst]
@@ -316,12 +372,14 @@ def build_scene(s, assets, only):
     if build == "endcard":
         ff = os.path.join(WORK, f"{sid}_f0.png")
         sh("ffmpeg", "-y", "-loglevel", "error", "-i", fit, "-frames:v", "1", ff)
-        for png, st, en in endcard_overlays(ff, assets["badge"], assets["wordmark"], assets.get("diploma"), WORK):
+        for png, st, en in endcard_overlays(fit, ff, assets["badge"], assets["wordmark"],
+                                            assets.get("diploma"), WORK):
             items.append((png, st, en, 0.5))
     if s.get("play_badge") and assets.get("play_badge"):
         ff = os.path.join(WORK, f"{sid}_f0.png")
         sh("ffmpeg", "-y", "-loglevel", "error", "-i", fit, "-frames:v", "1", ff)
-        items.append((play_badge_overlay(ff, assets["play_badge"], WORK), s["play_badge"], None, 0.4))
+        png, dx, dy = play_badge_overlay(fit, ff, assets["play_badge"], WORK)
+        items.append((png, s["play_badge"], None, 0.4, dx, dy))
     caps = s.get("captions", [])
     for i, c in enumerate(caps):
         png = render_caption(c["text"], c.get("pos", "bl"), os.path.join(WORK, f"{sid}_cap{i}.png"),
@@ -391,7 +449,10 @@ def main():
         vo = fetch(vo_url, os.path.join(WORK, f"{s['id']}_vo.wav"))
         cmd += ["-i", vo]
         ms = int((starts[i] + VO_LEAD) * 1000)
-        fc.append(f"[{i + 1}:a]aresample=48000,adelay={ms}|{ms}[v{i}]")
+        vd = probe_dur(vo)
+        # 60 ms tail fade so a line never stops on a hard edge against the music.
+        fc.append(f"[{i + 1}:a]aresample=48000,afade=t=out:st={max(0, vd - 0.06):.3f}:d=0.06,"
+                  f"adelay={ms}|{ms}[v{i}]")
         mix_in.append(f"[v{i}]")
     n = len(m["scenes"])
     fc.append("".join(mix_in) + f"amix=inputs={n}:normalize=0,alimiter=limit=0.95[vo]")

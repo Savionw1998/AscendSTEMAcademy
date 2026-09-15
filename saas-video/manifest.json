@@ -21,7 +21,7 @@
     {
      "text": "Florida homeschooling comes with paperwork.",
      "at": 0.5,
-     "pos": "bl"
+     "pos": "tl"
     }
    ],
    "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125844_aa7c3573-fe34-49c5-b8a8-491ba4aecc8b.mp4"
@@ -54,7 +54,7 @@
     {
      "text": "Enroll in about five minutes.",
      "at": 0.8,
-     "pos": "bl"
+     "pos": "tc"
     }
    ],
    "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125844_a24d37c2-ef5c-456c-86f3-71b7506f6050.mp4"
@@ -106,7 +106,7 @@
     {
      "text": "Days later: your welcome packet.",
      "at": 1.0,
-     "pos": "bl"
+     "pos": "tl"
     }
    ],
    "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_472e91c0-44f2-4a0f-b2df-abff9bc85847.mp4"
@@ -120,7 +120,7 @@
     {
      "text": "One dashboard. Everything in it.",
      "at": 0.5,
-     "pos": "bl"
+     "pos": "br"
     }
    ],
    "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_8248b29d-6fed-4d44-b3e3-d88803148425.mp4"
@@ -156,12 +156,12 @@
     {
      "text": "Type a sentence. Or send a photo.",
      "at": 0.6,
-     "pos": "bl"
+     "pos": "br"
     },
     {
      "text": "It becomes a real transcript.",
      "at": 7.0,
-     "pos": "bl"
+     "pos": "bc"
     }
    ],
    "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125843_03fe93a7-5324-4eb7-83af-c0a592edd795.mp4"
@@ -189,7 +189,7 @@
     {
      "text": "Now on the Google Play Store.",
      "at": 0.8,
-     "pos": "bl"
+     "pos": "tl"
     }
    ],
    "clip": "https://d8j0ntlcm91z4.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/hf_20260915_125933_1626a696-2b6d-46f1-9596-aea7247aff88.mp4",
@@ -220,7 +220,7 @@
    "clip_job": "0a6a0944-0d7a-45fb-ada6-41b902af2f16",
    "vo": "hf_20260915_125153_0c3dd6a5-d09f-42b4-996e-9346ea612f3c.wav",
    "vo_dur": 6.9,
-   "min": 9.5,
+   "min": 8.2,
    "captions": [
     {
      "text": "A real diploma.",

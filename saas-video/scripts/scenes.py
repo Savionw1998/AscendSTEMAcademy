@@ -92,16 +92,18 @@ def background():
 
 
 def shadow_card(img, box, radius=28, fill=WHITE, edge=CARD_EDGE, alpha=255, lift=18):
-    """Floating white card with a long soft shadow; alpha fades the whole card in."""
+    """Floating white card with a long soft shadow; alpha fades the whole card in.
+    Works on any surface, not just full frames (the time-card page is a tall canvas)."""
     x0, y0, x1, y1 = box
     if alpha <= 0:
         return
-    sh = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    size = img.size
+    sh = Image.new("RGBA", size, (0, 0, 0, 0))
     sd = ImageDraw.Draw(sh)
     sd.rounded_rectangle((x0, y0 + lift, x1, y1 + lift), radius, fill=(23, 62, 99, int(38 * alpha / 255)))
     sh = sh.filter(ImageFilter.GaussianBlur(26))
     img.paste(sh, (0, 0), sh)
-    card = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    card = Image.new("RGBA", size, (0, 0, 0, 0))
     cd = ImageDraw.Draw(card)
     cd.rounded_rectangle(box, radius, fill=fill + (alpha,), outline=edge + (alpha,), width=2)
     img.paste(card, (0, 0), card)
@@ -139,88 +141,127 @@ STUDENT = "Avery Johnson — Grade 5"
 DAYS_START = 41
 
 
-def timecard_frame(t, dur):
-    img = background()
-    d = ImageDraw.Draw(img)
+def scroll_at(t, dur):
+    """Piecewise eased scroll of the left-hand page, in page pixels.
 
-    # Cards assemble in the first second, staggered.
-    a_left = ease_out(seg(t, 0.0, 0.7))
-    a_right = ease_out(seg(t, 0.25, 0.95))
+    The page moves while rows land so each new row arrives into clear space
+    instead of cramming the card, then settles on the confirm + send block.
+    """
+    keys = [(0.0, 0), (1.4, 0), (3.0, 150), (4.6, 300), (6.0, 430), (7.4, 560), (dur, 560)]
+    for (t0, v0), (t1, v1) in zip(keys, keys[1:]):
+        if t <= t1:
+            return v0 + (v1 - v0) * ease_out(seg(t, t0, t1))
+    return keys[-1][1]
+
+
+def timecard_page(t, dur, pw):
+    """The scrolling left-hand column drawn on a tall canvas of width `pw`."""
+    ph = 1560
+    page = Image.new("RGBA", (pw, ph), (0, 0, 0, 0))
+    d = ImageDraw.Draw(page)
+    a_head = ease_out(seg(t, 0.0, 0.7))
     a_hours = ease_out(seg(t, 0.45, 1.15))
+    pad = 50
 
-    # Layout: two left cards, one right card; the lower-right corner (below the tally
-    # card, right of the hours card) stays clear for the scene's captions.
-    # Left column: header card ------------------------------------------------
-    lx0, lx1 = 150, 1100
-    hy0 = 70 + int((1 - a_left) * 60)
-    shadow_card(img, (lx0, hy0, lx1, hy0 + 300), alpha=int(255 * a_left))
-    d = ImageDraw.Draw(img)
-    if a_left > 0.05:
-        c = tuple(int(255 - (255 - v) * a_left) for v in DEEP)
-        g = tuple(int(255 - (255 - v) * a_left) for v in GREY)
-        text(d, (lx0 + 50, hy0 + 46), "Weekly time card", "bold", 58, c)
-        text(d, (lx0 + 50, hy0 + 126), "Log your student's instructional hours for the week.", "body", 27, g)
-        text(d, (lx0 + 50, hy0 + 164), "Add a row for each subject and day. Lucas keeps the tally.", "body", 27, g)
-        # Student + week ending fields
-        text(d, (lx0 + 50, hy0 + 216), "STUDENT", "semi", 20, g)
-        d.rounded_rectangle((lx0 + 50, hy0 + 244, lx0 + 470, hy0 + 288), 10, fill=CHIP, outline=CHIP_EDGE, width=2)
-        text(d, (lx0 + 68, hy0 + 266), STUDENT, "body", 24, c, anchor="lm")
-        text(d, (lx0 + 520, hy0 + 216), "WEEK ENDING", "semi", 20, g)
-        d.rounded_rectangle((lx0 + 520, hy0 + 244, lx0 + 800, hy0 + 288), 10, fill=CHIP, outline=CHIP_EDGE, width=2)
-        text(d, (lx0 + 538, hy0 + 266), "09 / 18 / 2026", "body", 24, c, anchor="lm")
+    # --- header card
+    hy = 20 + int((1 - a_head) * 60)
+    shadow_card(page, (0, hy, pw, hy + 300), alpha=int(255 * a_head))
+    d = ImageDraw.Draw(page)
+    if a_head > 0.05:
+        c = tuple(int(255 - (255 - v) * a_head) for v in DEEP)
+        g = tuple(int(255 - (255 - v) * a_head) for v in GREY)
+        text(d, (pad, hy + 46), "Weekly time card", "bold", 58, c)
+        text(d, (pad, hy + 126), "Log your student's instructional hours for the week.", "body", 27, g)
+        text(d, (pad, hy + 164), "Add a row for each subject and day. Lucas keeps the tally.", "body", 27, g)
+        text(d, (pad, hy + 216), "STUDENT", "semi", 20, g)
+        d.rounded_rectangle((pad, hy + 244, pad + 420, hy + 288), 10, fill=CHIP, outline=CHIP_EDGE, width=2)
+        text(d, (pad + 18, hy + 266), STUDENT, "body", 24, c, anchor="lm")
+        text(d, (pad + 470, hy + 216), "WEEK ENDING", "semi", 20, g)
+        d.rounded_rectangle((pad + 470, hy + 244, pad + 750, hy + 288), 10, fill=CHIP, outline=CHIP_EDGE, width=2)
+        text(d, (pad + 488, hy + 266), "09 / 18 / 2026", "body", 24, c, anchor="lm")
 
-    # Left column: hours logged card ------------------------------------------
-    hy1 = 400 + int((1 - a_hours) * 60)
-    shadow_card(img, (lx0, hy1, lx1, hy1 + 560), alpha=int(255 * a_hours))
-    d = ImageDraw.Draw(img)
-    rows = []
+    # --- hours card: chips, then logged rows with room to breathe
+    rows = [(ci, day, hrs, tt) for (ci, day, hrs, tt) in TAPS if ease_out(seg(t, tt + 0.15, tt + 0.55)) > 0]
+    card_h = 470 + 66 * len(rows)
+    cy = 360 + int((1 - a_hours) * 60)
+    shadow_card(page, (0, cy, pw, cy + card_h), alpha=int(255 * a_hours))
+    d = ImageDraw.Draw(page)
+    logged = []
     if a_hours > 0.05:
         c = tuple(int(255 - (255 - v) * a_hours) for v in DEEP)
         g = tuple(int(255 - (255 - v) * a_hours) for v in GREY)
-        text(d, (lx0 + 50, hy1 + 40), "Hours logged", "bold", 42, c)
-        text(d, (lx0 + 50, hy1 + 96), "Tap a subject to start a row.", "body", 25, g)
-        # Chip grid: flow layout, wrap at card width.
-        x, y = lx0 + 50, hy1 + 146
-        chip_h = 50
+        text(d, (pad, cy + 40), "Hours logged", "bold", 42, c)
+        text(d, (pad, cy + 96), "Tap a subject to start a row.", "body", 25, g)
+        x, y, chip_h = pad, cy + 150, 52
         f = font("semi", 24)
         for i, s in enumerate(SUBJECTS):
             w = int(d.textlength(s, font=f)) + 52
-            if x + w > lx1 - 50:
-                x, y = lx0 + 50, y + chip_h + 16
+            if x + w > pw - pad:
+                x, y = pad, y + chip_h + 16
             lit = 0.0
             for (ci, _day, _h, tt) in TAPS:
                 if ci == i:
-                    # lights on tap, holds 0.5 s, settles back to a soft 25 % tint
-                    k = seg(t, tt, tt + 0.18)
-                    lit = ease_out(k) * (1.0 if t < tt + 0.6 else 0.25)
-            if a_hours < 1:
-                lit *= a_hours
-            pill(d, (x, y, x + w, y + chip_h), s, size=24, lit=lit)
+                    lit = ease_out(seg(t, tt, tt + 0.18)) * (1.0 if t < tt + 0.6 else 0.28)
+            pill(d, (x, y, x + w, y + chip_h), s, size=24, lit=lit * a_hours)
             x += w + 14
-        # Logged rows appear under the chips, one per tap.
-        ry = y + chip_h + 34
+        # logged rows, generously spaced
+        ry = y + chip_h + 36
         for (ci, day, hrs, tt) in TAPS:
             k = ease_out(seg(t, tt + 0.15, tt + 0.55))
             if k <= 0:
                 continue
-            rows.append((ci, hrs))
-            ox = int((1 - k) * 40)
-            alpha = int(255 * k)
-            row = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            logged.append((ci, hrs, day))
+            ox, alpha = int((1 - k) * 44), int(255 * k)
+            row = Image.new("RGBA", (pw, ph), (0, 0, 0, 0))
             rd = ImageDraw.Draw(row)
-            rd.rounded_rectangle((lx0 + 50 + ox, ry, lx1 - 50 + ox, ry + 46), 12, fill=MINT + (alpha,))
-            rd.text((lx0 + 72 + ox, ry + 23), SUBJECTS[ci], font=font("semi", 24), fill=DEEP + (alpha,), anchor="lm")
-            rd.text((lx0 + 560 + ox, ry + 23), day, font=font("body", 24), fill=GREY + (alpha,), anchor="lm")
-            rd.text((lx1 - 72 + ox, ry + 23), f"{hrs:.1f} h", font=font("bold", 24), fill=BLUE + (alpha,), anchor="rm")
-            img.paste(row, (0, 0), row)
-            d = ImageDraw.Draw(img)
-            ry += 56
+            rd.rounded_rectangle((pad + ox, ry, pw - pad + ox, ry + 54), 12, fill=MINT + (alpha,),
+                                 outline=CHIP_EDGE + (alpha,), width=2)
+            rd.text((pad + 22 + ox, ry + 27), SUBJECTS[ci], font=font("semi", 25), fill=DEEP + (alpha,), anchor="lm")
+            rd.text((pad + 520 + ox, ry + 27), day, font=font("body", 24), fill=GREY + (alpha,), anchor="lm")
+            rd.text((pw - pad - 22 + ox, ry + 27), f"{hrs:.1f} h", font=font("bold", 25), fill=BLUE + (alpha,), anchor="rm")
+            page.alpha_composite(row)
+            d = ImageDraw.Draw(page)
+            ry += 66
 
-    # Right column: tally card -------------------------------------------------
+    # --- confirm + send block, revealed by the scroll
+    by = cy + card_h + 40
+    a_conf = ease_out(seg(t, 6.0, 6.8))
+    if a_conf > 0.02:
+        shadow_card(page, (0, by, pw, by + 190), alpha=int(255 * a_conf))
+        d = ImageDraw.Draw(page)
+        c = tuple(int(255 - (255 - v) * a_conf) for v in DEEP)
+        g = tuple(int(255 - (255 - v) * a_conf) for v in GREY)
+        checked = ease_out(seg(t, 7.0, 7.3)) > 0.5
+        d.rounded_rectangle((pad, by + 40, pad + 34, by + 74), 7,
+                            fill=BLUE if checked else WHITE, outline=BLUE if checked else CHIP_EDGE, width=2)
+        if checked:
+            d.line((pad + 8, by + 57, pad + 15, by + 65, pad + 26, by + 49), fill=WHITE, width=4, joint="curve")
+        text(d, (pad + 52, by + 42), "I confirm these hours are an accurate record", "body", 25, c)
+        text(d, (pad + 52, by + 74), "of my student's instruction for this week.", "body", 25, c)
+        text(d, (pad, by + 122), "SIGNED", "semi", 20, g)
+        d.rounded_rectangle((pad, by + 146, pad + 420, by + 176), 8, fill=CHIP, outline=CHIP_EDGE, width=2)
+        text(d, (pad + 16, by + 161), "Ascend Academy", "body", 22, c, anchor="lm")
+    return page, ph
+
+
+def timecard_frame(t, dur):
+    img = background()
+    a_right = ease_out(seg(t, 0.25, 0.95))
+
+    # --- left column: the scrolling page, clipped to a viewport
+    vx0, vx1, vy0, vy1 = 150, 1100, 40, 1040
+    page, ph = timecard_page(t, dur, vx1 - vx0)
+    off = int(scroll_at(t, dur))
+    win = page.crop((0, off, page.width, min(ph, off + (vy1 - vy0))))
+    img.paste(win, (vx0, vy0), win)
+    d = ImageDraw.Draw(img)
+
+    # --- right column: the tally card, fixed while the page scrolls
     rx0, rx1 = 1170, 1770
     ry0 = 70 + int((1 - a_right) * 60)
     shadow_card(img, (rx0, ry0, rx1, ry0 + 560), alpha=int(255 * a_right))
     d = ImageDraw.Draw(img)
+    rows = [(ci, hrs) for (ci, day, hrs, tt) in TAPS if ease_out(seg(t, tt + 0.15, tt + 0.55)) > 0]
     if a_right > 0.05:
         c = tuple(int(255 - (255 - v) * a_right) for v in DEEP)
         g = tuple(int(255 - (255 - v) * a_right) for v in GREY)
@@ -243,17 +284,6 @@ def timecard_frame(t, dur):
         text(d, ((rx0 + rx1) // 2, ry0 + 300), f"{hours:.1f}".rstrip("0").rstrip("."), "bold", 150, b, anchor="mm")
         text(d, ((rx0 + rx1) // 2, ry0 + 395), "hours on this card", "semi", 28, c, anchor="mm")
         text(d, ((rx0 + rx1) // 2, ry0 + 450), f"{days_logged} day{'s' if days_logged != 1 else ''} logged", "body", 26, g, anchor="mm")
-        # Send button lands and presses near the end.
-        k = ease_out(seg(t, dur - 2.2, dur - 1.6))
-        press = 1 - 0.06 * math.sin(math.pi * seg(t, dur - 1.2, dur - 0.9))
-        if k > 0:
-            bw, bh = int(300 * press), int(70 * press)
-            cx, cy = (rx0 + rx1) // 2, ry0 + 505 + int((1 - k) * 30)
-            btn = Image.new("RGBA", (W, H), (0, 0, 0, 0))
-            bd = ImageDraw.Draw(btn)
-            bd.rounded_rectangle((cx - bw // 2, cy - bh // 2, cx + bw // 2, cy + bh // 2), 14, fill=BLUE + (int(255 * k),))
-            bd.text((cx, cy), "Send time card", font=font("bold", 28), fill=WHITE + (int(255 * k),), anchor="mm")
-            img.paste(btn, (0, 0), btn)
     return img
 
 
