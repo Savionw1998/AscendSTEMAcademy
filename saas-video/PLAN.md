@@ -161,9 +161,12 @@ Higgsfield's output CDN (`*.cloudfront.net`) is also blocked, so generated frame
 cannot be pulled into this container. Consequences for the pipeline in §5:
 - I cannot look at a generation myself; you see it through the Higgsfield gallery widget and
   tell me what's wrong. Video #2's "generate, inspect, retake" loop was mine; here it is ours.
-- Assembly (VO sync, caption cards, music, cuts) must run inside Higgsfield — `sandbox_exec`
-  or the `video-editing` (Higgsedit) workflow — not with local ffmpeg/PIL. `assemble.py` from
-  video #2 needs porting into that sandbox rather than into this repo.
+- Assembly (VO sync, caption cards, music, cuts) runs inside Higgsfield's `sandbox_exec`
+  instead of local ffmpeg/PIL. **Probed 2026-09-15 and confirmed:** the sandbox pulls from
+  the CDN, and has ffmpeg 5.1, Pillow 12, ImageMagick, faster-whisper and Montserrat
+  ExtraBold (Poppins's stand-in). `assemble.py` from video #2 ports there almost unchanged;
+  the sandbox is ephemeral, so each render is one chained command that ends by uploading
+  its output through `media_upload` → `curl PUT` → `media_confirm`.
 - If you'd rather keep the video #2 local pipeline, run this session from your Windows
   machine (H:\projects) instead of the cloud container and everything in §5 works as before.
 
