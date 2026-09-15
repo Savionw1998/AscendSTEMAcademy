@@ -323,3 +323,8 @@ ascendstemacademy.com, pending their call on which page.
 - OPEN: YouTube upload (manual) → send back the URL → site embed; 9:16 Shorts cut;
   15 s bumper; thumbnail.
 
+
+**Handoff prompt** for a browser-capable session: `saas-video/HANDOFF-youtube-upload.md`
+(mirrored to Drive as `Handoff prompt - publish v5 to YouTube.md`). It carries the download
+URL, the exact title/description/chapters/tags/settings, the Public step, and the site-embed
+block — self-contained, so a fresh session needs nothing from this conversation.
