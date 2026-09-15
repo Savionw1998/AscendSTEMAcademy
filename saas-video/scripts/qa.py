@@ -45,43 +45,42 @@ def speech_bounds(wav):
 
 
 def frames_at(path, times, size=(480, 270)):
-    """Small RGB frames at the given times (seconds)."""
-    out = []
-    for t in times:
-        png = os.path.join(WORK, "_qa.png")
-        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", f"{t:.3f}", "-i", path, "-frames:v", "1",
-                        "-vf", f"scale={size[0]}:{size[1]}", png], check=True)
-        out.append(Image.open(png).convert("RGB"))
-    return out
+    """Small RGB frames at the given times (seconds). One ffmpeg pass per call."""
+    out, d = [], os.path.join(WORK, "_qa")
+    os.makedirs(d, exist_ok=True)
+    for f in os.listdir(d):
+        os.unlink(os.path.join(d, f))
+    sel = "+".join(f"lt(abs(t-{t:.3f}),0.021)" for t in times)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", path, "-vf",
+                    f"select='{sel}',scale={size[0]}:{size[1]}", "-vsync", "0",
+                    os.path.join(d, "f%04d.png")], check=True)
+    for f in sorted(os.listdir(d)):
+        out.append(Image.open(os.path.join(d, f)).convert("RGB"))
+    while len(out) < len(times) and out:      # tolerate a missed select near the tail
+        out.append(out[-1])
+    return out[:len(times)] if out else []
+
+
+def _frac_above(img_l, thresh):
+    """Share of pixels strictly above thresh, via the C-speed histogram."""
+    h = img_l.histogram()
+    tot = sum(h)
+    return sum(h[thresh + 1:]) / max(1, tot)
 
 
 def content_fraction(img, box):
-    """Share of pixels in box that are not near-white ground."""
+    """Share of pixels in box that are not near-white ground (dark OR saturated)."""
     x0, y0, x1, y1 = box
     crop = img.crop((x0, y0, x1, y1))
-    hsv = crop.convert("HSV")
-    lum = crop.convert("L").load()
-    sat = hsv.getchannel("S").load()
-    n = tot = 0
-    for y in range(crop.height):
-        for x in range(crop.width):
-            tot += 1
-            if lum[x, y] < 222 or sat[x, y] > 48:
-                n += 1
-    return n / max(1, tot)
+    dark = 1.0 - _frac_above(crop.convert("L"), 221)          # lum < 222
+    sat = _frac_above(crop.convert("HSV").getchannel("S"), 48)
+    return min(1.0, dark + sat)
 
 
 def motion_fraction(a, b, box):
     x0, y0, x1, y1 = box
     d = ImageChops.difference(a.crop((x0, y0, x1, y1)), b.crop((x0, y0, x1, y1))).convert("L")
-    px = d.load()
-    n = tot = 0
-    for y in range(d.height):
-        for x in range(d.width):
-            tot += 1
-            if px[x, y] > 18:
-                n += 1
-    return n / max(1, tot)
+    return _frac_above(d, 18)
 
 
 def scaled_box(text, pos, size, maxw, sx, sy):
