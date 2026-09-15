@@ -163,10 +163,15 @@ def qa_scene(s, m, assets):
 
 def main():
     m = json.load(open(sys.argv[1]))
+    out_path = sys.argv[2] if len(sys.argv) > 2 else "qa_report.json"
     os.makedirs(WORK, exist_ok=True)
-    assets = {}
-    report = {"scenes": [qa_scene(s, m, assets) for s in m["scenes"]]}
-    json.dump(report, sys.stdout, indent=1)
+    scenes_out = []
+    for s in m["scenes"]:
+        print(f"[qa] {s['id']}", flush=True)     # progress on stdout, report to the file
+        scenes_out.append(qa_scene(s, m, {}))
+    with open(out_path, "w") as fh:
+        json.dump({"scenes": scenes_out}, fh, indent=1)
+    print("wrote", out_path, flush=True)
 
 
 if __name__ == "__main__":
