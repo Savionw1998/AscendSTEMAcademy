@@ -223,13 +223,14 @@ def endcard_overlays(clip, first_frame_png, badge_path, wordmark_path, diploma_p
         badge = badge.crop(badge.getbbox())     # trim transparent margin so the mark fills its box
     if wm.getbbox():
         wm = wm.crop(wm.getbbox())
-    url_s, en_s = 58, 36
-    gap_lock, gap_url, gap_en = 30, 16, 0
-    # Height budget: lockup row + URL + enroll must fit the band above Lucas.
-    lock_h = avail - (url_s + en_s + gap_lock + gap_url + gap_en)
-    lock_h = max(150, min(lock_h, int(avail * 0.70)))
+    url_s, en_s = 50, 30
+    gap_lock, gap_url = 24, 12
+    # Height budget: the lockup row plus the two text lines must fit the band above Lucas,
+    # so every pixel not spent on type goes to the mark.
+    lock_h = avail - (url_s + en_s + gap_lock + gap_url)
+    lock_h = max(150, min(lock_h, int(avail * 0.78)))
     bs = lock_h                                  # badge is square and sets the row height
-    wm_h = int(lock_h * 0.56)                    # wordmark reads at ~56 % of the badge's height
+    wm_h = int(lock_h * 0.60)                    # wordmark reads at ~60 % of the badge's height
     wm_w = int(wm.width * wm_h / wm.height)
     inner = 44                                   # space between badge and wordmark
     lock_w = bs + inner + wm_w
