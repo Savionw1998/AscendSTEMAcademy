@@ -22,7 +22,7 @@ in at their `at` time. VO lines are placed on the global timeline; the music
 bed loops underneath with sidechain ducking. Nothing here needs a display.
 """
 import argparse, json, os, shutil, subprocess, sys
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import scenes  # noqa: E402  (fonts, palette, code-built scenes)
