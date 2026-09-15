@@ -103,5 +103,18 @@
   "duration_s": 103.63,
   "commit": "42264e333cbca9519ff4009aa69cd3dffa831819",
   "note": "captions bottom-only; AI clips unchanged from v3"
+ },
+ "renders_v5": {
+  "master_media": "01f6afe4-c215-4110-b0c7-0d159b177206",
+  "preview_media": "68bf556e-34c7-4b72-afa2-507803d47f5e",
+  "master_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/01f6afe4-c215-4110-b0c7-0d159b177206.mp4",
+  "preview_url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3IlwAF1RJeeZloQfJKUEXDdLRVb/68bf556e-34c7-4b72-afa2-507803d47f5e.mp4",
+  "duration_s": 103.588,
+  "commit": "c0577dc26b133c811ba30a2c621bb829a3802f4b",
+  "endcard_stills": [
+   "1fd073dd-c062-42d8-b532-c515168e5c33",
+   "5a82b2e8-47cd-4cc3-9a8d-a18c5f254c03"
+  ],
+  "note": "end card only: logo as a horizontal lockup, badge 114px -> 300px. Everything else identical to v4."
  }
 }

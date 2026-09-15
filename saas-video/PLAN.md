@@ -248,3 +248,28 @@ AI clips unchanged — the animation itself was fine.
   URLs in `jobs.json › renders_v4`.
 - OPEN: 9:16 Shorts cut; 15 s bumper; thumbnail.
 
+## 11. v5 — end card logo (2026-09-15)
+
+Only the last slide changed. The badge had been rendering at **114 px** because
+badge, wordmark, URL and enroll line were stacked vertically and all four had to
+fit the ~416 px band above Lucas's wave; the fit scaled everything to 0.76.
+
+Fix: set the mark as a **horizontal lockup** — badge beside wordmark — which
+spends the card's width (1615 px, mostly unused) instead of competing for its
+height. Both PNGs are trimmed of transparent margin first so they fill their
+boxes, and the URL/enroll type was tightened to hand the spare height to the mark.
+
+| | v4 | v5 |
+|---|---|---|
+| badge | 114 px | **300 px** (2.6x) |
+| wordmark | 532 x 177, below the badge | 377 x 180, beside it |
+| lockup | — | 721 px wide, centred at x 581–1302, y 120–420 |
+
+Still clear of Lucas (his extent starts at y 576) and still inside the white
+card. Beats: badge lands, wordmark joins at +0.5 s, URL at +1.1 s, enroll line
+at +1.7 s.
+
+- 2026-09-15 · **v5 master**: 103.6 s, 1080p24, 37 MB, commit `c0577dc`.
+  URLs in `jobs.json › renders_v5`.
+- OPEN: 9:16 Shorts cut; 15 s bumper; thumbnail.
+
