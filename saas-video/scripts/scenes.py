@@ -148,9 +148,11 @@ def timecard_frame(t, dur):
     a_right = ease_out(seg(t, 0.25, 0.95))
     a_hours = ease_out(seg(t, 0.45, 1.15))
 
+    # Layout: two left cards, one right card; the lower-right corner (below the tally
+    # card, right of the hours card) stays clear for the scene's captions.
     # Left column: header card ------------------------------------------------
-    lx0, lx1 = 150, 1130
-    hy0 = 110 + int((1 - a_left) * 60)
+    lx0, lx1 = 150, 1100
+    hy0 = 70 + int((1 - a_left) * 60)
     shadow_card(img, (lx0, hy0, lx1, hy0 + 300), alpha=int(255 * a_left))
     d = ImageDraw.Draw(img)
     if a_left > 0.05:
@@ -168,8 +170,8 @@ def timecard_frame(t, dur):
         text(d, (lx0 + 538, hy0 + 266), "09 / 18 / 2026", "body", 24, c, anchor="lm")
 
     # Left column: hours logged card ------------------------------------------
-    hy1 = 445 + int((1 - a_hours) * 60)
-    shadow_card(img, (lx0, hy1, lx1, hy1 + 500), alpha=int(255 * a_hours))
+    hy1 = 400 + int((1 - a_hours) * 60)
+    shadow_card(img, (lx0, hy1, lx1, hy1 + 560), alpha=int(255 * a_hours))
     d = ImageDraw.Draw(img)
     rows = []
     if a_hours > 0.05:
@@ -215,8 +217,8 @@ def timecard_frame(t, dur):
             ry += 56
 
     # Right column: tally card -------------------------------------------------
-    rx0, rx1 = 1200, 1770
-    ry0 = 110 + int((1 - a_right) * 60)
+    rx0, rx1 = 1170, 1770
+    ry0 = 70 + int((1 - a_right) * 60)
     shadow_card(img, (rx0, ry0, rx1, ry0 + 560), alpha=int(255 * a_right))
     d = ImageDraw.Draw(img)
     if a_right > 0.05:
