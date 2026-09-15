@@ -157,7 +157,21 @@ This session runs in a sandboxed container with a strict egress proxy: `youtube.
 reference-video analysis from here. The WordPress MCP, Google Drive MCP and Higgsfield MCP
 all work, which is how the facts in §1 were verified.
 
+Higgsfield's output CDN (`*.cloudfront.net`) is also blocked, so generated frames and clips
+cannot be pulled into this container. Consequences for the pipeline in §5:
+- I cannot look at a generation myself; you see it through the Higgsfield gallery widget and
+  tell me what's wrong. Video #2's "generate, inspect, retake" loop was mine; here it is ours.
+- Assembly (VO sync, caption cards, music, cuts) must run inside Higgsfield — `sandbox_exec`
+  or the `video-editing` (Higgsedit) workflow — not with local ffmpeg/PIL. `assemble.py` from
+  video #2 needs porting into that sandbox rather than into this repo.
+- If you'd rather keep the video #2 local pipeline, run this session from your Windows
+  machine (H:\projects) instead of the cloud container and everything in §5 works as before.
+
 ## 8. Status log
 
 - 2026-09-15 · Facts verified against the live site via WordPress MCP. Storyboard + VO v1
-  written. Higgsfield Elements from video #2 confirmed still live. Awaiting style-frame go.
+  written. Higgsfield Elements from video #2 confirmed still live.
+- 2026-09-15 · Four style frames v1 submitted (sc00, sc02, sc08, sc10) with `gpt_image_2` at
+  the model's default *low* quality as a first look at the SaaS register. Job IDs in
+  `jobs.json`. Unreviewed by me — CDN blocked (§7). Awaiting your read before rendering the
+  remaining nine at high quality.

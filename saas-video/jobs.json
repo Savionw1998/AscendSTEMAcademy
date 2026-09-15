@@ -1,0 +1,16 @@
+{
+  "style_frames_v1": {
+    "model": "gpt_image_2",
+    "quality": "low (model default; re-render approved frames at high before animating)",
+    "sc00_paperwork": "da578845-0b49-4971-9e9b-d8940669eef0",
+    "sc02_enroll":    "4f9c89d5-dc92-431f-ad4a-7d9446538713",
+    "sc08_transcript":"1f456eaa-a31a-4097-a150-a2debdaa76e1",
+    "sc10_app":       "266ba779-9d7e-44b6-856e-cf6c0fc35c4a"
+  },
+  "elements": {
+    "Lucas-2D":    "3efa6ccf-924b-4f6b-a849-ab6a8ba76ee7",
+    "Lucas-3D":    "23d25af7-8f2c-44c8-9aac-d27de804dd36",
+    "Ascend-Logo": "450b499b-03f2-48f8-9c25-95e0dd6e7d65"
+  },
+  "voice": { "Helena": "3c2b83c0-2e0a-5ae8-998a-a5fe71b7eccd" }
+}
