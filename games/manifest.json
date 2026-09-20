@@ -1,0 +1,17 @@
+{
+  "games": [
+    {
+      "id": "circuit-clash",
+      "title": "Circuit Clash",
+      "tagline": "Two-player STEM duel — challenge a classmate, win a badge.",
+      "icon": "⚡",
+      "players": 2,
+      "mode": "hot-seat",
+      "ages": "10-16",
+      "durationMinutes": 4,
+      "subjects": ["Math", "Physics", "Chemistry", "Biology", "Code & Logic", "Engineering"],
+      "entry": "circuit-clash/index.html",
+      "emits": ["ascend:badge-earned"]
+    }
+  ]
+}

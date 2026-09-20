@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Circuit Clash</title>
+<meta name="description" content="A two-player Ascend STEM Academy duel — challenge a classmate by name, trade questions, and win a badge.">
+<style>
+  :root{
+    --bg:#0b1020; --bg2:#121a33; --card:#16203d; --card2:#1d2a4f;
+    --ink:#eef3ff; --muted:#9db0d8; --line:#2b3862;
+    --p1:#4cc9f0; --p2:#f4a259; --gold:#ffd166; --good:#4ade80; --bad:#f87171;
+    --accent:#7c5cff;
+    --r:16px; --shadow:0 12px 32px rgba(0,0,0,.35);
+  }
+  :root[data-theme="light"]{
+    --bg:#f3f6fd; --bg2:#e8eefb; --card:#ffffff; --card2:#f4f7ff;
+    --ink:#13203d; --muted:#5a6b91; --line:#d7e0f4;
+    --shadow:0 12px 30px rgba(20,35,70,.12);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:radial-gradient(1100px 600px at 50% -10%, var(--bg2), var(--bg)) fixed;
+    color:var(--ink); font:16px/1.5 ui-sans-serif,system-ui,"Segoe UI",Inter,Roboto,Arial,sans-serif;
+    min-height:100vh; -webkit-text-size-adjust:100%;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:20px 16px 48px}
+  h1,h2,h3{margin:0 0 .4em;line-height:1.15}
+  h1{font-size:clamp(26px,6vw,40px);letter-spacing:-.02em}
+  .sub{color:var(--muted);margin:0 0 20px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+  .card + .card{margin-top:14px}
+  label{display:block;font-weight:600;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  input[type=text]{
+    width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);
+    background:var(--card2);color:var(--ink);font-size:16px;font-weight:600;
+  }
+  input[type=text]:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .row{display:grid;gap:12px}
+  @media(min-width:620px){.row.two{grid-template-columns:1fr 1fr}}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{
+    border:1px solid var(--line);background:var(--card2);color:var(--ink);
+    padding:9px 13px;border-radius:999px;cursor:pointer;font-weight:600;font-size:14px;
+  }
+  .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;
+    padding:15px 18px;border-radius:14px;border:0;cursor:pointer;
+    background:linear-gradient(135deg,var(--accent),#4cc9f0);color:#fff;font-weight:800;font-size:16px;
+  }
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn.small{width:auto;padding:10px 14px;font-size:14px;border-radius:11px}
+  .err{color:var(--bad);font-size:14px;margin-top:8px;min-height:20px}
+  .screen[hidden]{display:none}
+  [hidden]{display:none!important}
+
+  /* scoreboard */
+  .board{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch;margin-bottom:14px}
+  .pcard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;position:relative;overflow:hidden}
+  .pcard.active{border-color:currentColor;box-shadow:0 0 0 2px currentColor inset}
+  .pcard.p1{color:var(--p1)} .pcard.p2{color:var(--p2)}
+  .pname{font-weight:800;font-size:15px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pscore{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;color:currentColor}
+  .pmeta{font-size:12px;color:var(--muted)}
+  .vs{display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--muted);font-size:13px;letter-spacing:.1em}
+
+  .turnbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+  .turn{font-weight:800}
+  .timer{height:8px;border-radius:99px;background:var(--card2);overflow:hidden;border:1px solid var(--line)}
+  .timer > i{display:block;height:100%;width:100%;background:linear-gradient(90deg,var(--good),var(--gold),var(--bad));transition:width .1s linear}
+  .qtext{font-size:clamp(18px,4.2vw,23px);font-weight:700;margin:14px 0 16px}
+  .answers{display:grid;gap:10px}
+  @media(min-width:620px){.answers{grid-template-columns:1fr 1fr}}
+  .ans{
+    text-align:left;padding:15px;border-radius:13px;border:1px solid var(--line);
+    background:var(--card2);color:var(--ink);font-size:16px;font-weight:600;cursor:pointer;
+    display:flex;gap:10px;align-items:center;
+  }
+  .ans:hover:not(:disabled){border-color:var(--accent)}
+  .ans .k{display:grid;place-items:center;min-width:26px;height:26px;border-radius:8px;background:var(--card);border:1px solid var(--line);font-size:13px;font-weight:800;color:var(--muted)}
+  .ans.correct{border-color:var(--good);background:color-mix(in srgb,var(--good) 18%,var(--card2))}
+  .ans.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 18%,var(--card2))}
+  .ans.gone{opacity:.25}
+  .ans:disabled{cursor:default}
+  .powers{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .feedback{margin-top:14px;padding:13px;border-radius:12px;background:var(--card2);border:1px solid var(--line)}
+  .feedback b{display:block;margin-bottom:3px}
+  .tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:99px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+  .center{text-align:center}
+  .badgeWrap{display:flex;justify-content:center;margin:6px 0 18px}
+  .stack{display:grid;gap:10px;margin-top:14px}
+  @media(min-width:620px){.stack.two{grid-template-columns:1fr 1fr}}
+  .list{display:grid;gap:8px;margin-top:10px}
+  .item{display:flex;justify-content:space-between;gap:10px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--card2);font-size:14px}
+  .item b{color:var(--gold)}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+  .icon-btn{background:transparent;border:1px solid var(--line);color:var(--muted);border-radius:10px;padding:7px 11px;cursor:pointer;font-size:13px;font-weight:700}
+  .pulse{animation:pulse .5s ease}
+  @keyframes pulse{from{transform:scale(.85);opacity:.4}to{transform:scale(1);opacity:1}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <span class="tag">Ascend STEM Academy · Game Drawer</span>
+    <button class="icon-btn" id="themeBtn" type="button">☾ Theme</button>
+  </div>
+
+  <!-- ===== SETUP ===== -->
+  <section class="screen" id="setup">
+    <h1>Circuit Clash ⚡</h1>
+    <p class="sub">Two players, one device. Trade STEM questions, steal your rival's misses, and take the badge home.</p>
+
+    <div class="card">
+      <div class="row two">
+        <div>
+          <label for="n1">Player 1</label>
+          <input id="n1" type="text" maxlength="18" placeholder="Your name" autocomplete="off">
+        </div>
+        <div>
+          <label for="n2">Challenge (Player 2)</label>
+          <input id="n2" type="text" maxlength="18" placeholder="Type a classmate's name" autocomplete="off">
+        </div>
+      </div>
+      <div id="rivalry" class="sub" style="margin:12px 0 0;font-size:14px"></div>
+    </div>
+
+    <div class="card">
+      <label>Subject track</label>
+      <div class="chips" id="tracks"></div>
+      <label style="margin-top:16px">Questions each</label>
+      <div class="chips" id="lens"></div>
+    </div>
+
+    <div class="card">
+      <button class="btn" id="startBtn" type="button">Start the duel</button>
+      <div class="err" id="setupErr"></div>
+      <button class="btn ghost small" id="caseBtn" type="button" style="margin-top:4px">🏅 Badge case</button>
+    </div>
+  </section>
+
+  <!-- ===== DUEL ===== -->
+  <section class="screen" id="duel" hidden>
+    <div class="board">
+      <div class="pcard p1" id="pc1">
+        <div class="pname" id="pn1">P1</div>
+        <div class="pscore" id="ps1">0</div>
+        <div class="pmeta" id="pm1">—</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="pcard p2" id="pc2">
+        <div class="pname" id="pn2">P2</div>
+        <div class="pscore" id="ps2">0</div>
+        <div class="pmeta" id="pm2">—</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="turnbar">
+        <span class="turn" id="turnLbl">Turn</span>
+        <span class="tag" id="progLbl">Round 1</span>
+      </div>
+      <div class="timer"><i id="timerBar"></i></div>
+      <div class="qtext" id="qText">…</div>
+      <div class="answers" id="answers"></div>
+      <div class="powers" id="powers"></div>
+      <div class="feedback" id="feedback" hidden></div>
+      <button class="btn" id="nextBtn" type="button" hidden style="margin-top:12px">Next</button>
+    </div>
+  </section>
+
+  <!-- ===== RESULT ===== -->
+  <section class="screen" id="result" hidden>
+    <div class="center">
+      <h1 id="resTitle">Winner</h1>
+      <p class="sub" id="resLine"></p>
+    </div>
+    <div class="badgeWrap" id="badgeWrap"></div>
+    <div class="card">
+      <div id="resStats" class="list"></div>
+      <div class="stack two">
+        <button class="btn" id="rematchBtn" type="button">Rematch</button>
+        <button class="btn ghost" id="dlBtn" type="button">Download badge</button>
+      </div>
+      <div class="stack">
+        <button class="btn ghost" id="homeBtn" type="button">New challenge</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== BADGE CASE ===== -->
+  <section class="screen" id="case" hidden>
+    <h1>Badge case 🏅</h1>
+    <p class="sub">Every badge won on this device.</p>
+    <div class="card">
+      <div id="caseList" class="list"></div>
+      <div class="stack two" style="margin-top:14px">
+        <button class="btn ghost" id="caseBack" type="button">Back</button>
+        <button class="btn ghost" id="caseClear" type="button">Clear case</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="questions.js"></script>
+<script>
+(function(){
+  "use strict";
+  const $ = id => document.getElementById(id);
+  const BANK = window.CC_BANK;
+  const KEY_B = "ascend.cc.badges", KEY_R = "ascend.cc.rivalry";
+  const MAIN_TIME = 20, STEAL_TIME = 10;
+
+  const store = {
+    get(k, fb){ try { return JSON.parse(localStorage.getItem(k)) ?? fb; } catch(e){ return fb; } },
+    set(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+  };
+
+  /* ---------- setup screen ---------- */
+  let track = "mixed", qCount = 5;
+  const TRACKS = Object.assign({ mixed:{label:"Mixed STEM", icon:"✳"} }, BANK);
+
+  $("tracks").innerHTML = Object.keys(TRACKS).map(k =>
+    `<button class="chip" type="button" data-t="${k}" aria-pressed="${k===track}">${TRACKS[k].icon} ${TRACKS[k].label}</button>`).join("");
+  $("lens").innerHTML = [3,5,7].map(n =>
+    `<button class="chip" type="button" data-n="${n}" aria-pressed="${n===qCount}">${n} each</button>`).join("");
+
+  $("tracks").addEventListener("click", e => {
+    const b = e.target.closest("[data-t]"); if(!b) return;
+    track = b.dataset.t;
+    [...$("tracks").children].forEach(c => c.setAttribute("aria-pressed", c.dataset.t === track));
+  });
+  $("lens").addEventListener("click", e => {
+    const b = e.target.closest("[data-n]"); if(!b) return;
+    qCount = +b.dataset.n;
+    [...$("lens").children].forEach(c => c.setAttribute("aria-pressed", +c.dataset.n === qCount));
+  });
+
+  const rivalKey = (a,b) => [a.toLowerCase(), b.toLowerCase()].sort().join("|");
+  function showRivalry(){
+    const a = $("n1").value.trim(), b = $("n2").value.trim();
+    const el = $("rivalry");
+    if(!a || !b){ el.textContent = ""; return; }
+    const rec = store.get(KEY_R, {})[rivalKey(a,b)];
+    el.textContent = rec
+      ? `Head to head — ${a}: ${rec[a.toLowerCase()]||0} · ${b}: ${rec[b.toLowerCase()]||0}`
+      : "First time these two have faced off. 👀";
+  }
+  $("n1").addEventListener("input", showRivalry);
+  $("n2").addEventListener("input", showRivalry);
+
+  $("themeBtn").addEventListener("click", () => {
+    const r = document.documentElement;
+    r.dataset.theme = r.dataset.theme === "dark" ? "light" : "dark";
+  });
+
+  function show(id){
+    ["setup","duel","result","case"].forEach(s => $(s).hidden = s !== id);
+    window.scrollTo(0,0);
+  }
+
+  /* ---------- game state ---------- */
+  let G = null, timer = null;
+
+  function pickQuestions(){
+    let pool = [];
+    if(track === "mixed"){ Object.keys(BANK).forEach(k => pool.push(...BANK[k].items.map(q => ({...q, src:BANK[k].label})))); }
+    else pool = BANK[track].items.map(q => ({...q, src:BANK[track].label}));
+    // shuffle, then order easy -> hard so the duel ramps up
+    pool = pool.slice().sort(() => Math.random() - .5);
+    const need = qCount * 2;
+    const picked = [];
+    for(const lvl of [1,2,3]){
+      for(const q of pool) if(q.lvl === lvl && picked.length < need && !picked.includes(q)) picked.push(q);
+    }
+    while(picked.length < need) picked.push(pool[picked.length % pool.length]);
+    return picked.slice(0, need);
+  }
+
+  function newPlayer(name, key){
+    return { name, key, score:0, correct:0, asked:0, streak:0, best:0, fifty:true, dd:false, ddLeft:1 };
+  }
+
+  function startGame(){
+    const a = $("n1").value.trim(), b = $("n2").value.trim();
+    if(!a || !b){ $("setupErr").textContent = "Both players need a name to duel."; return; }
+    if(a.toLowerCase() === b.toLowerCase()){ $("setupErr").textContent = "Two different names, please — this is a challenge!"; return; }
+    $("setupErr").textContent = "";
+    G = {
+      p1: newPlayer(a, "p1"), p2: newPlayer(b, "p2"),
+      qs: pickQuestions(), i: 0, turn: "p1",
+      phase: "ask", removed: [], sudden: false, trackLabel: TRACKS[track].label
+    };
+    show("duel");
+    renderBoard();
+    askQuestion();
+  }
+
+  function cur(){ return G[G.turn]; }
+  function other(){ return G[G.turn === "p1" ? "p2" : "p1"]; }
+
+  function renderBoard(){
+    $("pn1").textContent = G.p1.name; $("pn2").textContent = G.p2.name;
+    $("ps1").textContent = G.p1.score; $("ps2").textContent = G.p2.score;
+    $("pm1").textContent = `${G.p1.correct}/${G.p1.asked} correct${G.p1.streak>1?` · 🔥${G.p1.streak}`:""}`;
+    $("pm2").textContent = `${G.p2.correct}/${G.p2.asked} correct${G.p2.streak>1?` · 🔥${G.p2.streak}`:""}`;
+    $("pc1").classList.toggle("active", G.turn === "p1");
+    $("pc2").classList.toggle("active", G.turn === "p2");
+  }
+
+  function stopTimer(){ if(timer){ clearInterval(timer); timer = null; } }
+
+  function runTimer(seconds, onEnd){
+    stopTimer();
+    const start = Date.now(), total = seconds * 1000;
+    $("timerBar").style.width = "100%";
+    timer = setInterval(() => {
+      const left = Math.max(0, total - (Date.now() - start));
+      $("timerBar").style.width = (left / total * 100) + "%";
+      G.left = left / 1000;
+      if(left <= 0){ stopTimer(); onEnd(); }
+    }, 100);
+    G.left = seconds; G.total = seconds;
+  }
+
+  function askQuestion(){
+    G.phase = "ask"; G.removed = []; G.ddActive = false;
+    const q = G.qs[G.i];
+    $("feedback").hidden = true; $("nextBtn").hidden = true;
+    $("turnLbl").innerHTML = `<span style="color:var(--${G.turn})">${cur().name}</span>'s turn`;
+    $("progLbl").textContent = G.sudden ? "⚡ Lightning round" : `Question ${Math.floor(G.i/2)+1} of ${qCount} · ${q.src}`;
+    $("qText").textContent = q.q;
+    $("qText").classList.remove("pulse"); void $("qText").offsetWidth; $("qText").classList.add("pulse");
+    renderAnswers(q, false);
+    renderPowers();
+    renderBoard();
+    runTimer(MAIN_TIME, () => resolve(-1));
+  }
+
+  function renderAnswers(q, disabled){
+    $("answers").innerHTML = q.a.map((t,i) =>
+      `<button class="ans${G.removed.includes(i)?" gone":""}" type="button" data-i="${i}"${disabled||G.removed.includes(i)?" disabled":""}>
+        <span class="k">${"ABCD"[i]}</span><span>${t}</span></button>`).join("");
+  }
+
+  function renderPowers(){
+    const p = cur();
+    $("powers").innerHTML =
+      `<button class="chip" type="button" id="pFifty"${p.fifty?"":" disabled style=opacity:.4"}>✂️ 50 / 50</button>
+       <button class="chip" type="button" id="pDD"${p.ddLeft?"":" disabled style=opacity:.4"} aria-pressed="${!!G.ddActive}">⚡ Double down</button>`;
+    if(p.fifty) $("pFifty").onclick = useFifty;
+    if(p.ddLeft) $("pDD").onclick = useDD;
+  }
+
+  function useFifty(){
+    if(G.phase !== "ask") return;
+    const p = cur(); if(!p.fifty) return;
+    p.fifty = false;
+    const q = G.qs[G.i];
+    const wrong = q.a.map((_,i) => i).filter(i => i !== q.c).sort(() => Math.random() - .5);
+    G.removed = wrong.slice(0,2);
+    renderAnswers(q, false); renderPowers();
+  }
+
+  function useDD(){
+    if(G.phase !== "ask" || G.ddActive) return;
+    const p = cur(); if(!p.ddLeft) return;
+    p.ddLeft--; G.ddActive = true; renderPowers();
+  }
+
+  $("answers").addEventListener("click", e => {
+    const b = e.target.closest("[data-i]"); if(!b || b.disabled) return;
+    resolve(+b.dataset.i);
+  });
+
+  function resolve(choice){
+    stopTimer();
+    const q = G.qs[G.i];
+    const stealing = G.phase === "steal";
+    const p = stealing ? other() : cur();
+    const right = choice === q.c;
+    let delta = 0, note = "";
+
+    p.asked++; // a steal attempt counts as a question faced
+
+    if(right){
+      p.correct++; p.streak++; p.best = Math.max(p.best, p.streak);
+      if(stealing){ delta = 60; note = `Stolen! +60 for ${p.name}.`; }
+      else {
+        const speed = Math.round(Math.max(0, G.left) / MAIN_TIME * 60);
+        delta = 100 + speed;
+        note = `Correct! +100 base, +${speed} speed.`;
+        if(p.streak >= 3){ delta += 25; note += " 🔥 +25 streak."; }
+        if(G.ddActive){ delta *= 2; note += " Double down doubled it!"; }
+      }
+    } else {
+      p.streak = 0;
+      if(stealing) note = choice === -1 ? `${p.name} let it slip away.` : `${p.name} missed the steal too.`;
+      else if(choice === -1) note = "Out of time!";
+      else note = "Not this time.";
+      if(!stealing && G.ddActive){ delta = -75; note += " Double down cost 75."; }
+    }
+    p.score = Math.max(0, p.score + delta);
+
+    // reveal
+    G.phase = "reveal";
+    renderAnswers(q, true);
+    [...$("answers").children].forEach(btn => {
+      const i = +btn.dataset.i;
+      if(i === q.c) btn.classList.add("correct");
+      else if(i === choice) btn.classList.add("wrong");
+    });
+    $("powers").innerHTML = "";
+    renderBoard();
+
+    const canSteal = !stealing && !right;
+    $("feedback").hidden = false;
+    $("feedback").innerHTML = `<b>${note}</b><span style="color:var(--muted)">${q.why}</span>`;
+    $("nextBtn").hidden = false;
+    if(canSteal){
+      $("nextBtn").textContent = `🎯 ${other().name}, steal it for 60`;
+      $("nextBtn").onclick = beginSteal;
+    } else {
+      $("nextBtn").textContent = "Next";
+      $("nextBtn").onclick = advance;
+    }
+  }
+
+  function beginSteal(){
+    G.phase = "steal";
+    const q = G.qs[G.i];
+    $("feedback").hidden = true; $("nextBtn").hidden = true;
+    $("turnLbl").innerHTML = `🎯 <span style="color:var(--${other().key})">${other().name}</span> steals — ${STEAL_TIME}s`;
+    G.removed = [];
+    renderAnswers(q, false);
+    runTimer(STEAL_TIME, () => resolve(-1));
+  }
+
+  function advance(){
+    G.i++;
+    if(G.sudden){
+      // lightning: after both players answered one, check for a winner
+      if(G.i % 2 === 0 && G.p1.score !== G.p2.score) return finish();
+      if(G.i >= G.qs.length) G.qs.push(...pickQuestions());
+      G.turn = G.turn === "p1" ? "p2" : "p1";
+      return askQuestion();
+    }
+    if(G.i >= G.qs.length){
+      if(G.p1.score === G.p2.score){
+        G.sudden = true;
+        G.qs.push(...pickQuestions());
+        G.turn = "p1";
+        return askQuestion();
+      }
+      return finish();
+    }
+    G.turn = G.turn === "p1" ? "p2" : "p1";
+    askQuestion();
+  }
+
+  /* ---------- result + badge ---------- */
+  const TIERS = [
+    { name:"Platinum", ring:"#c9d6ff", fill:"#8ea6ff" },
+    { name:"Gold",     ring:"#ffd166", fill:"#f0a500" },
+    { name:"Silver",   ring:"#d9e2ef", fill:"#9fb0c7" },
+    { name:"Bronze",   ring:"#e2a06d", fill:"#b87333" }
+  ];
+
+  function tierFor(w, margin){
+    const acc = w.asked ? w.correct / w.asked : 0;
+    if(acc >= .9 && margin >= 200) return TIERS[0];
+    if(acc >= .75) return TIERS[1];
+    if(acc >= .5) return TIERS[2];
+    return TIERS[3];
+  }
+
+  function badgeSVG(b){
+    const t = b.tier;
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 340" width="270" height="306" role="img" aria-label="${b.title} badge for ${b.winner}">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="${t.ring}"/><stop offset="1" stop-color="${t.fill}"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16203d"/><stop offset="1" stop-color="#2b3862"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="340" rx="22" fill="url(#g2)"/>
+  <circle cx="150" cy="128" r="86" fill="none" stroke="url(#g1)" stroke-width="9"/>
+  <circle cx="150" cy="128" r="72" fill="url(#g1)" opacity=".16"/>
+  <text x="150" y="104" text-anchor="middle" font-size="34" fill="${t.ring}" font-family="sans-serif">${b.icon}</text>
+  <text x="150" y="140" text-anchor="middle" font-size="15" letter-spacing="2" fill="#9db0d8" font-family="sans-serif">${t.name.toUpperCase()}</text>
+  <text x="150" y="168" text-anchor="middle" font-size="19" font-weight="bold" fill="#eef3ff" font-family="sans-serif">${esc(b.winner)}</text>
+  <text x="150" y="190" text-anchor="middle" font-size="12" fill="#9db0d8" font-family="sans-serif">${b.score} pts · ${b.correct}/${b.asked} correct</text>
+  <text x="150" y="248" text-anchor="middle" font-size="17" font-weight="bold" fill="${t.ring}" font-family="sans-serif">${esc(b.title)}</text>
+  <text x="150" y="270" text-anchor="middle" font-size="12" fill="#9db0d8" font-family="sans-serif">defeated ${esc(b.loser)} · ${esc(b.date)}</text>
+  <text x="150" y="308" text-anchor="middle" font-size="11" letter-spacing="1.5" fill="#6f83ad" font-family="sans-serif">ASCEND STEM ACADEMY</text>
+</svg>`;
+  }
+  function esc(s){ return String(s).replace(/[<>&]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;"}[c])); }
+
+  function finish(){
+    stopTimer();
+    const [w, l] = G.p1.score >= G.p2.score ? [G.p1, G.p2] : [G.p2, G.p1];
+    const margin = w.score - l.score;
+    const tier = tierFor(w, margin);
+    const badge = {
+      winner: w.name, loser: l.name, score: w.score, correct: w.correct, asked: w.asked,
+      tier, icon: TRACKS[track].icon, title: `${G.trackLabel} Circuit Champion`,
+      date: new Date().toLocaleDateString(), sudden: G.sudden
+    };
+
+    // rivalry record
+    const all = store.get(KEY_R, {});
+    const k = rivalKey(w.name, l.name);
+    const rec = all[k] || {};
+    rec[w.name.toLowerCase()] = (rec[w.name.toLowerCase()] || 0) + 1;
+    rec[l.name.toLowerCase()] = rec[l.name.toLowerCase()] || 0;
+    all[k] = rec; store.set(KEY_R, all);
+
+    const badges = store.get(KEY_B, []);
+    badges.unshift({ winner:badge.winner, loser:badge.loser, tier:tier.name, title:badge.title, score:badge.score, date:badge.date });
+    store.set(KEY_B, badges.slice(0, 50));
+
+    try { parent.postMessage({ type:"ascend:badge-earned", game:"circuit-clash", badge }, "*"); } catch(e){}
+
+    $("resTitle").innerHTML = `${esc(w.name)} wins! 🏆`;
+    $("resLine").textContent = `${w.score} – ${l.score}${G.sudden ? " after a lightning round" : ""} · ${G.trackLabel}`;
+    $("badgeWrap").innerHTML = badgeSVG(badge);
+    $("resStats").innerHTML = [
+      `<div class="item"><span>${esc(G.p1.name)}</span><b>${G.p1.score} pts · ${G.p1.correct}/${G.p1.asked} · best streak ${G.p1.best}</b></div>`,
+      `<div class="item"><span>${esc(G.p2.name)}</span><b>${G.p2.score} pts · ${G.p2.correct}/${G.p2.asked} · best streak ${G.p2.best}</b></div>`,
+      `<div class="item"><span>Badge earned</span><b>${tier.name} — ${esc(badge.title)}</b></div>`
+    ].join("");
+    $("dlBtn").onclick = () => downloadBadge(badge);
+    show("result");
+  }
+
+  function downloadBadge(b){
+    const svg = badgeSVG(b);
+    const img = new Image();
+    const url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = 600; c.height = 680;
+      c.getContext("2d").drawImage(img, 0, 0, 600, 680);
+      const a = document.createElement("a");
+      a.download = `ascend-badge-${b.winner.toLowerCase().replace(/\W+/g,"-")}.png`;
+      a.href = c.toDataURL("image/png");
+      a.click();
+    };
+    img.onerror = () => window.open(url, "_blank");
+    img.src = url;
+  }
+
+  /* ---------- badge case ---------- */
+  function renderCase(){
+    const badges = store.get(KEY_B, []);
+    $("caseList").innerHTML = badges.length
+      ? badges.map(b => `<div class="item"><span>${esc(b.winner)} <span style="color:var(--muted)">beat ${esc(b.loser)} · ${esc(b.date)}</span></span><b>${esc(b.tier)}</b></div>`).join("")
+      : `<div class="item"><span style="color:var(--muted)">No badges yet — go win one.</span></div>`;
+    show("case");
+  }
+
+  /* ---------- wiring ---------- */
+  $("startBtn").onclick = startGame;
+  $("caseBtn").onclick = renderCase;
+  $("caseBack").onclick = () => show("setup");
+  $("caseClear").onclick = () => { store.set(KEY_B, []); renderCase(); };
+  $("homeBtn").onclick = () => { stopTimer(); show("setup"); showRivalry(); };
+  $("rematchBtn").onclick = () => {
+    const a = G.p1.name, b = G.p2.name;
+    $("n1").value = a; $("n2").value = b;
+    startGame();
+  };
+  document.addEventListener("keydown", e => {
+    if(!$("duel").hidden && (G && (G.phase === "ask" || G.phase === "steal"))){
+      const i = "abcd".indexOf(e.key.toLowerCase());
+      if(i > -1 && !G.removed.includes(i)) resolve(i);
+    }
+  });
+  $("n1").focus();
+})();
+</script>
+</body>
+</html>
