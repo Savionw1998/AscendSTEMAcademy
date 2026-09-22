@@ -1,0 +1,277 @@
+<title>Ascend Site Ideas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+:root{
+  --ground:#f4f8fa; --card:#ffffff; --ink:#15303f; --muted:#56707e; --line:#d6e4ea;
+  --navy:#0b3a53; --blue:#037caf; --mint:#bfe0b4; --sun:#ffd166;
+  --tag-enroll:#dff1fa; --tag-enroll-ink:#035f86;
+  --tag-rev:#fff1cc; --tag-rev-ink:#7a5500;
+  --tag-fix:#fde4e4; --tag-fix-ink:#9b2c2c;
+  --tag-seo:#e5f3df; --tag-seo-ink:#2e5f1f;
+  --chk:#037caf; --tray:#0b3a53; --tray-ink:#ffffff;
+  --display:'Bricolage Grotesque',ui-sans-serif,system-ui,sans-serif;
+  --body:'Source Sans 3',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --ground:#0c1a22; --card:#12242f; --ink:#e3eef3; --muted:#9bb3bf; --line:#23404f;
+    --navy:#bfe3f5; --blue:#5cc1ec; --mint:#3d6b34; --sun:#e0b54a;
+    --tag-enroll:#133a4d; --tag-enroll-ink:#9fdcf6;
+    --tag-rev:#3d3214; --tag-rev-ink:#f3d58a;
+    --tag-fix:#44211f; --tag-fix-ink:#f3aaa4;
+    --tag-seo:#1f3a1a; --tag-seo-ink:#b5dea5;
+    --chk:#5cc1ec; --tray:#1c3a4b; --tray-ink:#ffffff;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0c1a22; --card:#12242f; --ink:#e3eef3; --muted:#9bb3bf; --line:#23404f;
+  --navy:#bfe3f5; --blue:#5cc1ec; --mint:#3d6b34; --sun:#e0b54a;
+  --tag-enroll:#133a4d; --tag-enroll-ink:#9fdcf6;
+  --tag-rev:#3d3214; --tag-rev-ink:#f3d58a;
+  --tag-fix:#44211f; --tag-fix-ink:#f3aaa4;
+  --tag-seo:#1f3a1a; --tag-seo-ink:#b5dea5;
+  --chk:#5cc1ec; --tray:#1c3a4b; --tray-ink:#ffffff;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;padding-inline:16px;padding-block:0 110px}
+.wrap{max-width:900px;margin:0 auto}
+header.top{padding-block:40px 20px}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue)}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2rem,5vw,2.9rem);line-height:1.05;margin:.3rem 0 .6rem;color:var(--navy);text-wrap:balance;letter-spacing:-.01em}
+.lede{max-width:64ch;color:var(--muted);font-size:1.08rem;margin:0}
+.done{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.done h2{font-family:var(--display);font-size:1.05rem;margin:0 0 6px;color:var(--navy)}
+.done ul{margin:0;padding-left:1.1rem;color:var(--muted)}
+.done li{margin:2px 0}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);padding-block:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line)}
+.bar button{font:inherit;font-weight:600;font-size:.9rem;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--navy);color:var(--ground);border-color:var(--navy)}
+.bar button:focus-visible,.idea input:focus-visible+span,.tray button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.bar .count{margin-left:auto;color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+section.page{margin-top:30px}
+section.page h2{font-family:var(--display);font-weight:800;font-size:1.4rem;margin:0;color:var(--navy);display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+section.page h2 small{font-family:var(--body);font-weight:600;font-size:.85rem;color:var(--muted)}
+.note{color:var(--muted);margin:4px 0 10px;max-width:70ch;font-size:.95rem}
+.ideas{list-style:none;margin:10px 0 0;padding:0;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.idea{border-top:1px solid var(--line)}
+.idea:first-child{border-top:0}
+.idea label{display:grid;grid-template-columns:22px 1fr;gap:12px;padding:13px 16px;cursor:pointer;align-items:start}
+.idea input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--chk);cursor:pointer}
+.idea .t{font-weight:600}
+.idea .d{display:block;color:var(--muted);font-size:.94rem;margin-top:2px}
+.idea .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.tag{font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:6px}
+.tag.enroll{background:var(--tag-enroll);color:var(--tag-enroll-ink)}
+.tag.rev{background:var(--tag-rev);color:var(--tag-rev-ink)}
+.tag.fix{background:var(--tag-fix);color:var(--tag-fix-ink)}
+.tag.seo{background:var(--tag-seo);color:var(--tag-seo-ink)}
+.tag.effort{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.idea.picked{background:color-mix(in srgb,var(--blue) 7%,var(--card))}
+.tray{position:fixed;left:0;right:0;bottom:0;background:var(--tray);color:var(--tray-ink);padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));display:flex;gap:12px;align-items:center;justify-content:center;flex-wrap:wrap;z-index:9}
+.tray p{margin:0;font-weight:600}
+.tray button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:9px 18px;cursor:pointer;background:var(--sun);color:#10222e}
+.tray button.ghost{background:transparent;color:var(--tray-ink);border:1px solid rgba(255,255,255,.5)}
+.tray .msg{font-size:.9rem;opacity:.9}
+textarea#fallback{width:100%;max-width:900px;min-height:120px;margin-top:8px;font:inherit;font-size:.85rem;border-radius:8px;padding:8px}
+@media (prefers-reduced-motion:no-preference){.idea{transition:background .15s}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Ascend STEM Academy &middot; site audit, September 2026</div>
+    <h1>Ideas for every page</h1>
+    <p class="lede">I read every page, product and post on ascendstemacademy.com. Tick the ideas you want, then press <strong>Copy my picks</strong> and paste the list back to me. Tags show what each idea does for you: bringing in enrollments, earning revenue, fixing something wrong, or search (SEO).</p>
+    <div class="done">
+      <h2>Already done today</h2>
+      <ul>
+        <li>Redesigned the Why Choose Ascend page (hero, comparison, benefit cards, enrollment steps, guides, closing call to action).</li>
+        <li>New search titles and descriptions for 17 pages; My Account set to noindex; school structured data and llms.txt refreshed.</li>
+        <li>Enrollment links added to all 16 blog guides; fixed 3 blog typos; wrote 5 missing image descriptions.</li>
+        <li>Rewrote the 4 enrollment product descriptions; removed &ldquo;campus&rdquo; wording from 6 products; hid the duplicate kids&rsquo; t-shirt listing and the broken Tickets Checkout page (both drafts, easy to restore).</li>
+        <li>Made a Code-a-lotl sticker concept (in your Media Library, draft).</li>
+      </ul>
+    </div>
+  </header>
+
+  <nav class="bar" aria-label="Filter ideas">
+    <button type="button" data-f="all" aria-pressed="true">All</button>
+    <button type="button" data-f="fix" aria-pressed="false">Fixes</button>
+    <button type="button" data-f="enroll" aria-pressed="false">Enrollments</button>
+    <button type="button" data-f="rev" aria-pressed="false">Revenue</button>
+    <button type="button" data-f="seo" aria-pressed="false">SEO</button>
+    <span class="count" id="count">0 picked</span>
+  </nav>
+
+  <main id="list"></main>
+</div>
+
+<div class="tray" role="region" aria-label="Your picks">
+  <p id="trayCount">0 ideas picked</p>
+  <button type="button" id="copy">Copy my picks</button>
+  <button type="button" class="ghost" id="clear">Clear</button>
+  <span class="msg" id="msg" aria-live="polite"></span>
+</div>
+
+<script>
+var TAGS={enroll:"Enrollments",rev:"Revenue",fix:"Fix",seo:"SEO"};
+// e = effort: quick (under an hour), medium (a few hours), bigger (a project)
+var PAGES=[
+ {id:"site",name:"Across the whole site",note:"Pages disagree with each other in a few places. Parents notice when pages disagree, so these come first.",ideas:[
+  ["site-noi","Settle the Notice of Intent question everywhere","The Home page and FAQ say families skip the Notice of Intent; the Enrollment Form and Program Enhancements say you file it for them. Pick the true answer and I’ll make every page match.",["fix","enroll"],"quick"],
+  ["site-flow","One enrollment path","“Start Enrollment” goes to /registration/ with the note “scroll to the bottom of your account”, while a newer 5-step /enrollment-form/ exists that nothing links to. Choose one flow and point every button at it.",["enroll","fix"],"medium"],
+  ["site-trips","Field trips and workshops: “coming soon” or live?","About Us and Resources describe field trips, workshops and “in-person support” as if they exist; Enrollment and Enhancements say “coming soon.” Make them agree.",["fix"],"quick"],
+  ["site-attend","Make attendance reporting consistent","The FAQ says quarterly, the Enrollment Agreement says quarterly daily attendance, the Time Card page is weekly. One rule, stated the same way everywhere.",["fix"],"quick"],
+  ["site-grad","Match the graduation packet to its product","The Graduation page promises transcript, diploma, t-shirt, cap and tassel; the $125 product lists diploma, program, tassel and folder.",["fix","rev"],"quick"],
+  ["site-resume","Match resume-review tiers to their products","The Enhancements page describes different things from the Basic/Standard/Premium product listings.",["fix"],"quick"],
+  ["site-speed","Speed-up plan for mobile (currently 36/100)","The largest element takes 11 seconds to appear on phones. Remove one Elementor add-on pack, one of the two backup plugins (UpdraftPlus and WPvivid), and one of the two analytics setups (GTM4WP and Site Kit); drop Ad Inserter and bbPress if unused; switch on the free Cloudflare plugin you already have installed. I list exactly which ones; you click deactivate.",["seo","enroll"],"medium"],
+  ["site-redirects","Add two redirects in the Redirection plugin","/blog/ → /posts/ and /register/ → /registration/. Both broken paths are linked from live pages.",["fix","seo"],"quick"]
+ ]},
+ {id:"home",name:"Home",url:"/",ideas:[
+  ["home-price","Show “Tuition from $185/year” near the top","Price is the first question parents have, and no price appears on the home page. A single line plus the Enroll button removes a reason to leave.",["enroll"],"quick"],
+  ["home-h1","Make the hero headline the page’s H1","The hero headline is an H5 while “Who We Are” and the compliance wizard both use H1. Also delete the empty HTML widget.",["seo","fix"],"quick"],
+  ["home-games","Add a “Play free axolotl games” band","Five game cards linking to each game. It brings families back daily and leads into Pond Key and Full Pond Pass sales.",["rev","enroll"],"medium"],
+  ["home-guides","Add a “Latest guides” row","Three newest blog guides. Keeps the home page fresh and passes search strength to the guides.",["seo"],"quick"],
+  ["home-wizard","Tidy the compliance wizard","Its statute link points to the 2024 statutes, it says Ascend handles “annual evaluation filing” (enrolled students don’t need one), and its button skips the newer enrollment form.",["fix"],"quick"],
+  ["home-lead","Free “Florida Homeschool Starter Checklist” for an email","A one-page PDF handed out through your Lead Capture plugin, followed by a short email series. I can write the PDF and the emails.",["enroll"],"medium"]
+ ]},
+ {id:"about",name:"About Us",url:"/about-us/",ideas:[
+  ["about-people","Add a “Who you’ll talk to” section","Why Choose promises “you’ll know who to call,” but About Us names no one. A photo, name and short background for the Director of Education builds more trust than anything else on the page.",["enroll"],"quick"],
+  ["about-video","Replace the stock drone background video","It’s a third-party YouTube clip and one of the heavier things on the page. Use your own photo or a short video of real families.",["seo","fix"],"quick"],
+  ["about-cta","End the page with Enroll and Book a call buttons","It currently ends on Contact Us only.",["enroll"],"quick"]
+ ]},
+ {id:"why",name:"Why Choose Ascend",url:"/why-choose-ascend-stem-academy/",note:"Redesigned today. Next steps:",ideas:[
+  ["why-reviews","Add 3 parent quotes from your 19 Google reviews","Real voices under the comparison section.",["enroll"],"quick"],
+  ["why-price","Add a price anchor","“$185 a year, about $15 a month, for a real person in your corner.”",["enroll"],"quick"],
+  ["why-vs","Add “Umbrella school vs. filing on your own”","A side-by-side of the county homeschool route (notice of intent, portfolio, annual evaluation) against enrolling with Ascend.",["enroll","seo"],"medium"]
+ ]},
+ {id:"enroll",name:"Enrollment",url:"/enrollment/",ideas:[
+  ["enr-tuition","Show tuition as plain text or a table","Prices live in hover-reveal cards: invisible to Google and awkward on phones.",["enroll","seo"],"quick"],
+  ["enr-upsell","Offer add-ons at checkout","WooCommerce “you may also like” on the enrollment products: Student ID, progress report, stickers.",["rev"],"quick"],
+  ["enr-sibling","Sibling pricing (if you want it)","A clear multi-child price encourages whole-family enrollment.",["enroll","rev"],"quick"],
+  ["enr-cleanup","Wording and image cleanup","“Opportunity Participation in Florida Virtual School” → “Option to take FLVS Flex courses”; “Transcripts” is listed as an add-on but there’s no transcript product; one background image loads from a template site (gene-2697.live.strattic.io) and could vanish.",["fix"],"quick"]
+ ]},
+ {id:"enh",name:"Program Enhancements",url:"/enhancements/",ideas:[
+  ["enh-transcript","Sell an official transcript and an enrollment verification letter","Both are promised elsewhere (the enrollment list, the withdrawal-letter tool) but have no product.",["rev"],"quick"],
+  ["enh-bundle","“High School Launch Pack” bundle","Resume review + transcript + ID card at a small discount.",["rev"],"quick"],
+  ["enh-fixes","Small fixes","Joann Fabrics closed in 2025; the blog link points to /blog/; “5–7 business days” repeats six times; “HPA Teacher Verification Letter” needs a one-line explanation.",["fix"],"quick"]
+ ]},
+ {id:"grad",name:"Graduation",url:"/graduation/",ideas:[
+  ["grad-typos","Fix typos and course list","“Please selecting”, “Career and Technical Educations”, “Geometry 1”, PE listed under Science, Electives copied from Science, empty lines in the Math card.",["fix"],"quick"],
+  ["grad-dates","Add deadlines and a celebration","Application deadlines plus a ticketed graduation celebration (in person or online), with photos for next year’s marketing.",["rev","enroll"],"bigger"],
+  ["grad-form","Bring the application onto your site","It’s currently a Jotform; an on-site form keeps the family’s data with their account.",["fix"],"medium"],
+  ["grad-merch","Graduation merch","“Class of 2027” tee and the Graduate sticker as a bundle with the packet.",["rev"],"quick"]
+ ]},
+ {id:"faq",name:"FAQ",url:"/faq/",ideas:[
+  ["faq-rebuild","Rebuild as readable text with FAQ search markup","All 17 answers sit in an accordion that Google barely reads (6 words detected). Visible text plus FAQ schema can win rich results.",["seo"],"medium"],
+  ["faq-broken","Remove the broken bits","A “Lorem ipsum” heading, an answer that contains a pasted copy of the site’s HTML, a “blog post” link with no link, and a “Why pay” link missing https:// (it breaks).",["fix"],"quick"],
+  ["faq-180","Double-check “180 calendar days”","The usual Florida standard is 180 school days, not calendar days.",["fix"],"quick"],
+  ["faq-new","Add the questions parents ask first","What it costs, whether scholarships (Step Up, FES) apply, and how to switch mid-year.",["enroll","seo"],"quick"]
+ ]},
+ {id:"contact",name:"Contact",url:"/contact-us/",ideas:[
+  ["con-phone","Fix the phone link","It’s written as tel:+1386385-7653, which some phones won’t dial.",["fix"],"quick"],
+  ["con-form","Add a short contact form and your hours","Through Lead Capture so every question becomes a lead you can follow up.",["enroll"],"quick"]
+ ]},
+ {id:"res",name:"Resources & Resource Explorer",url:"/ascend-stem-academy-resources-and-information/",ideas:[
+  ["res-update","Update and repair links","FLVS PDFs are the 2024–25 editions, one link ends in a stray %22, “Log-In/Create Account” goes to /register/, and directory logos aren’t clickable.",["fix"],"quick"],
+  ["res-preview","Public preview of the Resource Explorer","It’s password-protected, so visitors can’t see what they’d get. Show 5 sample resources and “55 more for enrolled families.”",["enroll"],"medium"]
+ ]},
+ {id:"shop",name:"Shop",url:"/shop/",ideas:[
+  ["shop-grid","Replace the stale shop widget","The Shop page shows one product, “Report Card $15,” which is renamed and repriced. Use a live product grid with Merch, Student Services and Game Passes sections.",["rev","fix"],"quick"],
+  ["shop-pond","Add images to Pond Key and Full Pond Pass","Both game products have no picture.",["rev"],"quick"],
+  ["shop-code","Launch the Code-a-lotl sticker","Concept is in your Media Library. It pairs with the new coding game.",["rev"],"quick"],
+  ["shop-tuition","Keep tuition products out of the merch grid","Put the four enrollment products in their own category so the shop reads as a store.",["fix"],"quick"],
+  ["shop-bundle","STEM-a-lotl sticker bundle","Scientist + Astronaut + Graduate (+ Code-a-lotl) at a bundle price.",["rev"],"quick"]
+ ]},
+ {id:"blog",name:"Blog",url:"/posts/",ideas:[
+  ["blog-intro","Give the blog page a heading, intro and categories","The page is only a shortcode today.",["seo"],"quick"],
+  ["blog-refresh","Refresh two dated posts","The Step Up post still says “NOW OPEN” for 2025–26; the 2024 drone “special offer” has likely expired.",["fix","seo"],"quick"],
+  ["blog-cadence","Two new posts a month","Top gaps: umbrella school vs. filing on your own, Bright Futures for umbrella students, dual enrollment step by step, FLVS Flex sign-up, testing options, graduation and transcripts, skilled trades.",["seo","enroll"],"bigger"]
+ ]},
+ {id:"games",name:"Axolotl games",url:"/guess-a-lotl/",ideas:[
+  ["games-hub","Build an Axolotl Games hub page and add it to the menu","None of the games are in the menu today.",["enroll","rev"],"medium"],
+  ["games-intro","Add a short intro under each game","What it teaches, how it works, and links to Enroll and the Full Pond Pass. Each page has about 30 words today.",["seo","rev"],"quick"],
+  ["games-code","Launch Code-a-lotl","The coding game built earlier (12 levels) is ready to install.",["enroll"],"quick"],
+  ["games-badges","Badges and a family leaderboard","Keeps kids coming back and shows parents progress.",["enroll"],"bigger"]
+ ]},
+ {id:"legal",name:"Privacy Policy & Enrollment Agreement",url:"/ascend-stem-academy-privacy-policy/",ideas:[
+  ["priv-update","Update the Privacy Policy","It’s dated January 1, 2024 and doesn’t mention health forms, birth certificates, time cards, game progress, cookies/analytics or payments. It also mentions an app and has a Google link with no address.",["fix"],"medium"],
+  ["agree-fix","Tidy the Enrollment Agreement","Missing “to” (“permitted use and store”), stray spaces, a sentence outside the numbering, “the Private School Act” (not a Florida statute name), and signature wording that doesn’t match the checkbox.",["fix"],"quick"]
+ ]},
+ {id:"acct",name:"Account & Time Card pages",url:"/time-card-tracker/",ideas:[
+  ["tc-fix","Time Card page fixes","Remove the stray “Send now” at the top and add the office phone number the page refers to.",["fix"],"quick"],
+  ["myacct-link","Fix My Account’s link","It sends families to /account/ for the student profile and time cards, which actually live on /user/.",["fix"],"quick"]
+ ]}
+];
+
+var KEY="ascend-ideas-picks-v1", picks={}, filter="all";
+try{ picks=JSON.parse(localStorage.getItem(KEY))||{}; }catch(e){ picks={}; }
+
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(picks)); }catch(e){} }
+
+function render(){
+  var main=document.getElementById("list"); main.innerHTML="";
+  PAGES.forEach(function(p){
+    var shown=p.ideas.filter(function(i){ return filter==="all"||i[3].indexOf(filter)>-1; });
+    if(!shown.length) return;
+    var s=document.createElement("section"); s.className="page"; s.id=p.id;
+    var h=document.createElement("h2"); h.textContent=p.name;
+    if(p.url){ var sm=document.createElement("small"); sm.textContent=p.url; h.appendChild(sm); }
+    s.appendChild(h);
+    if(p.note){ var n=document.createElement("p"); n.className="note"; n.textContent=p.note; s.appendChild(n); }
+    var ul=document.createElement("ul"); ul.className="ideas";
+    shown.forEach(function(i){
+      var li=document.createElement("li"); li.className="idea"+(picks[i[0]]?" picked":"");
+      var lab=document.createElement("label"); lab.setAttribute("for","c-"+i[0]);
+      var cb=document.createElement("input"); cb.type="checkbox"; cb.id="c-"+i[0]; cb.checked=!!picks[i[0]];
+      cb.addEventListener("change",function(){ if(cb.checked) picks[i[0]]=1; else delete picks[i[0]]; li.classList.toggle("picked",cb.checked); save(); counts(); });
+      var box=document.createElement("span");
+      var t=document.createElement("span"); t.className="t"; t.textContent=i[1];
+      var d=document.createElement("span"); d.className="d"; d.textContent=i[2];
+      var tg=document.createElement("span"); tg.className="tags";
+      i[3].forEach(function(k){ var x=document.createElement("span"); x.className="tag "+k; x.textContent=TAGS[k]; tg.appendChild(x); });
+      var ef=document.createElement("span"); ef.className="tag effort"; ef.textContent=i[4]==="quick"?"Quick":i[4]==="medium"?"A few hours":"Bigger project"; tg.appendChild(ef);
+      box.appendChild(t); box.appendChild(d); box.appendChild(tg);
+      lab.appendChild(cb); lab.appendChild(box); li.appendChild(lab); ul.appendChild(li);
+    });
+    s.appendChild(ul); main.appendChild(s);
+  });
+  counts();
+}
+function counts(){
+  var n=Object.keys(picks).length;
+  document.getElementById("count").textContent=n+" picked";
+  document.getElementById("trayCount").textContent=n+(n===1?" idea picked":" ideas picked");
+}
+function pickText(){
+  var out=["My picks from the Ascend site ideas:"];
+  PAGES.forEach(function(p){ p.ideas.forEach(function(i){ if(picks[i[0]]) out.push("- ["+p.name+"] "+i[1]); }); });
+  return out.join("\n");
+}
+document.querySelectorAll(".bar button").forEach(function(b){
+  b.addEventListener("click",function(){
+    filter=b.getAttribute("data-f");
+    document.querySelectorAll(".bar button").forEach(function(o){ o.setAttribute("aria-pressed",String(o===b)); });
+    render();
+  });
+});
+document.getElementById("copy").addEventListener("click",function(){
+  var msg=document.getElementById("msg");
+  if(!Object.keys(picks).length){ msg.textContent="Tick at least one idea first."; return; }
+  var text=pickText();
+  function fallback(){
+    var ta=document.getElementById("fallback");
+    if(!ta){ ta=document.createElement("textarea"); ta.id="fallback"; ta.setAttribute("aria-label","Your picks"); document.querySelector(".wrap").appendChild(ta); }
+    ta.value=text; ta.focus(); ta.select();
+    msg.textContent="Copy the selected text below.";
+  }
+  try{
+    navigator.clipboard.writeText(text).then(function(){ msg.textContent="Copied. Paste it into our chat."; },fallback);
+  }catch(e){ fallback(); }
+});
+document.getElementById("clear").addEventListener("click",function(){ picks={}; save(); render(); document.getElementById("msg").textContent="Cleared."; });
+render();
+</script>
