@@ -119,6 +119,22 @@ add_action( 'admin_post_asa_fix', function () {
 	exit;
 } );
 
+/* Direct link: https://ascendstemacademy.com/wp-admin/admin-post.php?action=asa_fix_page */
+add_action( 'admin_post_asa_fix_page', function () {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		wp_die( 'Please log in as an administrator first.' );
+	}
+	$done = get_option( 'asa_elementor_fix_v1' );
+	$html  = '<h1>Ascend page fix</h1>';
+	$html .= $done
+		? '<p>The page fix was applied on ' . esc_html( $done['time'] ) . ':</p><ul><li>' . implode( '</li><li>', array_map( 'esc_html', (array) $done['log'] ) ) . '</li></ul>'
+		: '<p>This puts the Home page back to its original design and rebuilds the sections added on Sept 23 as regular Elementor widgets that match the rest of the site. You can undo it afterwards.</p>';
+	$html .= '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '">' . wp_nonce_field( 'asa_fix', '_wpnonce', true, false )
+		. '<input type="hidden" name="action" value="asa_fix">' . ( $done ? '<input type="hidden" name="undo" value="1">' : '' )
+		. '<p><button class="button button-primary button-large">' . ( $done ? 'Undo the page fix' : 'Apply the page fix' ) . '</button></p></form>';
+	wp_die( $html, 'Ascend page fix', array( 'response' => 200 ) );
+} );
+
 add_action( 'admin_notices', function () {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
