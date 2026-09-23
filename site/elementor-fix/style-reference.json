@@ -1,0 +1,2140 @@
+{
+ "notes": "Clean, centered, white-page look built in Elementor containers (flexbox, default boxed width; a few use boxed_width 1280). Almost everything is center-aligned: headings (align:center), text-editor (align:center), buttons (align:center), images centered. Headings are bright blue #009CDE (also #00A0E3 on Enrollment/Graduation), Roboto, weight 600 for page titles (H1 45-60px), section H2 ~34px (Enhancements) or 48px (Enrollment) via typography_font_size only; small card H3s use deep green #1D4010. Body text is black #000000 (About/Enrollment/Graduation) or deep green #1D4010 (Enhancements), default kit font size (some 15-21px). Brand palette: blue #009CDE / #00A0E3, dark blue accent #037CAF, deep green #1D4010, light green #BFE0B4, pink accent #F2A6C6, card greens #57C64D, navy #0004AE. Buttons: owner's styled buttons are solid blue #009CDE bg, white text, border_radius 8px (rounded-square, NOT pill), text_padding 14/28, 16px; inverse button white bg + blue text on blue band. Older pages use unstyled default kit buttons (Graduation one has radius 10 + padding 15). Sections: plain containers with bottom margin 64px (40 mobile); highlighted bands use light-green #BFE0B4 bg with 16px radius and 40-48/32 padding, closing CTA band solid #009CDE with white text. Cards: white bg containers with 12-14px radius, 24-28/16-20 padding, NO box-shadow (no native box_shadow used anywhere); featured card gets 3px solid #F2A6C6 border. Icon-list used on Enrollment (fas fa-circle bullets, 16px icons, 18px text, black, 16px spacing). __globals__ appear only as empty strings — owner uses hard-coded hex, not global colors. Widget frequency (owner only, 4 pages): text-editor and heading most common, then container, button, ucaddon_circle_number_widget (About), ucaddon_material_footer_card (Graduation), icon-list, icon, image, video, eael-post-grid, ucaddon_blox_line_diamond_seperator, one html (withdrawal letter tool). Note: Enhancements page element ids (pg00001, rr00001, fin0001...) look hand-written/generated rather than Elementor random ids, but are not 'asu' so were treated as owner's.",
+ "palette": {
+  "blue": "#009CDE",
+  "blue_alt": "#00A0E3",
+  "blue_dark": "#037CAF",
+  "green_deep": "#1D4010",
+  "green_light": "#BFE0B4",
+  "pink": "#F2A6C6",
+  "text_black": "#000000",
+  "white": "#FFFFFF"
+ },
+ "section_container": {
+  "margin": {
+   "bottom": "64",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "margin_mobile": {
+   "bottom": "40",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  }
+ },
+ "section_container_band_light_green": {
+  "background_background": "classic",
+  "background_color": "#BFE0B4",
+  "border_radius": {
+   "bottom": "16",
+   "isLinked": true,
+   "left": "16",
+   "right": "16",
+   "top": "16",
+   "unit": "px"
+  },
+  "margin": {
+   "bottom": "64",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "margin_mobile": {
+   "bottom": "40",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "padding": {
+   "bottom": "48",
+   "isLinked": false,
+   "left": "32",
+   "right": "32",
+   "top": "48",
+   "unit": "px"
+  },
+  "padding_mobile": {
+   "bottom": "32",
+   "isLinked": false,
+   "left": "16",
+   "right": "16",
+   "top": "32",
+   "unit": "px"
+  }
+ },
+ "section_container_band_blue_cta": {
+  "background_background": "classic",
+  "background_color": "#009CDE",
+  "border_radius": {
+   "bottom": "16",
+   "isLinked": true,
+   "left": "16",
+   "right": "16",
+   "top": "16",
+   "unit": "px"
+  },
+  "margin": {
+   "bottom": "80",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "margin_mobile": {
+   "bottom": "48",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "padding": {
+   "bottom": "48",
+   "isLinked": false,
+   "left": "32",
+   "right": "32",
+   "top": "48",
+   "unit": "px"
+  },
+  "padding_mobile": {
+   "bottom": "32",
+   "isLinked": false,
+   "left": "16",
+   "right": "16",
+   "top": "32",
+   "unit": "px"
+  }
+ },
+ "section_container_page_title": {
+  "margin": {
+   "bottom": "0",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "48",
+   "unit": "px"
+  },
+  "margin_mobile": {
+   "bottom": "0",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "32",
+   "unit": "px"
+  },
+  "padding_mobile": {
+   "unit": "px",
+   "top": "0",
+   "right": "0",
+   "bottom": "0",
+   "left": "0",
+   "isLinked": true
+  }
+ },
+ "section_container_boxed_1280_example_enrollment": {
+  "boxed_width": {
+   "size": 1280,
+   "sizes": [],
+   "unit": "px"
+  },
+  "flex_align_items": "center",
+  "flex_direction": "column",
+  "flex_gap": {
+   "column": "080",
+   "row": "80",
+   "size": 80,
+   "unit": "px"
+  },
+  "flex_gap_mobile": {
+   "size": 0,
+   "sizes": [],
+   "unit": "px"
+  },
+  "flex_gap_tablet": {
+   "column": "48",
+   "row": "48",
+   "size": 48,
+   "sizes": [],
+   "unit": "px"
+  },
+  "flex_justify_content": "center",
+  "margin": {
+   "bottom": "0",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "60",
+   "unit": "px"
+  },
+  "padding": {
+   "bottom": "60",
+   "isLinked": false,
+   "left": "24",
+   "right": "24",
+   "top": "60",
+   "unit": "px"
+  },
+  "padding_mobile": {
+   "bottom": "48",
+   "isLinked": false,
+   "left": "16",
+   "right": "16",
+   "top": "48",
+   "unit": "px"
+  },
+  "padding_tablet": {
+   "bottom": "80",
+   "isLinked": false,
+   "left": "16",
+   "right": "16",
+   "top": "80",
+   "unit": "px"
+  }
+ },
+ "inner_container": {
+  "flex_align_items": "stretch",
+  "flex_direction": "row",
+  "flex_direction_mobile": "column",
+  "flex_gap": {
+   "column": "20",
+   "isLinked": true,
+   "row": "20",
+   "size": 20,
+   "unit": "px"
+  },
+  "flex_wrap": "wrap"
+ },
+ "card_container": {
+  "background_background": "classic",
+  "background_color": "#FFFFFF",
+  "border_radius": {
+   "bottom": "14",
+   "isLinked": true,
+   "left": "14",
+   "right": "14",
+   "top": "14",
+   "unit": "px"
+  },
+  "padding": {
+   "bottom": "28",
+   "isLinked": false,
+   "left": "20",
+   "right": "20",
+   "top": "28",
+   "unit": "px"
+  },
+  "width": {
+   "size": 32,
+   "sizes": [],
+   "unit": "%"
+  },
+  "width_mobile": {
+   "size": 100,
+   "sizes": [],
+   "unit": "%"
+  },
+  "width_tablet": {
+   "size": 50,
+   "sizes": [],
+   "unit": "%"
+  }
+ },
+ "card_container_featured": {
+  "background_background": "classic",
+  "background_color": "#FFFFFF",
+  "border_border": "solid",
+  "border_color": "#F2A6C6",
+  "border_radius": {
+   "bottom": "14",
+   "isLinked": true,
+   "left": "14",
+   "right": "14",
+   "top": "14",
+   "unit": "px"
+  },
+  "border_width": {
+   "bottom": "3",
+   "isLinked": true,
+   "left": "3",
+   "right": "3",
+   "top": "3",
+   "unit": "px"
+  },
+  "padding": {
+   "bottom": "28",
+   "isLinked": false,
+   "left": "20",
+   "right": "20",
+   "top": "28",
+   "unit": "px"
+  },
+  "width": {
+   "size": 32,
+   "sizes": [],
+   "unit": "%"
+  },
+  "width_mobile": {
+   "size": 100,
+   "sizes": [],
+   "unit": "%"
+  },
+  "width_tablet": {
+   "size": 50,
+   "sizes": [],
+   "unit": "%"
+  }
+ },
+ "card_container_small_stat": {
+  "background_background": "classic",
+  "background_color": "#FFFFFF",
+  "border_radius": {
+   "bottom": "12",
+   "isLinked": true,
+   "left": "12",
+   "right": "12",
+   "top": "12",
+   "unit": "px"
+  },
+  "padding": {
+   "bottom": "24",
+   "isLinked": false,
+   "left": "16",
+   "right": "16",
+   "top": "24",
+   "unit": "px"
+  },
+  "width": {
+   "size": 24,
+   "sizes": [],
+   "unit": "%"
+  },
+  "width_mobile": {
+   "size": 100,
+   "sizes": [],
+   "unit": "%"
+  },
+  "width_tablet": {
+   "size": 50,
+   "sizes": [],
+   "unit": "%"
+  }
+ },
+ "heading_h1_page_title": {
+  "_margin": {
+   "bottom": "16",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "100",
+   "unit": "px"
+  },
+  "_margin_mobile": {
+   "bottom": "12",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "100",
+   "unit": "px"
+  },
+  "align": "center",
+  "content_width": "full",
+  "header_size": "h1",
+  "title": "Enhancements",
+  "title_color": "#009CDE",
+  "typography_font_size": {
+   "size": 52,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_font_size_mobile": {
+   "size": 38,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_typography": "custom",
+  "eael_vto_writing_gradient_color_repeater": [
+   {
+    "eael_vto_writing_gradient_color": "#7C62FF",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 50
+    },
+    "_id": "9ae7c9a"
+   },
+   {
+    "eael_vto_writing_gradient_color": "#FF6464",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 90
+    },
+    "_id": "ca80aad"
+   }
+  ]
+ },
+ "heading_h1_page_title_roboto_about": {
+  "title_color": "#009CDE",
+  "align": "center",
+  "typography_typography": "custom",
+  "typography_font_family": "Roboto",
+  "typography_font_size": {
+   "unit": "px",
+   "size": 60,
+   "sizes": []
+  },
+  "typography_font_size_mobile": {
+   "unit": "px",
+   "size": 46,
+   "sizes": []
+  },
+  "typography_font_weight": "600"
+ },
+ "heading_h2": {
+  "_margin": {
+   "bottom": "20",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "align": "center",
+  "content_width": "full",
+  "title": "Progress Reports",
+  "title_color": "#009CDE",
+  "typography_font_size": {
+   "size": 34,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_typography": "custom",
+  "eael_vto_writing_gradient_color_repeater": [
+   {
+    "eael_vto_writing_gradient_color": "#7C62FF",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 50
+    },
+    "_id": "8aaa26e"
+   },
+   {
+    "eael_vto_writing_gradient_color": "#FF6464",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 90
+    },
+    "_id": "bc3c9f1"
+   }
+  ]
+ },
+ "heading_h2_large_enrollment": {
+  "align": "center",
+  "align_mobile": "center",
+  "title_color": "#00A0E3",
+  "typography_font_size": {
+   "size": 48,
+   "unit": "px"
+  },
+  "typography_typography": "custom"
+ },
+ "heading_h2_plain_graduation": {
+  "content_width": "full",
+  "align": "center",
+  "_margin": {
+   "unit": "px",
+   "top": "80",
+   "right": "0",
+   "bottom": "0",
+   "left": "0",
+   "isLinked": false
+  },
+  "_padding": {
+   "unit": "px",
+   "top": "10",
+   "right": "10",
+   "bottom": "10",
+   "left": "10",
+   "isLinked": true
+  },
+  "title_color": "#00A0E3"
+ },
+ "heading_h3": {
+  "_margin": {
+   "bottom": "4",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "align": "center",
+  "content_width": "full",
+  "header_size": "h3",
+  "title": "Basic",
+  "title_color": "#1D4010",
+  "typography_font_size": {
+   "size": 22,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_typography": "custom",
+  "eael_vto_writing_gradient_color_repeater": [
+   {
+    "eael_vto_writing_gradient_color": "#7C62FF",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 50
+    },
+    "_id": "b856d4a"
+   },
+   {
+    "eael_vto_writing_gradient_color": "#FF6464",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 90
+    },
+    "_id": "98290de"
+   }
+  ]
+ },
+ "heading_h3_blue_enrollment": {
+  "_margin": {
+   "bottom": "10",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "30",
+   "unit": "px"
+  },
+  "align": "center",
+  "header_size": "h3",
+  "title_color": "#00A0E3"
+ },
+ "text_editor": {
+  "_padding": {
+   "bottom": "0",
+   "isLinked": false,
+   "left": "10",
+   "right": "10",
+   "top": "16",
+   "unit": "px"
+  },
+  "align": "center",
+  "content_width": "full",
+  "editor": "<p>These official documents list your student’s courses for a given year and their respective grades, reported by quarter, semester, or full school year. For a final transcript for a graduating student, visit our <a href=\"https://ascendstemacademy.com/graduation/\" style=\"color:#037CAF\">Graduation</a> page.</p>",
+  "text_color": "#1D4010",
+  "eael_vto_writing_gradient_color_repeater": [
+   {
+    "eael_vto_writing_gradient_color": "#7C62FF",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 50
+    },
+    "_id": "ab7f396"
+   },
+   {
+    "eael_vto_writing_gradient_color": "#FF6464",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 90
+    },
+    "_id": "7a8451b"
+   }
+  ]
+ },
+ "text_editor_black_about_graduation": {
+  "content_width": "full",
+  "align": "center",
+  "_padding": {
+   "unit": "px",
+   "top": "10",
+   "right": "10",
+   "bottom": "10",
+   "left": "10",
+   "isLinked": true
+  },
+  "text_color": "#000000"
+ },
+ "text_editor_lead": {
+  "_margin": {
+   "bottom": "8",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "_margin_mobile": {
+   "bottom": "8",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "_padding": {
+   "bottom": "0",
+   "isLinked": false,
+   "left": "10",
+   "right": "10",
+   "top": "0",
+   "unit": "px"
+  },
+  "align": "center",
+  "content_width": "full",
+  "editor": "<p>Optional add-on services for enrolled Ascend STEM Academy families. Order any of these at any point during the school year — no deadlines, no bundles required.</p>",
+  "text_color": "#1D4010",
+  "typography_font_size": {
+   "size": 21,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_typography": "custom",
+  "eael_vto_writing_gradient_color_repeater": [
+   {
+    "eael_vto_writing_gradient_color": "#7C62FF",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 50
+    },
+    "_id": "63eb070"
+   },
+   {
+    "eael_vto_writing_gradient_color": "#FF6464",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 90
+    },
+    "_id": "368b914"
+   }
+  ]
+ },
+ "text_editor_price_big": {
+  "_margin": {
+   "bottom": "14",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "align": "center",
+  "content_width": "full",
+  "editor": "<p style=\"font-size:34px;line-height:1.1;font-weight:700;color:#009CDE;margin:0\">$30</p>",
+  "text_color": "#009CDE",
+  "typography_font_size": {
+   "size": 34,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_typography": "custom",
+  "eael_vto_writing_gradient_color_repeater": [
+   {
+    "eael_vto_writing_gradient_color": "#7C62FF",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 50
+    },
+    "_id": "b9b2ad2"
+   },
+   {
+    "eael_vto_writing_gradient_color": "#FF6464",
+    "eael_vto_writing_gradient_color_location": {
+     "unit": "%",
+     "size": 90
+    },
+    "_id": "0b58712"
+   }
+  ]
+ },
+ "button_primary": {
+  "align": "center",
+  "background_color": "#009CDE",
+  "border_radius": {
+   "bottom": "8",
+   "isLinked": true,
+   "left": "8",
+   "right": "8",
+   "top": "8",
+   "unit": "px"
+  },
+  "button_text_color": "#FFFFFF",
+  "content_width": "full",
+  "link": {
+   "custom_attributes": "",
+   "is_external": "",
+   "nofollow": "",
+   "url": "https://ascendstemacademy.com/product/report-card/"
+  },
+  "text": "Order a Progress Report",
+  "text_padding": {
+   "bottom": "14",
+   "isLinked": false,
+   "left": "28",
+   "right": "28",
+   "top": "14",
+   "unit": "px"
+  },
+  "typography_font_size": {
+   "size": 16,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_typography": "custom"
+ },
+ "button_primary_full_width_in_card": {
+  "_element_custom_width": {
+   "size": 100,
+   "sizes": [],
+   "unit": "%"
+  },
+  "_element_width": "initial",
+  "align": "center",
+  "background_color": "#009CDE",
+  "border_radius": {
+   "bottom": "8",
+   "isLinked": true,
+   "left": "8",
+   "right": "8",
+   "top": "8",
+   "unit": "px"
+  },
+  "button_text_color": "#FFFFFF",
+  "content_width": "full",
+  "link": {
+   "custom_attributes": "",
+   "is_external": "",
+   "nofollow": "",
+   "url": "https://ascendstemacademy.com/product/basic-resume-review/"
+  },
+  "text": "Order Basic",
+  "text_padding": {
+   "bottom": "14",
+   "isLinked": false,
+   "left": "28",
+   "right": "28",
+   "top": "14",
+   "unit": "px"
+  },
+  "typography_font_size": {
+   "size": 16,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_typography": "custom"
+ },
+ "button_secondary": {
+  "align": "center",
+  "background_color": "#FFFFFF",
+  "border_radius": {
+   "bottom": "8",
+   "isLinked": true,
+   "left": "8",
+   "right": "8",
+   "top": "8",
+   "unit": "px"
+  },
+  "button_text_color": "#009CDE",
+  "content_width": "full",
+  "link": {
+   "custom_attributes": "",
+   "is_external": "",
+   "nofollow": "",
+   "url": "https://ascendstemacademy.com/enrollment/"
+  },
+  "text": "Explore Enrollment",
+  "text_padding": {
+   "bottom": "14",
+   "isLinked": false,
+   "left": "28",
+   "right": "28",
+   "top": "14",
+   "unit": "px"
+  },
+  "typography_font_size": {
+   "size": 16,
+   "sizes": [],
+   "unit": "px"
+  },
+  "typography_typography": "custom"
+ },
+ "button_default_kit_graduation": {
+  "content_width": "full",
+  "align": "center",
+  "border_radius": {
+   "unit": "px",
+   "top": "10",
+   "right": "10",
+   "bottom": "10",
+   "left": "10",
+   "isLinked": true
+  },
+  "text_padding": {
+   "unit": "px",
+   "top": "15",
+   "right": "15",
+   "bottom": "15",
+   "left": "15",
+   "isLinked": true
+  }
+ },
+ "icon_list": {
+  "__globals__": {
+   "icon_color": "",
+   "icon_typography_typography": "",
+   "text_color": ""
+  },
+  "_padding": {
+   "bottom": "24",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "_padding_mobile": {
+   "bottom": "20",
+   "isLinked": true,
+   "left": "20",
+   "right": "20",
+   "top": "20",
+   "unit": "px"
+  },
+  "content_width": "full",
+  "icon_list": [
+   {
+    "_id": "0d6c436",
+    "selected_icon": {
+     "library": "fa-solid",
+     "value": "fas fa-circle"
+    },
+    "text": "K - 12 Eligibility"
+   }
+  ],
+  "icon_size": {
+   "size": 16,
+   "sizes": [],
+   "unit": "px"
+  },
+  "icon_typography_font_size": {
+   "size": 18,
+   "sizes": [],
+   "unit": "px"
+  },
+  "icon_typography_typography": "custom",
+  "space_between": {
+   "size": 16,
+   "sizes": [],
+   "unit": "px"
+  },
+  "text_color": "#000000"
+ },
+ "image": {
+  "align": "center",
+  "content_width": "full",
+  "image": {
+   "alt": "Sample Ascend STEM Academy progress report showing course names and final grades",
+   "id": 3466,
+   "size": "",
+   "source": "library",
+   "url": "https://ascendstemacademy.com/wp-content/uploads/2024/08/Screenshot-2024-08-01-152705.png"
+  },
+  "image_border_radius": {
+   "bottom": "12",
+   "isLinked": true,
+   "left": "12",
+   "right": "12",
+   "top": "12",
+   "unit": "px"
+  },
+  "width": {
+   "size": 55,
+   "sizes": [],
+   "unit": "%"
+  }
+ },
+ "separator_ucaddon": {
+  "_element_width": "inherit",
+  "_flex_align_self": "center",
+  "_flex_align_self_mobile": "center",
+  "_flex_size": "grow",
+  "_margin_mobile": {
+   "bottom": "24",
+   "isLinked": false,
+   "left": "0",
+   "right": "0",
+   "top": "0",
+   "unit": "px"
+  },
+  "content_width": "full",
+  "width": 300
+ },
+ "examples": {
+  "enhancements_band": {
+   "id": "rr00001",
+   "elType": "container",
+   "settings": {
+    "background_background": "classic",
+    "background_color": "#BFE0B4",
+    "border_radius": {
+     "bottom": "16",
+     "isLinked": true,
+     "left": "16",
+     "right": "16",
+     "top": "16",
+     "unit": "px"
+    },
+    "margin": {
+     "bottom": "64",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "0",
+     "unit": "px"
+    },
+    "margin_mobile": {
+     "bottom": "40",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "0",
+     "unit": "px"
+    },
+    "padding": {
+     "bottom": "48",
+     "isLinked": false,
+     "left": "32",
+     "right": "32",
+     "top": "48",
+     "unit": "px"
+    },
+    "padding_mobile": {
+     "bottom": "32",
+     "isLinked": false,
+     "left": "16",
+     "right": "16",
+     "top": "32",
+     "unit": "px"
+    }
+   },
+   "elements": [
+    {
+     "id": "5a4a1f5",
+     "elType": "widget",
+     "settings": {
+      "_margin": {
+       "bottom": "16",
+       "isLinked": false,
+       "left": "0",
+       "right": "0",
+       "top": "0",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "title": "Resume Reviews",
+      "title_color": "#009CDE",
+      "typography_font_size": {
+       "size": 34,
+       "sizes": [],
+       "unit": "px"
+      },
+      "typography_typography": "custom"
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "22335ea",
+     "elType": "widget",
+     "settings": {
+      "_padding": {
+       "bottom": "24",
+       "isLinked": false,
+       "left": "10",
+       "right": "10",
+       "top": "0",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "editor": "<p>As students approach graduation, a strong resume matters for college applications and for entering the workforce. Choose the level of support your student needs.</p>",
+      "text_color": "#1D4010"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "rr00002",
+     "elType": "container",
+     "settings": {
+      "flex_align_items": "stretch",
+      "flex_direction": "row",
+      "flex_direction_mobile": "column",
+      "flex_gap": {
+       "column": "20",
+       "isLinked": true,
+       "row": "20",
+       "size": 20,
+       "unit": "px"
+      },
+      "flex_wrap": "wrap"
+     },
+     "elements": [
+      {
+       "id": "rrc0001",
+       "elType": "container",
+       "settings": {
+        "background_background": "classic",
+        "background_color": "#FFFFFF",
+        "border_radius": {
+         "bottom": "14",
+         "isLinked": true,
+         "left": "14",
+         "right": "14",
+         "top": "14",
+         "unit": "px"
+        },
+        "padding": {
+         "bottom": "28",
+         "isLinked": false,
+         "left": "20",
+         "right": "20",
+         "top": "28",
+         "unit": "px"
+        },
+        "width": {
+         "size": 32,
+         "sizes": [],
+         "unit": "%"
+        },
+        "width_mobile": {
+         "size": 100,
+         "sizes": [],
+         "unit": "%"
+        },
+        "width_tablet": {
+         "size": 50,
+         "sizes": [],
+         "unit": "%"
+        }
+       },
+       "elements": [
+        {
+         "id": "rrn0001",
+         "elType": "widget",
+         "settings": {
+          "_margin": {
+           "bottom": "4",
+           "isLinked": false,
+           "left": "0",
+           "right": "0",
+           "top": "0",
+           "unit": "px"
+          },
+          "align": "center",
+          "content_width": "full",
+          "header_size": "h3",
+          "title": "Basic",
+          "title_color": "#1D4010",
+          "typography_font_size": {
+           "size": 22,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "heading"
+        },
+        {
+         "id": "rrp0001",
+         "elType": "widget",
+         "settings": {
+          "_margin": {
+           "bottom": "14",
+           "isLinked": false,
+           "left": "0",
+           "right": "0",
+           "top": "0",
+           "unit": "px"
+          },
+          "align": "center",
+          "content_width": "full",
+          "editor": "<p style=\"font-size:34px;line-height:1.1;font-weight:700;color:#009CDE;margin:0\">$30</p>",
+          "text_color": "#009CDE",
+          "typography_font_size": {
+           "size": 34,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "text-editor"
+        },
+        {
+         "id": "rrb0001",
+         "elType": "widget",
+         "settings": {
+          "align": "center",
+          "content_width": "full",
+          "editor": "<p>Quick review with feedback on formatting and grammar.</p><p>One round of written feedback.</p>",
+          "text_color": "#1D4010",
+          "typography_font_size": {
+           "size": 15,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "text-editor"
+        },
+        {
+         "id": "1dc9322",
+         "elType": "widget",
+         "settings": {
+          "_element_custom_width": {
+           "size": 100,
+           "sizes": [],
+           "unit": "%"
+          },
+          "_element_width": "initial",
+          "align": "center",
+          "background_color": "#009CDE",
+          "border_radius": {
+           "bottom": "8",
+           "isLinked": true,
+           "left": "8",
+           "right": "8",
+           "top": "8",
+           "unit": "px"
+          },
+          "button_text_color": "#FFFFFF",
+          "content_width": "full",
+          "link": {
+           "custom_attributes": "",
+           "is_external": "",
+           "nofollow": "",
+           "url": "https://ascendstemacademy.com/product/basic-resume-review/"
+          },
+          "text": "Order Basic",
+          "text_padding": {
+           "bottom": "14",
+           "isLinked": false,
+           "left": "28",
+           "right": "28",
+           "top": "14",
+           "unit": "px"
+          },
+          "typography_font_size": {
+           "size": 16,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "button"
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "rrc0002",
+       "elType": "container",
+       "settings": {
+        "background_background": "classic",
+        "background_color": "#FFFFFF",
+        "border_border": "solid",
+        "border_color": "#F2A6C6",
+        "border_radius": {
+         "bottom": "14",
+         "isLinked": true,
+         "left": "14",
+         "right": "14",
+         "top": "14",
+         "unit": "px"
+        },
+        "border_width": {
+         "bottom": "3",
+         "isLinked": true,
+         "left": "3",
+         "right": "3",
+         "top": "3",
+         "unit": "px"
+        },
+        "padding": {
+         "bottom": "28",
+         "isLinked": false,
+         "left": "20",
+         "right": "20",
+         "top": "28",
+         "unit": "px"
+        },
+        "width": {
+         "size": 32,
+         "sizes": [],
+         "unit": "%"
+        },
+        "width_mobile": {
+         "size": 100,
+         "sizes": [],
+         "unit": "%"
+        },
+        "width_tablet": {
+         "size": 50,
+         "sizes": [],
+         "unit": "%"
+        }
+       },
+       "elements": [
+        {
+         "id": "rrx0002",
+         "elType": "widget",
+         "settings": {
+          "_margin": {
+           "bottom": "8",
+           "isLinked": false,
+           "left": "0",
+           "right": "0",
+           "top": "0",
+           "unit": "px"
+          },
+          "align": "center",
+          "content_width": "full",
+          "editor": "<p style=\"letter-spacing:.1em;font-weight:700\">★ MOST POPULAR</p>",
+          "text_color": "#F2A6C6",
+          "typography_font_size": {
+           "size": 13,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "text-editor"
+        },
+        {
+         "id": "rrn0002",
+         "elType": "widget",
+         "settings": {
+          "_margin": {
+           "bottom": "4",
+           "isLinked": false,
+           "left": "0",
+           "right": "0",
+           "top": "0",
+           "unit": "px"
+          },
+          "align": "center",
+          "content_width": "full",
+          "header_size": "h3",
+          "title": "Standard",
+          "title_color": "#1D4010",
+          "typography_font_size": {
+           "size": 22,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "heading"
+        },
+        {
+         "id": "rrp0002",
+         "elType": "widget",
+         "settings": {
+          "_margin": {
+           "bottom": "14",
+           "isLinked": false,
+           "left": "0",
+           "right": "0",
+           "top": "0",
+           "unit": "px"
+          },
+          "align": "center",
+          "content_width": "full",
+          "editor": "<p style=\"font-size:34px;line-height:1.1;font-weight:700;color:#009CDE;margin:0\">$75</p>",
+          "text_color": "#009CDE",
+          "typography_font_size": {
+           "size": 34,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "text-editor"
+        },
+        {
+         "id": "rrb0002",
+         "elType": "widget",
+         "settings": {
+          "align": "center",
+          "content_width": "full",
+          "editor": "<p>Detailed review with personalized feedback on content, structure, and formatting.</p><p>One follow-up email for further clarification.</p>",
+          "text_color": "#1D4010",
+          "typography_font_size": {
+           "size": 15,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "text-editor"
+        },
+        {
+         "id": "043b0bf",
+         "elType": "widget",
+         "settings": {
+          "_element_custom_width": {
+           "size": 100,
+           "sizes": [],
+           "unit": "%"
+          },
+          "_element_width": "initial",
+          "align": "center",
+          "background_color": "#009CDE",
+          "border_radius": {
+           "bottom": "8",
+           "isLinked": true,
+           "left": "8",
+           "right": "8",
+           "top": "8",
+           "unit": "px"
+          },
+          "button_text_color": "#FFFFFF",
+          "content_width": "full",
+          "link": {
+           "custom_attributes": "",
+           "is_external": "",
+           "nofollow": "",
+           "url": "https://ascendstemacademy.com/product/standard-resume-review/"
+          },
+          "text": "Order Standard",
+          "text_padding": {
+           "bottom": "14",
+           "isLinked": false,
+           "left": "28",
+           "right": "28",
+           "top": "14",
+           "unit": "px"
+          },
+          "typography_font_size": {
+           "size": 16,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "button"
+        }
+       ],
+       "isInner": true
+      },
+      {
+       "id": "rrc0003",
+       "elType": "container",
+       "settings": {
+        "background_background": "classic",
+        "background_color": "#FFFFFF",
+        "border_radius": {
+         "bottom": "14",
+         "isLinked": true,
+         "left": "14",
+         "right": "14",
+         "top": "14",
+         "unit": "px"
+        },
+        "padding": {
+         "bottom": "28",
+         "isLinked": false,
+         "left": "20",
+         "right": "20",
+         "top": "28",
+         "unit": "px"
+        },
+        "width": {
+         "size": 32,
+         "sizes": [],
+         "unit": "%"
+        },
+        "width_mobile": {
+         "size": 100,
+         "sizes": [],
+         "unit": "%"
+        },
+        "width_tablet": {
+         "size": 50,
+         "sizes": [],
+         "unit": "%"
+        }
+       },
+       "elements": [
+        {
+         "id": "rrn0003",
+         "elType": "widget",
+         "settings": {
+          "_margin": {
+           "bottom": "4",
+           "isLinked": false,
+           "left": "0",
+           "right": "0",
+           "top": "0",
+           "unit": "px"
+          },
+          "align": "center",
+          "content_width": "full",
+          "header_size": "h3",
+          "title": "Premium",
+          "title_color": "#1D4010",
+          "typography_font_size": {
+           "size": 22,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "heading"
+        },
+        {
+         "id": "rrp0003",
+         "elType": "widget",
+         "settings": {
+          "_margin": {
+           "bottom": "14",
+           "isLinked": false,
+           "left": "0",
+           "right": "0",
+           "top": "0",
+           "unit": "px"
+          },
+          "align": "center",
+          "content_width": "full",
+          "editor": "<p style=\"font-size:34px;line-height:1.1;font-weight:700;color:#009CDE;margin:0\">$125</p>",
+          "text_color": "#009CDE",
+          "typography_font_size": {
+           "size": 34,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "text-editor"
+        },
+        {
+         "id": "rrb0003",
+         "elType": "widget",
+         "settings": {
+          "align": "center",
+          "content_width": "full",
+          "editor": "<p>Comprehensive review with in-depth feedback on every aspect of the resume.</p><p>30-minute consultation by phone or video to discuss feedback.</p><p>Interview tips plus a cover letter review.</p>",
+          "text_color": "#1D4010",
+          "typography_font_size": {
+           "size": 15,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "text-editor"
+        },
+        {
+         "id": "c3a6f13",
+         "elType": "widget",
+         "settings": {
+          "_element_custom_width": {
+           "size": 100,
+           "sizes": [],
+           "unit": "%"
+          },
+          "_element_width": "initial",
+          "align": "center",
+          "background_color": "#009CDE",
+          "border_radius": {
+           "bottom": "8",
+           "isLinked": true,
+           "left": "8",
+           "right": "8",
+           "top": "8",
+           "unit": "px"
+          },
+          "button_text_color": "#FFFFFF",
+          "content_width": "full",
+          "link": {
+           "custom_attributes": "",
+           "is_external": "",
+           "nofollow": "",
+           "url": "https://ascendstemacademy.com/product/premium-resume-review/"
+          },
+          "text": "Order Premium",
+          "text_padding": {
+           "bottom": "14",
+           "isLinked": false,
+           "left": "28",
+           "right": "28",
+           "top": "14",
+           "unit": "px"
+          },
+          "typography_font_size": {
+           "size": 16,
+           "sizes": [],
+           "unit": "px"
+          },
+          "typography_typography": "custom"
+         },
+         "elements": [],
+         "widgetType": "button"
+        }
+       ],
+       "isInner": true
+      }
+     ],
+     "isInner": true
+    }
+   ],
+   "isInner": false
+  },
+  "enhancements_section": {
+   "id": "1952852",
+   "elType": "container",
+   "settings": {
+    "margin": {
+     "bottom": "64",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "0",
+     "unit": "px"
+    },
+    "margin_mobile": {
+     "bottom": "40",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "0",
+     "unit": "px"
+    }
+   },
+   "elements": [
+    {
+     "id": "6139798",
+     "elType": "widget",
+     "settings": {
+      "_margin": {
+       "bottom": "20",
+       "isLinked": false,
+       "left": "0",
+       "right": "0",
+       "top": "0",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "title": "Progress Reports",
+      "title_color": "#009CDE",
+      "typography_font_size": {
+       "size": 34,
+       "sizes": [],
+       "unit": "px"
+      },
+      "typography_typography": "custom"
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "img00001",
+     "elType": "widget",
+     "settings": {
+      "align": "center",
+      "content_width": "full",
+      "image": {
+       "alt": "Sample Ascend STEM Academy progress report showing course names and final grades",
+       "id": 3466,
+       "size": "",
+       "source": "library",
+       "url": "https://ascendstemacademy.com/wp-content/uploads/2024/08/Screenshot-2024-08-01-152705.png"
+      },
+      "image_border_radius": {
+       "bottom": "12",
+       "isLinked": true,
+       "left": "12",
+       "right": "12",
+       "top": "12",
+       "unit": "px"
+      },
+      "width": {
+       "size": 55,
+       "sizes": [],
+       "unit": "%"
+      }
+     },
+     "elements": [],
+     "widgetType": "image"
+    },
+    {
+     "id": "8fa2f9d",
+     "elType": "widget",
+     "settings": {
+      "_padding": {
+       "bottom": "0",
+       "isLinked": false,
+       "left": "10",
+       "right": "10",
+       "top": "16",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "editor": "<p>These official documents list your student’s courses for a given year and their respective grades, reported by quarter, semester, or full school year. For a final transcript for a graduating studen…",
+      "text_color": "#1D4010"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "2655dcd",
+     "elType": "widget",
+     "settings": {
+      "align": "center",
+      "content_width": "full",
+      "editor": "<p><strong>When you order, you’ll be asked to:</strong></p><p>1. List the relevant course names and final grades</p><p>2. Choose whether grades are reported by quarter, semester, or school year</p><p>…",
+      "text_color": "#1D4010"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "3ed1c73",
+     "elType": "widget",
+     "settings": {
+      "_margin": {
+       "bottom": "20",
+       "isLinked": false,
+       "left": "0",
+       "right": "0",
+       "top": "8",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "editor": "<p><strong>Cost per progress report: $20</strong><br><span style=\"font-size:15px;color:#037CAF\">Delivered in 5–7 business days.</span></p>",
+      "text_color": "#1D4010",
+      "typography_font_size": {
+       "size": 18,
+       "sizes": [],
+       "unit": "px"
+      },
+      "typography_typography": "custom"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "55fd2f9",
+     "elType": "widget",
+     "settings": {
+      "align": "center",
+      "background_color": "#009CDE",
+      "border_radius": {
+       "bottom": "8",
+       "isLinked": true,
+       "left": "8",
+       "right": "8",
+       "top": "8",
+       "unit": "px"
+      },
+      "button_text_color": "#FFFFFF",
+      "content_width": "full",
+      "link": {
+       "custom_attributes": "",
+       "is_external": "",
+       "nofollow": "",
+       "url": "https://ascendstemacademy.com/product/report-card/"
+      },
+      "text": "Order a Progress Report",
+      "text_padding": {
+       "bottom": "14",
+       "isLinked": false,
+       "left": "28",
+       "right": "28",
+       "top": "14",
+       "unit": "px"
+      },
+      "typography_font_size": {
+       "size": 16,
+       "sizes": [],
+       "unit": "px"
+      },
+      "typography_typography": "custom"
+     },
+     "elements": [],
+     "widgetType": "button"
+    }
+   ],
+   "isInner": false
+  },
+  "enhancements_cta": {
+   "id": "fin0001",
+   "elType": "container",
+   "settings": {
+    "background_background": "classic",
+    "background_color": "#009CDE",
+    "border_radius": {
+     "bottom": "16",
+     "isLinked": true,
+     "left": "16",
+     "right": "16",
+     "top": "16",
+     "unit": "px"
+    },
+    "margin": {
+     "bottom": "80",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "0",
+     "unit": "px"
+    },
+    "margin_mobile": {
+     "bottom": "48",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "0",
+     "unit": "px"
+    },
+    "padding": {
+     "bottom": "48",
+     "isLinked": false,
+     "left": "32",
+     "right": "32",
+     "top": "48",
+     "unit": "px"
+    },
+    "padding_mobile": {
+     "bottom": "32",
+     "isLinked": false,
+     "left": "16",
+     "right": "16",
+     "top": "32",
+     "unit": "px"
+    }
+   },
+   "elements": [
+    {
+     "id": "fin0002",
+     "elType": "widget",
+     "settings": {
+      "_margin": {
+       "bottom": "12",
+       "isLinked": false,
+       "left": "0",
+       "right": "0",
+       "top": "0",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "title": "Not enrolled yet?",
+      "title_color": "#FFFFFF",
+      "typography_font_size": {
+       "size": 30,
+       "sizes": [],
+       "unit": "px"
+      },
+      "typography_typography": "custom"
+     },
+     "elements": [],
+     "widgetType": "heading"
+    },
+    {
+     "id": "fin0003",
+     "elType": "widget",
+     "settings": {
+      "_margin": {
+       "bottom": "24",
+       "isLinked": false,
+       "left": "0",
+       "right": "0",
+       "top": "0",
+       "unit": "px"
+      },
+      "_padding": {
+       "bottom": "0",
+       "isLinked": false,
+       "left": "10",
+       "right": "10",
+       "top": "0",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "editor": "<p>Enhancements are available to enrolled Ascend STEM Academy families. Join us and we’ll handle your Notice of Intent filing, recordkeeping, and more.</p>",
+      "text_color": "#FFFFFF",
+      "typography_font_size": {
+       "size": 18,
+       "sizes": [],
+       "unit": "px"
+      },
+      "typography_typography": "custom"
+     },
+     "elements": [],
+     "widgetType": "text-editor"
+    },
+    {
+     "id": "fin0004",
+     "elType": "widget",
+     "settings": {
+      "align": "center",
+      "background_color": "#FFFFFF",
+      "border_radius": {
+       "bottom": "8",
+       "isLinked": true,
+       "left": "8",
+       "right": "8",
+       "top": "8",
+       "unit": "px"
+      },
+      "button_text_color": "#009CDE",
+      "content_width": "full",
+      "link": {
+       "custom_attributes": "",
+       "is_external": "",
+       "nofollow": "",
+       "url": "https://ascendstemacademy.com/enrollment/"
+      },
+      "text": "Explore Enrollment",
+      "text_padding": {
+       "bottom": "14",
+       "isLinked": false,
+       "left": "28",
+       "right": "28",
+       "top": "14",
+       "unit": "px"
+      },
+      "typography_font_size": {
+       "size": 16,
+       "sizes": [],
+       "unit": "px"
+      },
+      "typography_typography": "custom"
+     },
+     "elements": [],
+     "widgetType": "button"
+    }
+   ],
+   "isInner": false
+  },
+  "graduation": {
+   "id": "8aa71f0",
+   "elType": "container",
+   "settings": [],
+   "elements": [
+    {
+     "id": "6e1ea85",
+     "elType": "widget",
+     "widgetType": "heading",
+     "settings": {
+      "content_width": "full",
+      "title": "Graduation Application Process",
+      "align": "center",
+      "_margin": {
+       "unit": "px",
+       "top": "80",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_padding": {
+       "unit": "px",
+       "top": "10",
+       "right": "10",
+       "bottom": "10",
+       "left": "10",
+       "isLinked": true
+      },
+      "title_color": "#00A0E3"
+     },
+     "elements": []
+    },
+    {
+     "id": "efdf4e1",
+     "elType": "widget",
+     "widgetType": "text-editor",
+     "settings": {
+      "content_width": "full",
+      "editor": "<p><span style=\"font-weight: 400;\">The Graduation Application Form is used to list all of the graduating student’s completed high school courses…</span></p>",
+      "align": "center",
+      "_padding": {
+       "unit": "px",
+       "top": "10",
+       "right": "10",
+       "bottom": "10",
+       "left": "10",
+       "isLinked": true
+      },
+      "text_color": "#000000"
+     },
+     "elements": []
+    },
+    {
+     "id": "f7bcae0",
+     "elType": "widget",
+     "widgetType": "button",
+     "settings": {
+      "content_width": "full",
+      "text": "Start Application",
+      "link": {
+       "url": "https://form.jotform.com/242164737101045",
+       "is_external": "",
+       "nofollow": "",
+       "custom_attributes": ""
+      },
+      "align": "center",
+      "border_radius": {
+       "unit": "px",
+       "top": "10",
+       "right": "10",
+       "bottom": "10",
+       "left": "10",
+       "isLinked": true
+      },
+      "text_padding": {
+       "unit": "px",
+       "top": "15",
+       "right": "15",
+       "bottom": "15",
+       "left": "15",
+       "isLinked": true
+      }
+     },
+     "elements": []
+    }
+   ],
+   "isInner": false
+  },
+  "enrollment": {
+   "id": "a259b16",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "margin": {
+     "bottom": "30",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "90",
+     "unit": "px"
+    },
+    "margin_mobile": {
+     "bottom": "0",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "0",
+     "unit": "px"
+    },
+    "margin_tablet": {
+     "bottom": "0",
+     "isLinked": false,
+     "left": "0",
+     "right": "0",
+     "top": "100",
+     "unit": "px"
+    }
+   },
+   "elements": [
+    {
+     "id": "6bb82cb",
+     "elType": "widget",
+     "widgetType": "heading",
+     "settings": {
+      "_margin": {
+       "bottom": "0",
+       "isLinked": false,
+       "left": "0",
+       "right": "0",
+       "top": "140",
+       "unit": "px"
+      },
+      "_padding": {
+       "bottom": "10",
+       "isLinked": true,
+       "left": "10",
+       "right": "10",
+       "top": "10",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "header_size": "h1",
+      "title": "Start Enrollment",
+      "title_color": "#000000",
+      "typography_font_family": "Roboto",
+      "typography_font_size": {
+       "size": 50,
+       "sizes": [],
+       "unit": "px"
+      },
+      "typography_font_weight": "600",
+      "typography_typography": "custom"
+     },
+     "elements": []
+    },
+    {
+     "id": "e94544a",
+     "elType": "widget",
+     "widgetType": "text-editor",
+     "settings": {
+      "_padding": {
+       "bottom": "10",
+       "isLinked": true,
+       "left": "10",
+       "right": "10",
+       "top": "10",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "editor": "<p>By clicking “Start Enrollment” below, you will open our Registration Page…</p>",
+      "text_color": "#000000"
+     },
+     "elements": []
+    },
+    {
+     "id": "f97b8bb",
+     "elType": "widget",
+     "widgetType": "button",
+     "settings": {
+      "_margin": {
+       "bottom": "30",
+       "isLinked": false,
+       "left": "0",
+       "right": "0",
+       "top": "0",
+       "unit": "px"
+      },
+      "_padding": {
+       "bottom": "10",
+       "isLinked": true,
+       "left": "10",
+       "right": "10",
+       "top": "10",
+       "unit": "px"
+      },
+      "align": "center",
+      "content_width": "full",
+      "link": {
+       "custom_attributes": "",
+       "is_external": "",
+       "nofollow": "",
+       "url": "https://ascendstemacademy.com/registration/"
+      },
+      "text": "Start Enrollment"
+     },
+     "elements": []
+    }
+   ],
+   "isInner": false
+  },
+  "about": {
+   "id": "1f43bb8",
+   "elType": "container",
+   "settings": {
+    "flex_direction": "column",
+    "margin": {
+     "unit": "px",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    },
+    "padding": {
+     "unit": "px",
+     "top": "0",
+     "right": "50",
+     "bottom": "50",
+     "left": "50",
+     "isLinked": false
+    },
+    "padding_mobile": {
+     "unit": "px",
+     "top": "25",
+     "right": "25",
+     "bottom": "25",
+     "left": "25",
+     "isLinked": true
+    },
+    "margin_mobile": {
+     "unit": "px",
+     "top": "0",
+     "right": "0",
+     "bottom": "0",
+     "left": "0",
+     "isLinked": false
+    }
+   },
+   "elements": [
+    {
+     "id": "48acea4",
+     "elType": "widget",
+     "widgetType": "text-editor",
+     "settings": {
+      "content_width": "full",
+      "editor": "<p><span style=\"font-weight: 400;\">At <strong>Ascend STEM Academy</strong>, our mission is to empower students and families…</span></p>",
+      "align": "center",
+      "text_color": "#000000",
+      "_margin": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": false
+      },
+      "_padding": {
+       "unit": "px",
+       "top": "90",
+       "right": "0",
+       "bottom": "70",
+       "left": "0",
+       "isLinked": false
+      },
+      "_padding_mobile": {
+       "unit": "px",
+       "top": "60",
+       "right": "0",
+       "bottom": "40",
+       "left": "0",
+       "isLinked": false
+      }
+     },
+     "elements": []
+    }
+   ],
+   "isInner": false
+  }
+ }
+}
