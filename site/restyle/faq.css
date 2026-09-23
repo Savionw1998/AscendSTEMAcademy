@@ -1,0 +1,17 @@
+/* FAQ page: accordion styles. Scoped to .asa-why. */
+.asa-why .asa-faq-hero .asa-wrap{grid-template-columns:1fr}
+.asa-why .asa-faqs{max-width:820px;margin:32px auto 0;display:grid;gap:12px}
+.asa-why .asa-faq{background:#fff;border:1px solid var(--asa-line);border-radius:18px;transition:border-color .2s,box-shadow .2s}
+.asa-why .asa-faq[open]{border-color:var(--asa-blue);box-shadow:0 10px 24px rgba(11,58,83,.08)}
+.asa-why .asa-faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;font-weight:700;color:var(--asa-navy);font-size:1.02rem;line-height:1.4;border-radius:18px}
+.asa-why .asa-faq summary::-webkit-details-marker{display:none}
+.asa-why .asa-faq summary::after{content:"+";flex:0 0 30px;height:30px;border-radius:50%;background:var(--asa-soft);color:var(--asa-blue);font-size:1.3rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.asa-why .asa-faq[open] summary::after{content:"\2212"}
+.asa-why .asa-faq summary:focus-visible{outline:3px solid #ffd166;outline-offset:2px}
+.asa-why .asa-faq summary + div{padding:0 22px 20px;color:var(--asa-muted)}
+.asa-why .asa-faq summary + div p{margin:0 0 10px}
+.asa-why .asa-faq summary + div p:last-child{margin-bottom:0}
+.asa-why .asa-faq ul{margin:0 0 10px 1.2em;padding:0}
+.asa-why .asa-faq li{margin:0 0 6px}
+.asa-why .asa-faq a{color:var(--asa-blue);font-weight:600}
+@media (max-width:600px){.asa-why .asa-faq summary{padding:16px 18px}.asa-why .asa-faq summary + div{padding:0 18px 18px}}

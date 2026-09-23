@@ -1,0 +1,14 @@
+/* Graduation page additions. Scoped to .asa-why. */
+.asa-why .asa-grad-btns{justify-content:center;margin-top:24px}
+.asa-why .asa-grad-pack{align-items:center}
+.asa-why .asa-grad-pack .asa-grad-btns{justify-content:flex-start}
+.asa-why .asa-grad-list li{font-weight:500}
+.asa-why .asa-grad-callout{margin-top:28px}
+.asa-why .asa-grad-sub{margin-top:28px;color:var(--asa-blue)}
+.asa-why .asa-grad-wide{margin-top:20px}
+.asa-why .asa-grad-pick{font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--asa-blue);margin:-2px 0 10px}
+.asa-why .asa-courses{list-style:none;margin:0;padding:0}
+.asa-why .asa-courses li{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0;padding:9px 0;border-top:1px dashed var(--asa-line)}
+.asa-why .asa-courses li:first-child{border-top:0}
+.asa-why .asa-courses li span{flex:0 0 auto;font-size:.85rem;font-weight:700;color:var(--asa-blue);background:var(--asa-soft);border-radius:999px;padding:2px 10px}
+.asa-why .asa-courses small{display:block;color:var(--asa-muted);font-size:.9rem}

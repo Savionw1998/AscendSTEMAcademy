@@ -1,0 +1,9 @@
+/* Resources page additions (load after site.css) */
+.asa-why .asa-res-btns{margin-top:20px}
+.asa-why .asa-res-gap{margin-top:28px}
+.asa-why .asa-card .asa-btns{margin-top:20px}
+.asa-why .asa-logos{list-style:none;margin:32px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.asa-why .asa-logos li{margin:0;background:#fff;border:1px solid var(--asa-line);border-radius:20px;padding:16px;display:flex;align-items:center;justify-content:center}
+.asa-why .asa-logos img{max-height:110px;object-fit:contain}
+@media (min-width:601px){.asa-why .asa-logos{grid-template-columns:repeat(3,1fr)}}
+@media (min-width:901px){.asa-why .asa-logos{grid-template-columns:repeat(4,1fr)}}
