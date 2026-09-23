@@ -54,3 +54,9 @@ Details per page: pages-1.md, pages-2.md, content-seo.md, shop.md.
 ## Resource Explorer (page 5477)
 - I never edited it. It was last saved 07:50-07:51 today (Sept 23) from your admin account.
 - It has no Ultimate Member restriction. The connector cannot see the page password or the Ascend Resource Gate settings.
+
+## Fixes made after the audit (2026-09-23)
+- Pond Key (7188) and Full Pond Pass (7189): Game Passes category assigned again by slug. The category count in the
+  connector still reads 0, so check Products > filter by "Game Passes".
+- Tees 3903 and 3899: leftover ChatGPT markup removed; the wording is unchanged.
+  Undo tokens: 6a0273e354953605186a3ce06cdaa8d3 (3903), ccc4aec8940c5fce5150596c78117a52 (3899), valid until 2026-09-26.
