@@ -6,7 +6,7 @@
 .asa-why .asa-faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;font-weight:700;color:var(--asa-navy);font-size:1.02rem;line-height:1.4;border-radius:18px}
 .asa-why .asa-faq summary::-webkit-details-marker{display:none}
 .asa-why .asa-faq summary::after{content:"+";flex:0 0 30px;height:30px;border-radius:50%;background:var(--asa-soft);color:var(--asa-blue);font-size:1.3rem;font-weight:700;display:flex;align-items:center;justify-content:center;transition:transform .2s}
-.asa-why .asa-faq[open] summary::after{content:"\2212"}
+.asa-why .asa-faq[open] summary::after{content:"−"}
 .asa-why .asa-faq summary:focus-visible{outline:3px solid #ffd166;outline-offset:2px}
 .asa-why .asa-faq summary + div{padding:0 22px 20px;color:var(--asa-muted)}
 .asa-why .asa-faq summary + div p{margin:0 0 10px}

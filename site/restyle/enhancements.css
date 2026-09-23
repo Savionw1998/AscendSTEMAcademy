@@ -1,0 +1,30 @@
+/* Enhancements page additions. Load after site.css. */
+.asa-why .asa-enh-glance{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.asa-why .asa-enh-glance li{margin:0}
+.asa-why .asa-enh-glance a{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.1);color:#fff;text-decoration:none;transition:background .15s}
+.asa-why .asa-enh-glance a:hover{background:rgba(255,255,255,.18)}
+.asa-why .asa-enh-glance a:focus-visible{outline:3px solid #ffd166;outline-offset:2px}
+.asa-why .asa-enh-glance strong{flex:0 0 92px;font-size:1.25rem;font-weight:800;color:#ffd166}
+.asa-why .asa-enh-glance span{font-weight:600;line-height:1.3}
+.asa-why .asa-enh-glance small{display:block;font-weight:400;font-size:.85rem;color:rgba(255,255,255,.8)}
+.asa-why .asa-sec[id]{scroll-margin-top:100px}
+.asa-why .asa-enh-split{display:grid;gap:28px;align-items:center}
+.asa-why .asa-enh-body{display:grid;gap:14px}
+.asa-why .asa-enh-body .asa-eyebrow{margin-bottom:0}
+.asa-why .asa-enh-body a:not(.asa-btn){color:var(--asa-blue);font-weight:600}
+.asa-why .asa-enh-body .asa-btns{margin-top:6px}
+.asa-why .asa-enh-list{margin:0;padding-left:1.3em;display:grid;gap:6px}
+.asa-why .asa-enh-list li{margin:0}
+.asa-why .asa-enh-cost{background:#fff;border:1px solid var(--asa-line);border-radius:14px;padding:14px 18px}
+.asa-why .asa-enh-cost span{display:block;font-size:.95rem;color:var(--asa-blue)}
+.asa-why .asa-enh-plans .asa-card{display:flex;flex-direction:column;gap:12px;position:relative}
+.asa-why .asa-enh-plans .asa-price{margin:0}
+.asa-why .asa-enh-plans .asa-enh-list{color:var(--asa-muted);font-size:.98rem;flex:1}
+.asa-why .asa-enh-plans .asa-enh-when{font-size:.9rem;color:var(--asa-blue)}
+.asa-why .asa-enh-pop{border:2px solid var(--asa-blue);box-shadow:0 14px 34px rgba(3,124,175,.12)}
+.asa-why .asa-enh-badge{position:absolute;top:-14px;left:24px;background:var(--asa-blue);color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:999px}
+@media (max-width:900px){.asa-why .asa-enh-plans{row-gap:32px}}
+@media (min-width:901px){
+.asa-why .asa-enh-split{grid-template-columns:5fr 7fr;gap:48px}
+.asa-why .asa-enh-flip .asa-enh-body{order:-1}
+}
