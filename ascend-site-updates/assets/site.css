@@ -1,0 +1,185 @@
+/* Ascend Site Updates: styles for the sections added by this plugin. Scoped to .asa-why. */
+/* Base (same as the Why Choose page styles, so new sections work on their own) */
+.asa-why{--asa-blue:#037CAF;--asa-sky:#009CDE;--asa-navy:#0B3A53;--asa-green:#1D4010;--asa-mint:#BFE0B4;--asa-ink:#1f2a33;--asa-muted:#55636e;--asa-line:#dbe7ee;--asa-soft:#f2f8fb;font-family:'Roboto',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;color:var(--asa-ink);line-height:1.6;font-size:17px}
+.asa-why *,.asa-why *::before,.asa-why *::after{box-sizing:border-box}
+.asa-why .asa-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.asa-why .asa-sec{padding:64px 0}
+.asa-why h1,.asa-why h2,.asa-why h3{font-family:inherit;margin:0;line-height:1.2;letter-spacing:-.01em}
+.asa-why h2{font-size:clamp(1.6rem,3.2vw,2.3rem);color:var(--asa-navy);font-weight:700}
+.asa-why h3{font-size:1.15rem;color:var(--asa-navy);font-weight:700}
+.asa-why p{margin:0}
+.asa-why .asa-eyebrow{display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--asa-blue);margin-bottom:10px}
+.asa-why .asa-lead{font-size:1.1rem;color:var(--asa-muted);max-width:720px}
+.asa-why .asa-center{text-align:center}
+.asa-why .asa-center .asa-lead{margin-left:auto;margin-right:auto}
+.asa-why a.asa-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:12px 26px;border-radius:999px;font-weight:700;font-size:1rem;text-decoration:none;transition:transform .15s,box-shadow .15s,background .15s;border:2px solid transparent}
+.asa-why a.asa-btn:hover{transform:translateY(-1px)}
+.asa-why a.asa-btn:focus-visible{outline:3px solid #ffd166;outline-offset:3px}
+.asa-why a.asa-btn-primary{background:#ffd166;color:#10222e;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.asa-why a.asa-btn-primary:hover{background:#ffc53d;color:#10222e}
+.asa-why a.asa-btn-ghost{border-color:rgba(255,255,255,.7);color:#fff;background:transparent}
+.asa-why a.asa-btn-ghost:hover{background:rgba(255,255,255,.12);color:#fff}
+.asa-why a.asa-btn-blue{background:var(--asa-blue);color:#fff}
+.asa-why a.asa-btn-blue:hover{background:#02648d;color:#fff}
+.asa-why a.asa-btn-outline{border-color:var(--asa-blue);color:var(--asa-blue);background:#fff}
+.asa-why a.asa-btn-outline:hover{background:var(--asa-soft);color:var(--asa-blue)}
+.asa-why .asa-btns{display:flex;flex-wrap:wrap;gap:12px}
+.asa-why .asa-cta .asa-btns{justify-content:center}
+.asa-why .asa-mt{margin-top:12px}
+.asa-why .asa-center .asa-btns{justify-content:center}
+
+/* hero */
+.asa-why .asa-hero{position:relative;overflow:hidden;color:#fff;margin-top:0;background:radial-gradient(1200px 500px at 85% -10%,rgba(0,156,222,.55),transparent 60%),linear-gradient(135deg,#0B3A53 0%,#037CAF 60%,#009CDE 100%);border-radius:0 0 36px 36px;padding:170px 0 72px}
+.asa-why .asa-hero::after{content:"";position:absolute;right:-60px;bottom:-60px;width:320px;height:320px;border-radius:50%;background:rgba(191,224,180,.18)}
+.asa-why .asa-hero .asa-wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.3fr .9fr;gap:40px;align-items:center}
+.asa-why .asa-hero .asa-eyebrow{color:var(--asa-mint)}
+.asa-why .asa-hero h1{font-size:clamp(2rem,4.6vw,3.2rem);font-weight:800;color:#fff}
+.asa-why .asa-hero h1 span{color:#ffd166}
+.asa-why .asa-hero p.asa-sub{margin:18px 0 28px;font-size:1.15rem;color:rgba(255,255,255,.9);max-width:600px}
+.asa-why .asa-hero-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:22px;padding:26px;backdrop-filter:blur(4px)}
+.asa-why .asa-hero-card h3{color:#fff;font-size:1.1rem;margin-bottom:6px}
+.asa-why .asa-hero-card p{color:rgba(255,255,255,.88);font-size:.98rem}
+.asa-why .asa-chips{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px}
+.asa-why .asa-chips li{display:flex;align-items:center;gap:10px;font-weight:600;font-size:.98rem;margin:0}
+.asa-why .asa-chips li::before{content:"";flex:0 0 22px;height:22px;border-radius:50%;background:#BFE0B4 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231D4010' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E") center/14px no-repeat}
+
+/* compare */
+.asa-why .asa-compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:36px}
+.asa-why .asa-col{border-radius:22px;padding:28px;border:1px solid var(--asa-line);background:#fff}
+.asa-why .asa-col.is-us{border:2px solid var(--asa-blue);background:linear-gradient(180deg,#f2f9fd 0%,#fff 60%);box-shadow:0 14px 34px rgba(3,124,175,.12);position:relative}
+.asa-why .asa-col.is-us .asa-badge{position:absolute;top:-14px;left:24px;background:var(--asa-blue);color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 12px;border-radius:999px}
+.asa-why .asa-col h3{margin-bottom:14px}
+.asa-why .asa-col.is-them h3{color:var(--asa-muted)}
+.asa-why .asa-col ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.asa-why .asa-col li{display:flex;gap:12px;align-items:flex-start;margin:0}
+.asa-why .asa-col.is-them li{color:var(--asa-muted)}
+
+/* benefits */
+.asa-why .asa-alt{background:var(--asa-soft)}
+.asa-why .asa-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:36px}
+.asa-why .asa-card{background:#fff;border:1px solid var(--asa-line);border-radius:20px;padding:26px;transition:transform .2s,box-shadow .2s}
+.asa-why .asa-card:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(11,58,83,.1)}
+.asa-why .asa-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:16px;background:linear-gradient(135deg,#e2f3fb,#d3ecf7);color:var(--asa-blue)}
+.asa-why .asa-card:nth-child(3n+2) .asa-icon{background:linear-gradient(135deg,#e9f5e4,#d9eed0);color:#2f6b1c}
+.asa-why .asa-card:nth-child(3n+3) .asa-icon{background:linear-gradient(135deg,#fff4d6,#ffe9ad);color:#9a6a00}
+.asa-why .asa-card h3{margin-bottom:8px}
+.asa-why .asa-card p{color:var(--asa-muted);font-size:.98rem}
+
+/* quote */
+.asa-why .asa-quote{margin-top:40px;border-radius:24px;padding:34px 36px;background:linear-gradient(120deg,#1D4010,#2f6b1c);color:#fff;display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:center}
+.asa-why .asa-quote .asa-qmark{font-size:4.5rem;line-height:.8;color:#BFE0B4;font-family:Georgia,serif}
+.asa-why .asa-quote p{font-size:1.3rem;font-weight:600}
+.asa-why .asa-quote p span{display:block;font-size:1rem;font-weight:400;opacity:.9;margin-top:6px}
+
+/* steps */
+.asa-why .asa-steps{list-style:none;margin:36px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:asa}
+.asa-why .asa-steps li{margin:0;position:relative;background:#fff;border:1px solid var(--asa-line);border-radius:20px;padding:30px 24px 24px;counter-increment:asa}
+.asa-why .asa-steps li::before{content:counter(asa);position:absolute;top:-18px;left:24px;width:40px;height:40px;border-radius:50%;background:var(--asa-blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(3,124,175,.3)}
+.asa-why .asa-steps h3{margin-bottom:8px}
+.asa-why .asa-steps p{color:var(--asa-muted);font-size:.98rem}
+.asa-why .asa-steps a{color:var(--asa-blue);font-weight:600}
+
+/* guides */
+.asa-why .asa-guides{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px}
+.asa-why a.asa-guide{display:flex;flex-direction:column;gap:10px;padding:22px;border-radius:18px;background:#fff;border:1px solid var(--asa-line);text-decoration:none;color:var(--asa-ink);transition:border-color .2s,transform .2s}
+.asa-why a.asa-guide:hover{border-color:var(--asa-blue);transform:translateY(-2px);color:var(--asa-ink)}
+.asa-why a.asa-guide .asa-tag{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--asa-blue)}
+.asa-why a.asa-guide strong{font-size:1.05rem;color:var(--asa-navy);line-height:1.35}
+.asa-why a.asa-guide .asa-more{margin-top:auto;font-weight:700;color:var(--asa-blue);font-size:.92rem}
+
+/* final cta */
+.asa-why .asa-cta{border-radius:28px;padding:52px 32px;background:linear-gradient(135deg,#0B3A53,#037CAF);color:#fff;text-align:center}
+.asa-why .asa-cta h2{color:#fff}
+.asa-why .asa-cta p{color:rgba(255,255,255,.9);margin:12px auto 26px;max-width:620px;font-size:1.1rem}
+.asa-why .asa-fine{font-size:.9rem;color:rgba(255,255,255,.75);margin-top:18px}
+.asa-why .asa-fine a{color:#fff;text-decoration:underline}
+
+@media (max-width:900px){
+.asa-why .asa-hero .asa-wrap,.asa-why .asa-compare{grid-template-columns:1fr}
+.asa-why .asa-grid,.asa-why .asa-guides{grid-template-columns:1fr 1fr}
+.asa-why .asa-steps{grid-template-columns:1fr;gap:30px}
+}
+@media (max-width:600px){
+.asa-why{font-size:16px}
+.asa-why .asa-sec{padding:48px 0}
+.asa-why .asa-hero{padding:140px 0 52px;border-radius:0 0 24px 24px}
+.asa-why .asa-grid,.asa-why .asa-guides{grid-template-columns:1fr}
+.asa-why .asa-quote{grid-template-columns:1fr;padding:28px 24px;gap:6px}
+.asa-why .asa-btns a.asa-btn{width:100%}
+.asa-why .asa-cta{padding:40px 20px;border-radius:22px}
+}
+@media (prefers-reduced-motion:reduce){.asa-why *{transition:none!important}}
+
+/* icons (CSS masks so the page HTML stays plain) */
+.asa-why .asa-i,.asa-why .asa-mark{display:inline-block;background:currentColor;-webkit-mask:var(--asa-m) center/contain no-repeat;mask:var(--asa-m) center/contain no-repeat}
+.asa-why .asa-i{width:28px;height:28px}
+.asa-why .asa-mark{flex:0 0 22px;width:22px;height:22px;margin-top:3px}
+.asa-why .asa-ck{color:#037CAF;--asa-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")}
+.asa-why .asa-x{color:#9aa7b0;--asa-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E")}
+.asa-why .asa-i-file{--asa-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 3v5h5'/%3E%3Cpath d='M9 14l2 2 4-4'/%3E%3C/svg%3E")}
+.asa-why .asa-i-chat{--asa-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3Cpath d='M8 9h8M8 13h5'/%3E%3C/svg%3E")}
+.asa-why .asa-i-cap{--asa-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 10L12 5 2 10l10 5 10-5z'/%3E%3Cpath d='M6 12v5c3 2 9 2 12 0v-5'/%3E%3C/svg%3E")}
+.asa-why .asa-i-shield{--asa-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z'/%3E%3Cpath d='M9 12l2 2 4-4'/%3E%3C/svg%3E")}
+.asa-why .asa-i-book{--asa-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 19.5A2.5 2.5 0 0 1 6.5 17H20'/%3E%3Cpath d='M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z'/%3E%3Cpath d='M9 7h7M9 11h5'/%3E%3C/svg%3E")}
+.asa-why .asa-i-compass{--asa-m:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M16.2 7.8l-2.1 6.3-6.3 2.1 2.1-6.3z'/%3E%3C/svg%3E")}
+
+/* Sections inside Elementor pages sit in boxed containers; let them breathe */
+.asa-why.asa-embed .asa-sec{padding:48px 0}
+.asa-why.asa-embed .asa-wrap{padding:0}
+
+/* Games band */
+.asa-why .asa-games{background:linear-gradient(180deg,#f2f8fb 0%,#fff 100%);border-radius:28px}
+.asa-why .asa-game-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:32px}
+.asa-why a.asa-game{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:20px 14px;border-radius:20px;background:#fff;border:1px solid var(--asa-line);text-decoration:none;color:var(--asa-ink);transition:transform .2s,border-color .2s,box-shadow .2s}
+.asa-why a.asa-game:hover{transform:translateY(-3px);border-color:var(--asa-blue);box-shadow:0 14px 28px rgba(11,58,83,.1);color:var(--asa-ink)}
+.asa-why a.asa-game img{width:88px;height:88px;object-fit:contain;margin-bottom:6px}
+.asa-why .asa-game-name{font-weight:800;color:var(--asa-navy);font-size:1.05rem}
+.asa-why .asa-game-desc{color:var(--asa-muted);font-size:.92rem;line-height:1.4}
+.asa-why .asa-game .asa-more{margin-top:auto;padding-top:6px;font-weight:700;color:var(--asa-blue);font-size:.9rem}
+.asa-why .asa-pass{margin-top:22px;text-align:center;color:var(--asa-muted)}
+.asa-why .asa-pass a{color:var(--asa-blue);font-weight:700}
+
+/* Tuition table */
+.asa-why .asa-tuition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.asa-why .asa-tcard{background:#fff;border:1px solid var(--asa-line);border-radius:20px;padding:24px}
+.asa-why .asa-tcard h3{margin-bottom:12px}
+.asa-why .asa-tcard dl{margin:0;display:grid;gap:10px}
+.asa-why .asa-tcard dl div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;border-top:1px dashed var(--asa-line);padding-top:10px}
+.asa-why .asa-tcard dt{color:var(--asa-muted);font-weight:600}
+.asa-why .asa-tcard dd{margin:0;font-size:1.6rem;font-weight:800;color:var(--asa-navy);font-variant-numeric:tabular-nums}
+.asa-why .asa-tcard dd span{font-size:.9rem;font-weight:600;color:var(--asa-muted)}
+.asa-why .asa-tcard.asa-hl{background:linear-gradient(135deg,#1D4010,#2f6b1c);border-color:transparent;color:#fff}
+.asa-why .asa-tcard.asa-hl h3{color:#fff}
+.asa-why .asa-tcard.asa-hl p{color:rgba(255,255,255,.9)}
+.asa-why .asa-tnote{margin-top:14px;color:var(--asa-muted);text-align:center;font-size:.95rem}
+
+/* Topic filters on the blog */
+.asa-why .asa-topics{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 0 24px}
+.asa-why .asa-topics a{padding:7px 14px;border-radius:999px;border:1px solid var(--asa-line);background:#fff;color:var(--asa-ink);text-decoration:none;font-weight:600;font-size:.92rem}
+.asa-why .asa-topics a[aria-current="page"]{background:var(--asa-navy);border-color:var(--asa-navy);color:#fff}
+.asa-why.asa-latest .asa-guides{margin-top:0}
+
+/* Small callouts and notes */
+.asa-why .asa-callout{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;background:var(--asa-soft);border:1px solid var(--asa-line);border-radius:20px;padding:22px 26px}
+.asa-why .asa-callout p{margin:0;max-width:640px}
+.asa-why .asa-note{background:#fff8e1;border:1px solid #f3dd9a;border-radius:14px;padding:14px 18px;color:#5b4700}
+.asa-why .asa-price,.asa-why .asa-card p.asa-price{font-size:1.8rem;font-weight:800;color:var(--asa-blue);margin:4px 0 8px}
+
+/* Long-form text (privacy policy) */
+.asa-why .asa-policy{max-width:760px;margin:0 auto;text-align:left}
+.asa-why .asa-policy h2{font-size:1.3rem;margin:32px 0 10px}
+.asa-why .asa-policy p,.asa-why .asa-policy li{color:var(--asa-ink);margin:0 0 10px}
+.asa-why .asa-policy ul{margin:0 0 12px 1.2em;padding:0}
+.asa-why .asa-policy .asa-meta{color:var(--asa-muted)}
+
+/* Two-up card grid */
+.asa-why .asa-grid.asa-grid-2{grid-template-columns:repeat(2,1fr)}
+
+@media (max-width:900px){
+.asa-why .asa-game-grid{grid-template-columns:repeat(3,1fr)}
+.asa-why .asa-tuition-grid{grid-template-columns:1fr}
+}
+@media (max-width:600px){
+.asa-why .asa-game-grid{grid-template-columns:1fr 1fr}
+.asa-why .asa-grid.asa-grid-2{grid-template-columns:1fr}
+}

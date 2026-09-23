@@ -1,0 +1,1176 @@
+{
+ "version": "2026-09-23",
+ "pages": {
+  "2732": "Home",
+  "2780": "About Us",
+  "2781": "Enrollment",
+  "2782": "Program Enhancements",
+  "2783": "Graduation",
+  "2784": "FAQ",
+  "2785": "Contact Us",
+  "5025": "Resources and Information",
+  "4448": "Enrollment Agreement",
+  "3477": "Shop",
+  "3521": "Blog (Posts)",
+  "6097": "Time Card",
+  "4897": "Privacy Policy",
+  "7056": "My Account"
+ },
+ "changes": [
+  {
+   "type": "set",
+   "element": "0c61f50",
+   "setting": "header_size",
+   "value": "h1",
+   "id": "home-h1",
+   "page": 2732,
+   "label": "Make the hero tagline the page's main heading (H1)",
+   "why": "Search engines read the H1 as the page's topic. The tagline is currently an H5."
+  },
+  {
+   "type": "set",
+   "element": "a41b579",
+   "setting": "header_size",
+   "value": "h2",
+   "id": "home-h1-whoweare",
+   "page": 2732,
+   "label": "Change “Who We Are” from H1 to H2",
+   "why": "A page should have one H1."
+  },
+  {
+   "type": "replace",
+   "element": "45b45fbd",
+   "setting": "html",
+   "find": "<h1>Florida Homeschool<br>Compliance Wizard</h1>",
+   "replace": "<h2>Florida Homeschool<br>Compliance Wizard</h2>",
+   "count": 1,
+   "id": "home-h1-wizard",
+   "page": 2732,
+   "label": "Change the compliance wizard title from H1 to H2"
+  },
+  {
+   "type": "replace",
+   "element": "45b45fbd",
+   "setting": "html",
+   "find": "#ascend-compliance-wizard h1{",
+   "replace": "#ascend-compliance-wizard .acw-header h2{",
+   "count": 1,
+   "id": "home-h1-wizard-css",
+   "page": 2732,
+   "label": "Keep the wizard title's styling after the H2 change"
+  },
+  {
+   "type": "remove",
+   "element": "9fe7454",
+   "id": "home-empty",
+   "page": 2732,
+   "label": "Remove the empty HTML block in the hero"
+  },
+  {
+   "type": "replace",
+   "element": "4f7d1f5",
+   "setting": "editor",
+   "find": "Submitting a Notice of Intent ",
+   "replace": "Filing your own Notice of Intent (Ascend files the required notice for you)",
+   "count": 1,
+   "id": "home-noi",
+   "page": 2732,
+   "label": "Notice of Intent: say Ascend files it for you",
+   "why": "Matches your answer: Ascend files the notice with the district."
+  },
+  {
+   "type": "replace",
+   "element": "45b45fbd",
+   "setting": "html",
+   "find": "means no separate Notice of Intent to the district and no annual evaluation filing on your own — Ascend handles that as your school of record.",
+   "replace": "means you don’t file a Notice of Intent yourself (Ascend files the required notice with your district as your school of record), and no annual evaluation is required.",
+   "count": 1,
+   "id": "home-wizard-noi",
+   "page": 2732,
+   "label": "Wizard: correct the Notice of Intent and evaluation wording"
+  },
+  {
+   "type": "replace",
+   "element": "45b45fbd",
+   "setting": "html",
+   "find": "https://www.flsenate.gov/Laws/Statutes/2024/1002.41",
+   "replace": "http://www.leg.state.fl.us/statutes/index.cfm?App_mode=Display_Statute&amp;URL=1000-1099/1002/Sections/1002.41.html",
+   "count": 1,
+   "id": "home-wizard-statute",
+   "page": 2732,
+   "label": "Wizard: link to the current Florida statute instead of the 2024 edition",
+   "why": "The Legislature's link always shows the statute as currently in force."
+  },
+  {
+   "type": "insert",
+   "after": "102a02d",
+   "new": {
+    "id": "asuhg01",
+    "elType": "container",
+    "isInner": false,
+    "settings": {
+     "content_width": "boxed",
+     "flex_direction": "column",
+     "padding": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "padding_mobile": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "flex_gap": {
+      "size": 0,
+      "column": "0",
+      "row": "0",
+      "unit": "px",
+      "isLinked": true
+     }
+    },
+    "elements": [
+     {
+      "id": "asuhg02",
+      "elType": "widget",
+      "widgetType": "html",
+      "isInner": false,
+      "settings": {
+       "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec asa-games\" aria-labelledby=\"asa-games-h\"><div class=\"asa-wrap\"><div class=\"asa-center\"><span class=\"asa-eyebrow\">Free axolotl learning games</span><h2 id=\"asa-games-h\">Play, puzzle and learn every day</h2><p class=\"asa-lead asa-mt\">Quick daily puzzles that build vocabulary, logic and STEM thinking, starring our axolotl mascot.</p></div><div class=\"asa-game-grid\"><a class=\"asa-game\" href=\"https://ascendstemacademy.com/guess-a-lotl/\"><img src=\"https://ascendstemacademy.com/wp-content/uploads/2026/09/Capture-removebg-preview.png\" alt=\"\" loading=\"lazy\" width=\"88\" height=\"88\"><span class=\"asa-game-name\">Guess-a-lotl</span><span class=\"asa-game-desc\">Daily STEM word game</span><span class=\"asa-more\">Play &rarr;</span></a><a class=\"asa-game\" href=\"https://ascendstemacademy.com/connect-a-lotl/\"><img src=\"https://ascendstemacademy.com/wp-content/uploads/2026/09/Capture-removebg-preview-2.png\" alt=\"\" loading=\"lazy\" width=\"88\" height=\"88\"><span class=\"asa-game-name\">Connect-a-lotl</span><span class=\"asa-game-desc\">Find the four hidden groups</span><span class=\"asa-more\">Play &rarr;</span></a><a class=\"asa-game\" href=\"https://ascendstemacademy.com/cross-a-lotl/\"><img src=\"https://ascendstemacademy.com/wp-content/uploads/2026/09/axolotl_vector_image-removebg-preview.png\" alt=\"\" loading=\"lazy\" width=\"88\" height=\"88\"><span class=\"asa-game-name\">Cross-a-lotl</span><span class=\"asa-game-desc\">Daily axolotl word search</span><span class=\"asa-more\">Play &rarr;</span></a><a class=\"asa-game\" href=\"https://ascendstemacademy.com/hex-a-lotl/\"><img src=\"https://ascendstemacademy.com/wp-content/uploads/2026/09/Capture-removebg-preview-1.png\" alt=\"\" loading=\"lazy\" width=\"88\" height=\"88\"><span class=\"asa-game-name\">Hex-a-lotl</span><span class=\"asa-game-desc\">Hexagon logic puzzle</span><span class=\"asa-more\">Play &rarr;</span></a><a class=\"asa-game\" href=\"https://ascendstemacademy.com/grow-a-lotl/\"><img src=\"https://ascendstemacademy.com/wp-content/uploads/2026/09/stem-a-lotl-scientist-sticker.png\" alt=\"\" loading=\"lazy\" width=\"88\" height=\"88\"><span class=\"asa-game-name\">Grow-a-lotl</span><span class=\"asa-game-desc\">Daily stem-cell growth puzzle</span><span class=\"asa-more\">Play &rarr;</span></a></div><p class=\"asa-pass\">Can’t wait for tomorrow’s puzzle? The <a href=\"https://ascendstemacademy.com/product/axolotl-games-full-pond-pass/\">Full Pond Pass</a> unlocks every game with no daily wait.</p></div></section></div>",
+       "_title": "Games band"
+      },
+      "elements": []
+     }
+    ]
+   },
+   "id": "home-games",
+   "page": 2732,
+   "label": "Add a “Play free axolotl games” band after Benefits of Enrollment"
+  },
+  {
+   "type": "insert",
+   "at_end": true,
+   "new": {
+    "id": "asuhl01",
+    "elType": "container",
+    "isInner": false,
+    "settings": {
+     "content_width": "boxed",
+     "flex_direction": "column",
+     "padding": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "padding_mobile": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "flex_gap": {
+      "size": 0,
+      "column": "0",
+      "row": "0",
+      "unit": "px",
+      "isLinked": true
+     }
+    },
+    "elements": [
+     {
+      "id": "asuhl02",
+      "elType": "widget",
+      "widgetType": "html",
+      "isInner": false,
+      "settings": {
+       "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec\" aria-labelledby=\"asa-guides-h\"><div class=\"asa-wrap\"><div class=\"asa-center\"><span class=\"asa-eyebrow\">From the blog</span><h2 id=\"asa-guides-h\">Latest guides for Florida homeschool families</h2></div></div></section></div>",
+       "_title": "Latest guides heading"
+      },
+      "elements": []
+     },
+     {
+      "id": "asuhl03",
+      "elType": "widget",
+      "widgetType": "shortcode",
+      "isInner": false,
+      "settings": {
+       "shortcode": "[ascend_latest_guides count=\"4\"]"
+      },
+      "elements": []
+     },
+     {
+      "id": "asuhl04",
+      "elType": "widget",
+      "widgetType": "html",
+      "isInner": false,
+      "settings": {
+       "html": "<div class=\"asa-why asa-embed\"><p class=\"asa-center\" style=\"margin:18px 0 48px\"><a class=\"asa-btn asa-btn-outline\" href=\"https://ascendstemacademy.com/posts/\">See all guides</a></p></div>",
+       "_title": "See all guides"
+      },
+      "elements": []
+     }
+    ]
+   },
+   "id": "home-guides",
+   "page": 2732,
+   "label": "Add a “Latest guides” row at the end of the page",
+   "why": "Updates itself: always shows the four newest posts."
+  },
+  {
+   "type": "replace",
+   "element": "25cc1b3",
+   "setting": "description",
+   "find": "including guides, project ideas, field trips, workshops, and college and career support",
+   "replace": "including guides, project ideas, and college and career support",
+   "count": 1,
+   "id": "about-trips",
+   "page": 2780,
+   "label": "Remove field trips and workshops from Support and Guidance",
+   "why": "Your answer: take field trips off the site until they launch."
+  },
+  {
+   "type": "set",
+   "element": "235ba13",
+   "setting": "background_video_link",
+   "value": null,
+   "id": "about-video",
+   "page": 2780,
+   "label": "Remove the stock drone video from the header",
+   "why": "It's a third-party clip (IndigoDrone) and wasn't displaying anyway."
+  },
+  {
+   "type": "insert",
+   "before": "6249777",
+   "new": {
+    "id": "asuac01",
+    "elType": "container",
+    "isInner": false,
+    "settings": {
+     "content_width": "boxed",
+     "flex_direction": "column",
+     "padding": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "padding_mobile": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "flex_gap": {
+      "size": 0,
+      "column": "0",
+      "row": "0",
+      "unit": "px",
+      "isLinked": true
+     }
+    },
+    "elements": [
+     {
+      "id": "asuac02",
+      "elType": "widget",
+      "widgetType": "html",
+      "isInner": false,
+      "settings": {
+       "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec\" aria-labelledby=\"asa-about-cmp\"><div class=\"asa-wrap\"><div class=\"asa-center\"><span class=\"asa-eyebrow\">How we compare</span><h2 id=\"asa-about-cmp\">What you get with Ascend</h2><p class=\"asa-lead asa-mt\">Every umbrella school keeps your child’s records. Here’s what Ascend adds on top.</p></div><div class=\"asa-compare\"><div class=\"asa-col is-them\"><h3>A basic umbrella school</h3><ul><li><span class=\"asa-mark asa-x\" aria-hidden=\"true\"></span>Records filed through an automated portal</li><li><span class=\"asa-mark asa-x\" aria-hidden=\"true\"></span>Questions wait in a support-ticket queue</li><li><span class=\"asa-mark asa-x\" aria-hidden=\"true\"></span>A generic diploma and a basic record</li><li><span class=\"asa-mark asa-x\" aria-hidden=\"true\"></span>You find curriculum and resources on your own</li><li><span class=\"asa-mark asa-x\" aria-hidden=\"true\"></span>No particular focus</li></ul></div><div class=\"asa-col is-us\"><span class=\"asa-badge\">Ascend STEM Academy</span><h3>Support that goes further</h3><ul><li><span class=\"asa-mark asa-ck\" aria-hidden=\"true\"></span>A real person reviews your child’s file and files the district notice for you</li><li><span class=\"asa-mark asa-ck\" aria-hidden=\"true\"></span>Same-day or next-day answers from someone who knows your family</li><li><span class=\"asa-mark asa-ck\" aria-hidden=\"true\"></span>A 24-credit diploma and transcript aligned to Florida standards</li><li><span class=\"asa-mark asa-ck\" aria-hidden=\"true\"></span>Grade-by-grade guides and 60+ curated resources included</li><li><span class=\"asa-mark asa-ck\" aria-hidden=\"true\"></span>A STEM focus, with free axolotl learning games for kids</li><li><span class=\"asa-mark asa-ck\" aria-hidden=\"true\"></span>Optional progress reports, IDs, resume reviews and college and trade consulting</li></ul></div></div></div></section></div>",
+       "_title": "How we compare"
+      },
+      "elements": []
+     }
+    ]
+   },
+   "id": "about-compare",
+   "page": 2780,
+   "label": "Add a “What you get with Ascend” comparison",
+   "why": "Your request: talk about the school and what it offers compared to others."
+  },
+  {
+   "type": "insert",
+   "at_end": true,
+   "new": {
+    "id": "asuat01",
+    "elType": "container",
+    "isInner": false,
+    "settings": {
+     "content_width": "boxed",
+     "flex_direction": "column",
+     "padding": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "padding_mobile": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "flex_gap": {
+      "size": 0,
+      "column": "0",
+      "row": "0",
+      "unit": "px",
+      "isLinked": true
+     }
+    },
+    "elements": [
+     {
+      "id": "asuat02",
+      "elType": "widget",
+      "widgetType": "html",
+      "isInner": false,
+      "settings": {
+       "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec\"><div class=\"asa-wrap\"><div class=\"asa-cta\"><h2>Ready to join the Ascend STEM family?</h2><p>Enrollment is open year-round for grades K–12.</p><div class=\"asa-btns\"><a class=\"asa-btn asa-btn-primary\" href=\"https://ascendstemacademy.com/registration/\">Start enrollment</a><a class=\"asa-btn asa-btn-ghost\" href=\"https://calendar.app.google/Zrt44eK4625dPaz66\">Book a free 15-minute call</a></div><p class=\"asa-fine\">Questions first? <a href=\"https://ascendstemacademy.com/contact-us/\">Contact us</a> or <a href=\"https://calendar.app.google/Zrt44eK4625dPaz66\">book a free 15-minute call</a>.</p></div></div></section></div>",
+       "_title": "Closing call to action"
+      },
+      "elements": []
+     }
+    ]
+   },
+   "id": "about-cta",
+   "page": 2780,
+   "label": "End the page with Enroll and Book a call buttons"
+  },
+  {
+   "type": "remove",
+   "element": "6249777",
+   "id": "about-contact-btn",
+   "page": 2780,
+   "label": "Remove the old lone Contact Us button (the new closing section links to Contact)"
+  },
+  {
+   "type": "replace",
+   "element": "e94544a",
+   "setting": "editor",
+   "find": "Please scroll to the bottom of your account and complete the <strong>Enrollment Form</strong> for the child you wish to enroll.",
+   "replace": "Create your family account, then open the <strong>Enrollment Form</strong> in your account and complete it for each child you are enrolling.",
+   "count": 1,
+   "id": "enr-steps",
+   "page": 2781,
+   "label": "Clarify the enrollment steps (registration first)",
+   "why": "Your answer: keep Registration first."
+  },
+  {
+   "type": "replace",
+   "element": "4ce4b27",
+   "setting": "icon_list",
+   "find": "Opportunity Participation in Florida Virtual School",
+   "replace": "Option to take free FLVS Flex courses",
+   "count": 1,
+   "id": "enr-flvs",
+   "page": 2781,
+   "label": "Reword “Opportunity Participation in Florida Virtual School”"
+  },
+  {
+   "type": "remove_item",
+   "element": "c7a115c",
+   "setting": "icon_list",
+   "match_key": "text",
+   "match": "Field Trips and Workshops",
+   "id": "enr-trips",
+   "page": 2781,
+   "label": "Remove “Field Trips and Workshops (coming soon!)”"
+  },
+  {
+   "type": "set",
+   "element": "L8eKkSJ",
+   "setting": "background_image",
+   "value": null,
+   "id": "enr-strattic",
+   "page": 2781,
+   "label": "Remove the background image that loads from a template site",
+   "why": "It pointed at gene-2697.live.strattic.io and wasn't displaying."
+  },
+  {
+   "type": "insert",
+   "after": "7d42347",
+   "new": {
+    "id": "asuet01",
+    "elType": "container",
+    "isInner": false,
+    "settings": {
+     "content_width": "boxed",
+     "flex_direction": "column",
+     "padding": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "padding_mobile": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "flex_gap": {
+      "size": 0,
+      "column": "0",
+      "row": "0",
+      "unit": "px",
+      "isLinked": true
+     }
+    },
+    "elements": [
+     {
+      "id": "asuet02",
+      "elType": "widget",
+      "widgetType": "html",
+      "isInner": false,
+      "settings": {
+       "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec\" aria-label=\"Tuition\"><div class=\"asa-wrap\"><div class=\"asa-tuition-grid\"><div class=\"asa-tcard\"><h3>First-time enrollment</h3><dl><div><dt>Grades K–8</dt><dd>$185<span>/year</span></dd></div><div><dt>Grades 9–12</dt><dd>$200<span>/year</span></dd></div></dl></div><div class=\"asa-tcard\"><h3>Re-enrollment</h3><dl><div><dt>Grades K–8</dt><dd>$165<span>/year</span></dd></div><div><dt>Grades 9–12</dt><dd>$175<span>/year</span></dd></div></dl></div><div class=\"asa-tcard asa-hl\"><h3>Siblings save 10%</h3><p>Enrolling more than one child? Every additional child in the same order is 10% off. It’s applied automatically at checkout.</p></div></div><p class=\"asa-tnote\">Your child’s school year runs for 12 months from the day you enroll. Enrollment is open year-round.</p></div></section></div>",
+       "_title": "Tuition table"
+      },
+      "elements": []
+     }
+    ]
+   },
+   "id": "enr-tuition",
+   "page": 2781,
+   "label": "Show tuition as a plain table (with sibling pricing)",
+   "why": "Hover cards hide prices from Google and are awkward on phones."
+  },
+  {
+   "type": "remove",
+   "element": "3e4b691",
+   "id": "enr-hover",
+   "page": 2781,
+   "label": "Remove the old hover-reveal tuition cards"
+  },
+  {
+   "type": "replace",
+   "element": "1ee05e5",
+   "setting": "editor",
+   "find": "Michael’s, Joann Fabrics, Office Depot, and Barnes &amp; Noble.",
+   "replace": "Michael’s, Office Depot, and Barnes &amp; Noble.",
+   "count": 1,
+   "id": "enh-joann",
+   "page": 2782,
+   "label": "Remove Joann Fabrics (closed in 2025)"
+  },
+  {
+   "type": "replace",
+   "element": "1ee05e5",
+   "setting": "editor",
+   "find": "a Home Physical Address (HPA) Teacher Verification Letter",
+   "replace": "a Teacher Verification Letter (a letter from Ascend confirming you are your enrolled student’s home educator)",
+   "count": 1,
+   "id": "enh-hpa",
+   "page": 2782,
+   "label": "Explain the teacher verification letter"
+  },
+  {
+   "type": "remove",
+   "element": "rrt0001",
+   "id": "enh-delivery-1",
+   "page": 2782,
+   "label": "Remove repeated “Delivered in 5–7 business days” line (resume card 1)",
+   "why": "The page header already states delivery time."
+  },
+  {
+   "type": "remove",
+   "element": "rrt0002",
+   "id": "enh-delivery-2",
+   "page": 2782,
+   "label": "Remove repeated “Delivered in 5–7 business days” line (resume card 2)",
+   "why": "The page header already states delivery time."
+  },
+  {
+   "type": "remove",
+   "element": "rrt0003",
+   "id": "enh-delivery-3",
+   "page": 2782,
+   "label": "Remove repeated “Delivered in 5–7 business days” line (resume card 3)",
+   "why": "The page header already states delivery time."
+  },
+  {
+   "type": "remove",
+   "element": "e7af7fd",
+   "id": "enh-trips",
+   "page": 2782,
+   "label": "Remove the Field Trips and Workshops section",
+   "why": "Also removes the broken /blog/ link that lived in it."
+  },
+  {
+   "type": "insert",
+   "after": "rr00001",
+   "new": {
+    "id": "asuer01",
+    "elType": "container",
+    "isInner": false,
+    "settings": {
+     "content_width": "boxed",
+     "flex_direction": "column",
+     "padding": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "padding_mobile": {
+      "unit": "px",
+      "top": "0",
+      "right": "0",
+      "bottom": "0",
+      "left": "0",
+      "isLinked": true
+     },
+     "flex_gap": {
+      "size": 0,
+      "column": "0",
+      "row": "0",
+      "unit": "px",
+      "isLinked": true
+     }
+    },
+    "elements": [
+     {
+      "id": "asuer02",
+      "elType": "widget",
+      "widgetType": "html",
+      "isInner": false,
+      "settings": {
+       "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec\" aria-labelledby=\"asa-records-h\"><div class=\"asa-wrap\"><div class=\"asa-center\"><span class=\"asa-eyebrow\">Records on request</span><h2 id=\"asa-records-h\">Official transcripts and enrollment letters</h2></div><div class=\"asa-grid asa-grid-2\"><div class=\"asa-card\"><h3>Official transcript</h3><p class=\"asa-price\">$15</p><p>A signed official transcript of your student’s Ascend coursework and grades, for colleges, scholarships, employers or a new school.</p><p style=\"margin-top:14px\"><a class=\"asa-btn asa-btn-blue\" href=\"https://ascendstemacademy.com/product/official-transcript/\">Order a transcript</a></p></div><div class=\"asa-card\"><h3>Enrollment verification letter</h3><p class=\"asa-price\">Free</p><p>Proof that your child is enrolled with Ascend, for your school district, Step Up For Students, sports leagues or discounts. Free for enrolled families.</p><p style=\"margin-top:14px\"><a class=\"asa-btn asa-btn-outline\" href=\"https://ascendstemacademy.com/contact-us/\">Request a letter</a></p></div></div></div></section></div>",
+       "_title": "Transcripts and letters"
+      },
+      "elements": []
+     }
+    ]
+   },
+   "id": "enh-records",
+   "page": 2782,
+   "label": "Add official transcript ($15) and free enrollment verification letter",
+   "why": "Your prices: transcript $15, letter free."
+  },
+  {
+   "type": "replace",
+   "element": "efdf4e1",
+   "setting": "editor",
+   "find": "Please selecting the listed course",
+   "replace": "please select the listed course",
+   "count": 1,
+   "id": "grad-typo1",
+   "page": 2783,
+   "label": "Fix “Please selecting”"
+  },
+  {
+   "type": "replace",
+   "element": "85fb602",
+   "setting": "editor",
+   "find": "are no different than traditional private school transcript and diploma.",
+   "replace": "are no different from traditional private school transcripts and diplomas.",
+   "count": 1,
+   "id": "grad-typo2",
+   "page": 2783,
+   "label": "Fix “no different than … transcript and diploma”"
+  },
+  {
+   "type": "replace",
+   "element": "4f07a57",
+   "setting": "content",
+   "find": "Career and Technical Educations",
+   "replace": "Career and Technical Education",
+   "count": 1,
+   "id": "grad-typo3",
+   "page": 2783,
+   "label": "Fix “Career and Technical Educations”"
+  },
+  {
+   "type": "replace",
+   "element": "7402a87",
+   "setting": "content",
+   "find": "Geometry 1 (1 credit)",
+   "replace": "Geometry (1 credit)",
+   "count": 1,
+   "id": "grad-geometry",
+   "page": 2783,
+   "label": "Rename “Geometry 1” to “Geometry”"
+  },
+  {
+   "type": "replace",
+   "element": "9879983",
+   "setting": "content",
+   "find": "<p><span style=\"font-weight: 400;\">Physical Education</span></p>",
+   "replace": "",
+   "count": 1,
+   "done_if_absent": true,
+   "id": "grad-pe",
+   "page": 2783,
+   "label": "Remove Physical Education from the Science card (it's covered by H.O.P.E.)"
+  },
+  {
+   "type": "replace",
+   "element": "6be3f96",
+   "setting": "content",
+   "find": "<p> </p><p><span style=\"font-weight: 400;\">Agriscience</span></p><p><span style=\"font-weight: 400;\">Anatomy and Physiology</span></p><p><span style=\"font-weight: 400;\">Chemistry 1</span></p><p><span style=\"font-weight: 400;\">Earth-Space Science</span></p><p><span style=\"font-weight: 400;\">Environmental Science</span></p><p><span style=\"font-weight: 400;\">Forensic Science </span></p><p><span style=\"font-weight: 400;\">Marine Science 1</span></p><p><span style=\"font-weight: 400;\">Natural Resources and Conservation</span></p><p><span style=\"font-weight: 400;\">Physical Science</span></p><p><span style=\"font-weight: 400;\">Physics</span></p>",
+   "replace": "<p>Computer Science and Coding</p><p>Engineering and Robotics</p><p>World Languages (Spanish, ASL and more)</p><p>Psychology</p><p>Economics</p><p>Art, Music or Theatre</p><p>Career and Technical Education courses</p><p>Extra math and science courses (for example Chemistry or Physics)</p>",
+   "count": 1,
+   "id": "grad-electives",
+   "page": 2783,
+   "label": "Replace the Electives sample list (it was a copy of the Science list)"
+  },
+  {
+   "type": "replace",
+   "element": "b2e3bc6",
+   "setting": "content",
+   "find": "<p> </p><p> </p><p> </p><p> </p><p> </p>",
+   "replace": "",
+   "count": 1,
+   "done_if_absent": true,
+   "id": "grad-math-blank",
+   "page": 2783,
+   "label": "Remove the five empty lines at the bottom of the Math card"
+  },
+  {
+   "type": "insert",
+   "after": "1401f9c",
+   "new": {
+    "id": "asugm01",
+    "elType": "widget",
+    "widgetType": "html",
+    "isInner": false,
+    "settings": {
+     "html": "<div class=\"asa-why asa-embed\"><div class=\"asa-callout\" style=\"margin:24px 0\"><p><strong>Celebrate your graduate.</strong> Add the STEM-a-lotl Graduate sticker, a cap-and-tassel axolotl for water bottles and laptops.</p><a class=\"asa-btn asa-btn-outline\" href=\"https://ascendstemacademy.com/product/stem-a-lotl-graduate-sticker/\">See the Graduate sticker</a></div></div>",
+     "_title": "Graduation merch"
+    },
+    "elements": []
+   },
+   "id": "grad-merch",
+   "page": 2783,
+   "label": "Add a graduation merch callout under the Order button"
+  },
+  {
+   "type": "set_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "match_key": "title",
+   "match": "Is an Ascend STEM Academy diploma different",
+   "key": "heading",
+   "value": "",
+   "id": "faq-lorem",
+   "page": 2784,
+   "label": "Remove the “Lorem ipsum” placeholder"
+  },
+  {
+   "type": "set_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "match_key": "title",
+   "match": "Can we withdraw?",
+   "key": "content",
+   "value": "<p>Yes. Simply contact us via email to terminate enrollment. Your withdrawal will be recorded on the date that your request was sent. Ascend STEM Academy does not offer refunds if a student withdraws before his or her school year is completed. A student who withdraws from Ascend STEM Academy can enroll in public or private school or begin a course of homeschool.</p>",
+   "id": "faq-withdraw",
+   "page": 2784,
+   "label": "Replace the pasted page code in “Can we withdraw?” with the real answer"
+  },
+  {
+   "type": "set_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "match_key": "title",
+   "match": "must I notify the superintendent",
+   "key": "content",
+   "value": "<p>No, you don’t file anything with the superintendent yourself. Once your child is enrolled with Ascend, they are a private school student rather than a home education student, and Ascend files the required notice with your school district as their school of record. For more, read <a href=\"https://ascendstemacademy.com/umbrella-schools-flexibility-support-and-legal-compliance/\">Is an Umbrella School the Right Choice for Your Family?</a></p>",
+   "id": "faq-noi",
+   "page": 2784,
+   "label": "Superintendent answer: Ascend files the notice; fix the dead blog reference",
+   "why": "Matches your answer: Ascend files the notice."
+  },
+  {
+   "type": "set_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "match_key": "title",
+   "match": "Why pay Ascend STEM Academy?",
+   "key": "link.url",
+   "value": "https://ascendstemacademy.com/why-choose-ascend-stem-academy/",
+   "id": "faq-whypay",
+   "page": 2784,
+   "label": "Fix the broken “Why pay” link"
+  },
+  {
+   "type": "set_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "match_key": "title",
+   "match": "enroll in Florida Virtual School",
+   "key": "content",
+   "value": "<p>Yes! Ascend STEM Academy students can take free FLVS Flex courses, with hundreds of options for grades K–12. We’ll send registration details in your Parent-Teacher Manual when you enroll.</p>",
+   "id": "faq-flvs",
+   "page": 2784,
+   "label": "Rewrite the garbled FLVS Flex answer"
+  },
+  {
+   "type": "set_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "match_key": "title",
+   "match": "How many days of school are required?",
+   "key": "content",
+   "value": "<p>Ascend students complete 180 days of instruction per school year. That means 180 school days, not calendar days. Track them as you go on your time card.</p>",
+   "id": "faq-180",
+   "page": 2784,
+   "label": "Correct “180 calendar days”"
+  },
+  {
+   "type": "set_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "match_key": "title",
+   "match": "dual enroll",
+   "key": "content",
+   "value": "<p>Yes, they can. The <strong>College of Central Florida</strong> is the main option for families in Marion, Citrus and Levy counties. Families in other areas can ask their local state college about dual enrollment for private school students. See our <a href=\"https://ascendstemacademy.com/ascend-stem-academy-resources-and-information/\">Resources page</a> for details.</p>",
+   "id": "faq-dual",
+   "page": 2784,
+   "label": "Tidy the dual enrollment answer"
+  },
+  {
+   "type": "add_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "item": {
+    "heading": "",
+    "link": {
+     "url": "#"
+    },
+    "button_text": "Learn More",
+    "template": {
+     "template": ""
+    },
+    "image": {
+     "url": "https://ascendstemacademy.com/wp-content/plugins/unlimited-elements-for-elementor/images/placeholder.png"
+    },
+    "additional_heading_content": "<i class=\"fa fa-star\"></i>",
+    "_generated_id": "4fzv2",
+    "item_repeater_class": "elementor-repeater-item-4fzv2",
+    "_id": "asufq01",
+    "title": "Can we use a Florida scholarship like Step Up For Students?",
+    "content": "<p>Scholarship rules differ by program and change from year to year. Read our guide, <a href=\"https://ascendstemacademy.com/understanding-florida-school-choice-scholarships-and-florida-umbrella-schools/\">Understanding Florida School Choice Scholarships and Florida Umbrella Schools</a>, or <a href=\"https://ascendstemacademy.com/contact-us/\">contact us</a> to talk through your situation. We can provide an enrollment verification letter if your program asks for one.</p>"
+   },
+   "match_key": "title",
+   "position": 16,
+   "id": "faq-scholar",
+   "page": 2784,
+   "label": "Add FAQ: Can we use a Florida scholarship like Step Up For Students?"
+  },
+  {
+   "type": "add_item",
+   "element": "b973208",
+   "setting": "uc_items",
+   "item": {
+    "heading": "",
+    "link": {
+     "url": "#"
+    },
+    "button_text": "Learn More",
+    "template": {
+     "template": ""
+    },
+    "image": {
+     "url": "https://ascendstemacademy.com/wp-content/plugins/unlimited-elements-for-elementor/images/placeholder.png"
+    },
+    "additional_heading_content": "<i class=\"fa fa-star\"></i>",
+    "_generated_id": "4fzv2",
+    "item_repeater_class": "elementor-repeater-item-4fzv2",
+    "_id": "asufq02",
+    "title": "Can we switch to Ascend in the middle of the school year?",
+    "content": "<p>Yes. Enrollment is open year-round, and your child’s Ascend school year starts the day you enroll. If your child is in public school now, the withdrawal letter generator on our <a href=\"https://ascendstemacademy.com/enrollment/\">Enrollment page</a> writes the notice for your current school.</p>"
+   },
+   "match_key": "title",
+   "position": 17,
+   "id": "faq-midyear",
+   "page": 2784,
+   "label": "Add FAQ: Can we switch to Ascend in the middle of the school year?"
+  },
+  {
+   "type": "replace",
+   "element": "93d7129",
+   "setting": "link.url",
+   "find": "tel:+1386385-7653",
+   "replace": "tel:+13863857653",
+   "count": 1,
+   "id": "contact-tel",
+   "page": 2785,
+   "label": "Fix the phone link so phones can dial it"
+  },
+  {
+   "type": "replace",
+   "element": "53a3d09",
+   "setting": "eael_cta_btn_link.url",
+   "find": "?source=counselor-resources%22",
+   "replace": "?source=counselor-resources",
+   "count": 1,
+   "id": "res-22",
+   "page": 5025,
+   "label": "Fix the FLVS registration link (stray %22 at the end)"
+  },
+  {
+   "type": "replace",
+   "element": "3256f41",
+   "setting": "eael_cta_secondary_btn_link.url",
+   "find": "https://ascendstemacademy.com/register/",
+   "replace": "https://ascendstemacademy.com/registration/",
+   "count": 1,
+   "id": "res-register",
+   "page": 5025,
+   "label": "Fix “Log-In/Create Account” link (/register/ → /registration/)"
+  },
+  {
+   "type": "replace",
+   "element": "54e7ac5",
+   "setting": "eael_cta_btn_link.url",
+   "find": "ascendstemacademy.com/homeschool-resource-explorer",
+   "replace": "https://ascendstemacademy.com/ascend-stem-academy-resources-and-information/homeschool-resource-explorer/",
+   "count": 1,
+   "id": "res-explorer",
+   "page": 5025,
+   "label": "Fix the Resource Explorer button link (it had no https://)"
+  },
+  {
+   "type": "replace",
+   "element": "53a3d09",
+   "setting": "eael_cta_content",
+   "find": "while gaining access to Ascend STEM Academy’s hands-on STEM programs and in-person support.",
+   "replace": "while Ascend STEM Academy keeps their records and provides guidance and one-on-one support.",
+   "count": 1,
+   "id": "res-claim",
+   "page": 5025,
+   "label": "Remove the “hands-on STEM programs and in-person support” claim"
+  },
+  {
+   "type": "set",
+   "element": "bbf51b5",
+   "setting": "eael_infobox_sub_title",
+   "value": "",
+   "id": "res-subtitle",
+   "page": 5025,
+   "label": "Remove the “This is a sub title” placeholder"
+  },
+  {
+   "type": "replace",
+   "element": "6facabc",
+   "setting": "editor",
+   "find": "enroll my child at&nbsp; &nbsp; &nbsp; &nbsp;Ascend STEM Academy:",
+   "replace": "enroll my child at Ascend STEM Academy:",
+   "count": 1,
+   "id": "agr-spaces",
+   "page": 4448,
+   "label": "Remove the stray spaces in “enroll my child at …”"
+  },
+  {
+   "type": "replace",
+   "element": "6facabc",
+   "setting": "editor",
+   "find": "is permitted use and store this information",
+   "replace": "is permitted to use and store this information",
+   "count": 1,
+   "id": "agr-to",
+   "page": 4448,
+   "label": "Add the missing “to” (permitted to use)"
+  },
+  {
+   "type": "replace",
+   "element": "6facabc",
+   "setting": "editor",
+   "find": "2. To submit a quarterly report of daily attendance to the school administration.<br>To fulfill all requirements documented in the&nbsp;Policies section of your Welcome Packet&nbsp;or otherwise requested by Ascend STEM Academy.",
+   "replace": "2. To submit a quarterly report of daily attendance to the school administration, and to fulfill all requirements documented in the Policies section of the Welcome Packet or otherwise requested by Ascend STEM Academy.",
+   "count": 1,
+   "id": "agr-number",
+   "page": 4448,
+   "label": "Fold the unnumbered Welcome Packet sentence into item 2"
+  },
+  {
+   "type": "replace",
+   "element": "6facabc",
+   "setting": "editor",
+   "find": "as related to the Private School Act.",
+   "replace": "as related to private schools (Section 1002.42, Florida Statutes).",
+   "count": 1,
+   "id": "agr-statute",
+   "page": 4448,
+   "label": "Replace “the Private School Act” with the actual Florida statute"
+  },
+  {
+   "type": "replace",
+   "element": "6facabc",
+   "setting": "editor",
+   "find": "We release and hold harmless",
+   "replace": "I release and hold harmless",
+   "count": 1,
+   "id": "agr-voice",
+   "page": 4448,
+   "label": "Keep the agreement in the parent's voice (“I release”)"
+  },
+  {
+   "type": "replace",
+   "element": "6facabc",
+   "setting": "editor",
+   "find": "By signing my name and dating this document, I agree",
+   "replace": "By checking the agreement box and submitting my enrollment, I agree",
+   "count": 1,
+   "id": "agr-sign",
+   "page": 4448,
+   "label": "Match the signature wording to the checkbox"
+  },
+  {
+   "type": "replace_all",
+   "elements": [
+    {
+     "id": "asush01",
+     "elType": "container",
+     "isInner": false,
+     "settings": {
+      "content_width": "boxed",
+      "flex_direction": "column",
+      "padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": true
+      },
+      "padding_mobile": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": true
+      },
+      "flex_gap": {
+       "size": 0,
+       "column": "0",
+       "row": "0",
+       "unit": "px",
+       "isLinked": true
+      }
+     },
+     "elements": [
+      {
+       "id": "asush02",
+       "elType": "widget",
+       "widgetType": "html",
+       "isInner": false,
+       "settings": {
+        "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec\" style=\"padding-top:140px\"><div class=\"asa-wrap\"><div class=\"asa-center\"><span class=\"asa-eyebrow\">Ascend STEM Academy shop</span><h1 style=\"font-size:clamp(2rem,4.4vw,3rem);color:var(--asa-navy)\">Merch, student services and game passes</h1><p class=\"asa-lead asa-mt\">Show your school pride, order records and reports, or unlock every axolotl game.</p></div></div></section></div>",
+        "_title": "Shop intro"
+       },
+       "elements": []
+      },
+      {
+       "id": "asush03",
+       "elType": "widget",
+       "widgetType": "html",
+       "isInner": false,
+       "settings": {
+        "html": "<div class=\"asa-why asa-embed\"><div class=\"asa-center\" style=\"margin:36px 0 18px\"><h2>Merch</h2><p class=\"asa-lead asa-mt\">T-shirts, hoodies, stickers and more.</p></div></div>",
+        "_title": "Merch heading"
+       },
+       "elements": []
+      },
+      {
+       "id": "asush04",
+       "elType": "widget",
+       "widgetType": "shortcode",
+       "isInner": false,
+       "settings": {
+        "shortcode": "[products category=\"merch\" limit=\"24\" columns=\"4\" orderby=\"menu_order\"]"
+       },
+       "elements": []
+      },
+      {
+       "id": "asush05",
+       "elType": "widget",
+       "widgetType": "html",
+       "isInner": false,
+       "settings": {
+        "html": "<div class=\"asa-why asa-embed\"><div class=\"asa-center\" style=\"margin:36px 0 18px\"><h2>Student services</h2><p class=\"asa-lead asa-mt\">Progress reports, IDs, transcripts, resume reviews and graduation.</p></div></div>",
+        "_title": "Services heading"
+       },
+       "elements": []
+      },
+      {
+       "id": "asush06",
+       "elType": "widget",
+       "widgetType": "shortcode",
+       "isInner": false,
+       "settings": {
+        "shortcode": "[products category=\"enhancements\" limit=\"12\" columns=\"4\"]"
+       },
+       "elements": []
+      },
+      {
+       "id": "asush07",
+       "elType": "widget",
+       "widgetType": "html",
+       "isInner": false,
+       "settings": {
+        "html": "<div class=\"asa-why asa-embed\"><div class=\"asa-center\" style=\"margin:36px 0 18px\"><h2>Axolotl game passes</h2><p class=\"asa-lead asa-mt\">Unlock more puzzles in our free learning games.</p></div></div>",
+        "_title": "Games heading"
+       },
+       "elements": []
+      },
+      {
+       "id": "asush08",
+       "elType": "widget",
+       "widgetType": "shortcode",
+       "isInner": false,
+       "settings": {
+        "shortcode": "[products category=\"game-passes\" limit=\"4\" columns=\"2\"]"
+       },
+       "elements": []
+      }
+     ]
+    }
+   ],
+   "id": "shop-rebuild",
+   "page": 3477,
+   "label": "Rebuild the shop page: Merch, Student services and Game passes (tuition stays off)",
+   "why": "The old layout was stored in a broken format, so the page showed a stale “Report Card $15” listing."
+  },
+  {
+   "type": "insert",
+   "before": "5cbf73c",
+   "new": {
+    "id": "asubl01",
+    "elType": "widget",
+    "widgetType": "html",
+    "isInner": false,
+    "settings": {
+     "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec\" style=\"padding-top:140px\"><div class=\"asa-wrap\"><div class=\"asa-center\"><span class=\"asa-eyebrow\">The Ascend blog</span><h1 style=\"font-size:clamp(2rem,4.4vw,3rem);color:var(--asa-navy)\">Guides for Florida homeschool families</h1><p class=\"asa-lead asa-mt\">What to teach at every grade, homeschooling kids with ADHD, autism or anxiety, scholarships and how umbrella schools work.</p></div></div></section></div>",
+     "_title": "Blog intro"
+    },
+    "elements": []
+   },
+   "id": "blog-intro",
+   "page": 3521,
+   "label": "Add a heading and introduction to the blog"
+  },
+  {
+   "type": "replace",
+   "element": "5cbf73c",
+   "setting": "shortcode",
+   "find": "[bdp_post design=\"design-2\" grid=\"2\"]",
+   "replace": "[ascend_latest_guides count=\"50\" filters=\"1\"]",
+   "count": 1,
+   "id": "blog-grid",
+   "page": 3521,
+   "label": "Replace the broken post-list shortcode with a working grid and topic filters",
+   "why": "The Blog Designer plugin it needed isn't installed, so visitors saw the raw [bdp_post] text."
+  },
+  {
+   "type": "insert",
+   "before": "7939a138",
+   "new": {
+    "id": "asutc01",
+    "elType": "widget",
+    "widgetType": "html",
+    "isInner": false,
+    "settings": {
+     "html": "<div class=\"asa-why asa-embed\"><p class=\"asa-note\" style=\"margin:0 0 18px\"><strong>How attendance works:</strong> log hours here as you go. Ascend collects attendance four times a year, at the end of March, June, September and December. Questions? Call (386) 385-7653.</p></div>",
+     "_title": "Attendance note"
+    },
+    "elements": []
+   },
+   "id": "tc-note",
+   "page": 6097,
+   "label": "Explain quarterly attendance and add the office phone number",
+   "why": "Your answer: attendance is collected quarterly."
+  },
+  {
+   "type": "replace",
+   "element": "557b4894",
+   "setting": "editor",
+   "find": "href=\"https://ascendstemacademy.com/account/\"",
+   "replace": "href=\"https://ascendstemacademy.com/user/\"",
+   "count": 1,
+   "id": "myacct-link",
+   "page": 7056,
+   "label": "Point “Student Account” to the page where profiles and time cards live"
+  },
+  {
+   "type": "replace_all",
+   "elements": [
+    {
+     "id": "asupp01",
+     "elType": "container",
+     "isInner": false,
+     "settings": {
+      "content_width": "boxed",
+      "flex_direction": "column",
+      "padding": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": true
+      },
+      "padding_mobile": {
+       "unit": "px",
+       "top": "0",
+       "right": "0",
+       "bottom": "0",
+       "left": "0",
+       "isLinked": true
+      },
+      "flex_gap": {
+       "size": 0,
+       "column": "0",
+       "row": "0",
+       "unit": "px",
+       "isLinked": true
+      }
+     },
+     "elements": [
+      {
+       "id": "asupp02",
+       "elType": "widget",
+       "widgetType": "html",
+       "isInner": false,
+       "settings": {
+        "html": "<div class=\"asa-why asa-embed\"><section class=\"asa-sec\" style=\"padding-top:140px\"><div class=\"asa-wrap\"><article class=\"asa-policy\">\n<h1 style=\"font-size:clamp(2rem,4.4vw,2.8rem);color:var(--asa-navy)\">Ascend STEM Academy Privacy Policy</h1>\n<p class=\"asa-meta\">Effective date: September 23, 2026</p>\n<p>Ascend STEM Academy is a Florida private umbrella school for homeschool families. To keep your child&rsquo;s official school records we have to collect some personal information, and we take that responsibility seriously. This policy explains what we collect, why, who we share it with and the choices you have.</p>\n\n<h2>1. Information we collect</h2>\n<p><strong>About your family and student.</strong> Parent or guardian name, email, phone number and permanent mailing address; your child&rsquo;s name, date of birth, grade and other enrollment details.</p>\n<p><strong>Enrollment documents.</strong> The documents Florida requires for school enrollment, such as your child&rsquo;s birth certificate, Florida School Entry Health Exam (Form DH 3040) and Certificate of Immunization (Form DH 680) or Religious Exemption (Form DH 681).</p>\n<p><strong>School records.</strong> Attendance and time cards, courses, grades, progress reports, transcripts and graduation records. If you choose to share an IEP, 504 plan or other learning information, we keep it with your child&rsquo;s file.</p>\n<p><strong>Orders and payments.</strong> What you buy and your billing and shipping details. Payments are handled by our payment processors (WooPayments and PayPal); we do not store full card numbers.</p>\n<p><strong>Accounts and games.</strong> Your website login, and progress and purchases in our axolotl learning games, which are saved to the student account used to play.</p>\n<p><strong>Website use.</strong> Like most websites, we collect device, browser and usage information through cookies and similar tools, including Google Analytics and Google Tag Manager, Jetpack statistics, and embedded services such as Google reviews and YouTube videos.</p>\n<p><strong>Messages.</strong> What you send us by email, phone, forms or booked calls.</p>\n\n<h2>2. How we use it</h2>\n<ul>\n<li>To enroll your child, maintain official school records and meet Florida private school requirements, including filing the required notice with your school district.</li>\n<li>To issue transcripts, diplomas, progress reports, IDs and verification letters you request.</li>\n<li>To process orders and payments and ship items.</li>\n<li>To answer your questions and send important updates about enrollment and deadlines.</li>\n<li>To run, secure and improve our website and games.</li>\n<li>To send news and offers, only if you agree; you can unsubscribe at any time.</li>\n</ul>\n\n<h2>3. Who we share it with</h2>\n<p>We do not sell your personal information. We share it only:</p>\n<ul>\n<li><strong>With Florida school authorities</strong> when the law requires it, such as the notice filed with your school district or a records request from a school your child transfers to.</li>\n<li><strong>With people you ask us to send records to</strong>, such as colleges, scholarship programs or employers receiving a transcript or verification letter.</li>\n<li><strong>With service providers</strong> who help us run the school and the website, such as our web host, payment processors, email and analytics providers. They may use it only to provide their service to us.</li>\n<li><strong>When required by law</strong> or to protect the safety of a student, our families or our school.</li>\n</ul>\n\n<h2>4. Children&rsquo;s privacy</h2>\n<p>Information about students is provided by their parent or guardian as part of enrollment. Our games are designed for students and are played through an account set up by the family. We do not knowingly collect personal information from a child under 13 without a parent&rsquo;s consent. If you believe we have, please contact us and we will delete it.</p>\n\n<h2>5. How long we keep it</h2>\n<p>Official school records such as transcripts and graduation records are kept permanently, as schools are expected to do, so they are available whenever your child needs them. Other information is kept only as long as we need it for the purposes above or as the law requires.</p>\n\n<h2>6. How we protect it</h2>\n<p>We use reasonable safeguards, including secure connections, restricted access to student files and trusted service providers. No method of storing or sending information online is completely secure, so we cannot guarantee absolute security.</p>\n\n<h2>7. Your choices and rights</h2>\n<ul>\n<li>Ask to see or get a copy of the information we hold about you or your child.</li>\n<li>Ask us to correct information that is wrong.</li>\n<li>Ask us to delete information we are not required to keep as part of the school record.</li>\n<li>Unsubscribe from marketing emails using the link in any email.</li>\n<li>Block or delete cookies in your browser settings. Some site features may not work without them.</li>\n</ul>\n\n<h2>8. Changes to this policy</h2>\n<p>We may update this policy from time to time. The effective date at the top shows when it last changed. If we make a significant change, we will let enrolled families know.</p>\n\n<h2>9. Contact us</h2>\n<p>Questions or requests about your information: email <a href=\"mailto:ascendstemacademy@gmail.com\">ascendstemacademy@gmail.com</a> or call <a href=\"tel:+13863857653\">(386) 385-7653</a>.</p>\n</article></div></section></div>",
+        "_title": "Privacy Policy"
+       },
+       "elements": []
+      }
+     ]
+    }
+   ],
+   "id": "privacy-rewrite",
+   "page": 4897,
+   "label": "Replace the Privacy Policy with an updated version",
+   "why": "Covers student records, health and immunization forms, time cards, game progress, payments, cookies and analytics. Please read it before applying."
+  }
+ ]
+}

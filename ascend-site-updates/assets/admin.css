@@ -1,0 +1,18 @@
+.asu-wrap .asu-intro{max-width:880px;font-size:14px}
+.asu-applyall{margin:12px 0 24px}
+.asu-page{margin:28px 0}
+.asu-page h2{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.asu-page h2 a{font-size:13px;font-weight:400}
+.asu-table td{vertical-align:top}
+.asu-table td.asu-diff{max-width:520px;font-size:13px;line-height:1.5}
+.asu-diff del{background:#fde4e4;color:#8a1f1f;text-decoration:line-through}
+.asu-diff ins{background:#e3f5ea;color:#1e5b36;text-decoration:none}
+.asu-why{color:#50575e;font-size:12px}
+.asu-detail{color:#50575e;font-size:12px}
+.asu-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:12px;font-weight:600}
+.asu-pending{background:#dff1fa;color:#035f86}
+.asu-applied,.asu-done{background:#e3f5ea;color:#1e5b36}
+.asu-missing{background:#fff1cc;color:#7a5500}
+.asu-page-actions{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.asu-page-actions form{margin:0}
+.asu-list{list-style:disc;margin-left:20px}
