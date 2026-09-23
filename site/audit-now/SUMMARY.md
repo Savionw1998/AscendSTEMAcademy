@@ -60,3 +60,15 @@ Details per page: pages-1.md, pages-2.md, content-seo.md, shop.md.
   connector still reads 0, so check Products > filter by "Game Passes".
 - Tees 3903 and 3899: leftover ChatGPT markup removed; the wording is unchanged.
   Undo tokens: 6a0273e354953605186a3ce06cdaa8d3 (3903), ccc4aec8940c5fce5150596c78117a52 (3899), valid until 2026-09-26.
+- Shop: enrollment products 4461, 4463, 4464, 4466 set to catalog visibility "Search results only"
+  (product_visibility term exclude-from-catalog). They stay purchasable through Enrollment. To undo: edit each
+  product > Publish box > Catalog visibility > "Shop and search results".
+
+## Login / password reset findings (2026-09-23)
+- Ultimate Member reCAPTCHA is switched ON (v3, also on the WP login and lost-password forms) but the site key and
+  secret key are EMPTY. Likely cause of failed logins and password resets. Fix: Ultimate Member > Settings >
+  Extensions (or Secure) > reCAPTCHA: turn it off, or add real v3 keys.
+- Emails are sent "from" ascendstemacademy@gmail.com by the web server. Gmail and others often reject or spam-folder
+  that (the server is not allowed to send as gmail.com). Fix: set Ultimate Member > Settings > Email > "Mail appears
+  from address" to an @ascendstemacademy.com address, or send through real SMTP.
+- Test Account (119) is approved; last login 2026-09-17. 51 of 52 accounts are approved, 1 awaiting email confirmation.
