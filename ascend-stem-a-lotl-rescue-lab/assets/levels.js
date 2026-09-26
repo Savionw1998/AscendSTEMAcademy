@@ -1,17 +1,15 @@
-/* STEM-a-lotl: Rescue Lab — authored level content.
+/* STEM-a-lotl: Rescue Lab — the 40 authored puzzles.
  *
- * Shared by the game (browser), the standalone preview and the node tests, so it
- * is a plain UMD-ish script with no DOM access. Scene units: 100 wide x 60 tall,
- * y grows downward, ground at y = 56. All levels are deterministic: the same
- * design under the same variation always produces the same run (see engine.js).
+ * Every puzzle is a journey: a food pellet leaves the dispenser and must reach
+ * Lucas the axolotl. Four worlds of ten, one new idea at a time:
+ *   Meadow (ramps, bouncers, gravity) · Windy Hills (wind, fans, bees)
+ *   Pond (water, currents, fish, bubbles) · Waterfall Canyon (falls + everything)
  *
- * Every level has:
- *   free         — first three levels are free (the site's existing key rule:
- *                  one Pond Key permanently opens one premium level)
- *   variations   — the main mission first, then included variations; each is
- *                  solvable (tests/levels.test.js proves it with a search)
- *   challenges   — two optional badges: 'efficiency' and 'invention'
- *   reward       — the station area that visibly repairs on success
+ * Scene units: 100 wide x 60 tall, y grows downward, ground at y = 56.
+ * Shared by the game, the preview and the tests (tests/solutions.json holds a
+ * verified reference solution for every puzzle and every challenge).
+ * Text fields can be overridden per site through the ascend_rl_level_text
+ * option (see the plugin), without touching the physics.
  */
 (function (root, factory) {
   if (typeof module !== 'undefined' && module.exports) module.exports = factory();
@@ -21,310 +19,348 @@
 
   var GROUND = 56;
 
-  function seg(x1, y1, x2, y2, opts) {
-    var s = { x1: x1, y1: y1, x2: x2, y2: y2 };
-    if (opts) for (var k in opts) s[k] = opts[k];
+  /* ---- terrain helpers: each adds collision segments and a drawable fill ---- */
+  function seg(x1, y1, x2, y2, mat) { return { x1: x1, y1: y1, x2: x2, y2: y2, mat: mat || 'grass' }; }
+  function S(theme) { return { theme: theme, solids: [], fills: [], rocks: [], wind: [], water: [], falls: [], bugs: [], fish: [], bubbles: [] }; }
+  function ground(s, x1, x2, mat) {
+    mat = mat || (s.theme === 'canyon' ? 'rock' : 'grass');
+    s.solids.push(seg(x1, GROUND, x2, GROUND, mat));
+    s.fills.push({ shape: 'rect', x: x1, y: GROUND, w: x2 - x1, h: 8, mat: mat });
     return s;
   }
-  function ground() { return seg(-20, GROUND, 120, GROUND, { kind: 'ground' }); }
-  function platform(x1, x2, y) { return seg(x1, y, x2, y, { kind: 'platform' }); }
-  function wall(x, y1, y2) { return seg(x, y1, x, y2, { kind: 'wall' }); }
+  function ledge(s, x1, x2, y, mat) {
+    mat = mat || (s.theme === 'canyon' ? 'rock' : 'grass');
+    s.solids.push(seg(x1, y, x2, y, mat), seg(x1, y, x1, GROUND, mat), seg(x2, y, x2, GROUND, mat));
+    s.fills.push({ shape: 'rect', x: x1, y: y, w: x2 - x1, h: GROUND - y + 8, mat: mat });
+    return s;
+  }
+  function slab(s, x1, x2, y1, y2, mat) {
+    mat = mat || 'rock';
+    s.solids.push(seg(x1, y1, x2, y1, mat), seg(x1, y2, x2, y2, mat), seg(x1, y1, x1, y2, mat), seg(x2, y1, x2, y2, mat));
+    s.fills.push({ shape: 'rect', x: x1, y: y1, w: x2 - x1, h: y2 - y1, mat: mat });
+    return s;
+  }
+  function hill(s, x1, y1, x2, y2, mat) {
+    mat = mat || 'grass';
+    s.solids.push(seg(x1, y1, x2, y2, mat));
+    if (y1 < GROUND) s.solids.push(seg(x1, y1, x1, GROUND, mat));
+    if (y2 < GROUND) s.solids.push(seg(x2, y2, x2, GROUND, mat));
+    s.fills.push({ shape: 'poly', pts: [[x1, y1], [x2, y2], [x2, GROUND + 8], [x1, GROUND + 8]], mat: mat });
+    return s;
+  }
+  function pillar(s, x, y, w, mat) { return ledge(s, x - (w || 4) / 2, x + (w || 4) / 2, y, mat || 'rock'); }
+  function pond(s, x1, x2, surface, current) { s.water.push({ x: x1, y: surface, w: x2 - x1, h: GROUND - surface, current: current || 0 }); return s; }
+  function bed(s, x1, x2) { return ground(s, x1, x2, 'sand'); }
+  function falls(s, x1, x2, top) { s.falls.push({ x: x1, y: top || 0, w: x2 - x1, h: GROUND - (top || 0) }); return s; }
+  function wind(s, x, y, w, h, fx, gust, fy) { s.wind.push({ x: x, y: y, w: w, h: h, fx: fx, fy: fy || 0, gust: gust || 0 }); return s; }
+  function bee(s, x, y, ax, ay, period, phase) { s.bugs.push({ x: x, y: y, ax: ax, ay: ay, period: period, phase: phase || 0 }); return s; }
+  function fish(s, x, y, range, period, phase) { s.fish.push({ x: x, y: y, range: range, period: period, phase: phase || 0 }); return s; }
+  function rock(s, x, y, r) { s.rocks.push({ x: x, y: y, r: r }); return s; }
+  function bubbles(s, x1, x2, top, fy) { s.bubbles.push({ x: x1, y: top, w: x2 - x1, h: GROUND - top, fy: fy }); return s; }
+  function at(s, spawn, lucas, extra) {
+    s.spawn = { x: spawn[0], y: spawn[1] };
+    s.lucas = { x: lucas[0], y: lucas[1], face: lucas[2] || -1 };
+    if (extra) for (var k in extra) s[k] = extra[k];
+    return s;
+  }
+
+  var R22 = { type: 'ramp', len: 22 }, R16 = { type: 'ramp', len: 16 }, R30 = { type: 'ramp', len: 30 };
+  function tray() { var out = []; for (var i = 0; i < arguments.length; i += 2) { var t = JSON.parse(JSON.stringify(arguments[i])); t.count = arguments[i + 1]; out.push(t); } return out; }
+  var BOUNCER = { type: 'bouncer' }, FAN = { type: 'fan' }, BLOCK = { type: 'block' };
+
+  /* challenge helpers */
+  function lean(n) { return { id: 'lean', badge: 'efficiency', text: 'Lean build: feed Lucas using ' + n + ' part' + (n === 1 ? '' : 's') + ' or fewer.', rule: { type: 'maxParts', n: n } }; }
+  function quick(s) { return { id: 'quick', badge: 'invention', text: 'Hungry Lucas: feed him within ' + s + ' seconds.', rule: { type: 'maxTime', s: s } }; }
+  function gentle(d) { return { id: 'gentle', badge: 'invention', text: 'Gentle slopes: keep every part tilted ' + d + '° or less.', rule: { type: 'maxAngle', deg: d } }; }
+  function avoid(kinds, word) { return { id: 'avoid', badge: 'invention', text: 'Clean run: feed Lucas without touching ' + word + '.', rule: { type: 'avoid', kinds: kinds } }; }
+  function without(part, word, badge) { return { id: 'no-' + part, badge: badge || 'invention', text: 'Inventor: feed Lucas without using ' + word + '.', rule: { type: 'noPart', part: part } }; }
+  function use(event, kind, text) { return { id: 'use-' + event, badge: 'invention', text: text, rule: { type: 'touch', event: event, kind: kind } }; }
+  function dodge(event, text) { return { id: 'dodge-' + event, badge: 'invention', text: text, rule: { type: 'noTouch', event: event } }; }
+
+  function L(id, world, name, s, tr, o) {
+    var lvl = { id: id, world: world, name: name, scene: s, tray: tr, initial: o.initial || [], intro: o.intro, lesson: o.lesson, idea: o.idea, hint: o.hint || '', challenges: o.challenges };
+    return lvl;
+  }
 
   var LEVELS = [
-    /* ------------------------------------------------------------------ 1 */
-    {
-      id: 1, slug: 'supply-slide', name: 'Supply Slide', free: true, mode: 'physics',
-      area: 'dock', tool: 'Ramp', concept: 'Ramp angle, gravity and observing motion',
-      objective: 'Deliver the supply capsule into the collection basket.',
-      intro: 'The supply dock is closed. Tilt the ramp so the capsule rolls into the basket.',
-      reward: 'The supply dock opens.',
-      explain: 'A steeper ramp lets gravity speed the capsule up more, so it travels farther before it lands. You matched the slope to the basket.',
-      reflect: 'What changed when you tilted the ramp more?',
-      scene: {
-        spawn: { x: 16, y: 6 }, capsule: { r: 2.2 },
-        static: [ground()],
-        zones: [{ type: 'basket', x: 50, y: 48, w: 12, h: 8 }]
-      },
-      tray: [{ type: 'ramp', len: 22, count: 1 }],
+    /* ============================== World 1: Meadow ============================== */
+    L(1, 1, 'First Bite', at(ground(S('meadow'), -20, 120), [16, 6], [58, GROUND]), tray(R22, 1), {
       initial: [{ type: 'ramp', x: 24, y: 14, angle: 0, len: 22 }],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'Farther basket', scene: { zones: [{ type: 'basket', x: 60, y: 48, w: 12, h: 8 }] }, tray: [{ type: 'ramp', len: 30, count: 1 }], initial: [{ type: 'ramp', x: 26, y: 14, angle: 0, len: 30 }] },
-        { name: 'Small basket', scene: { zones: [{ type: 'basket', x: 52, y: 48, w: 8, h: 8 }] } }
-      ],
-      challenges: [
-        { id: 'quick', badge: 'efficiency', text: 'Quick delivery: the capsule settles within 4 seconds.', rule: { type: 'maxTime', s: 4 } },
-        { id: 'gentle', badge: 'invention', text: 'Gentle slope: deliver with the ramp tilted 12° or less.', rule: { type: 'partAngleMax', part: 'ramp', deg: 12 } }
-      ]
-    },
+      idea: 'Ramps and gravity',
+      intro: 'Lucas is hungry! Tilt the ramp so the pellet rolls to him.',
+      lesson: 'A flat ramp holds the pellet still. Tilt it, and gravity pulls the pellet along the slope toward Lucas.',
+      hint: 'Tap the ramp, then press Rotate + once or twice.',
+      challenges: [gentle(10), quick(4)]
+    }),
+    L(2, 1, 'Hilltop Picnic', at(ledge(ground(S('meadow'), -20, 120), 58, 120, 40), [18, 6], [74, 40]), tray(R30, 1), {
+      idea: 'Starting height',
+      intro: 'Lucas is having a picnic on the hill. The pellet has to land up there.',
+      lesson: 'The pellet can only end up lower than where it starts. Starting high gave it enough height to reach the hilltop.',
+      challenges: [gentle(25), quick(4)]
+    }),
+    L(3, 1, 'The Long Roll', at(ground(S('meadow'), -20, 120), [8, 6], [90, GROUND]), tray(R22, 2), {
+      idea: 'Speed from slopes',
+      intro: 'Lucas is way over on the far side of the meadow.',
+      lesson: 'The steeper and longer the slope, the more speed the pellet builds, and speed carries it across the flat grass.',
+      challenges: [quick(5), gentle(30)]
+    }),
+    L(4, 1, 'Boing!', at(ledge(ground(S('meadow'), -20, 120), 66, 120, 34), [22, 6], [80, 34]), tray(BOUNCER, 1, R22, 1), {
+      idea: 'Bouncers store energy',
+      intro: 'Lucas climbed onto a tall rock. Try the springy bouncer.',
+      lesson: 'The bouncer squashes when the pellet lands and springs back, sending the pellet up and over to Lucas.',
+      challenges: [lean(1), without('ramp', 'a ramp')]
+    }),
+    L(5, 1, 'Stone Wall', at(pillar(ground(S('meadow'), -20, 120), 48, 32, 4), [14, 6], [80, GROUND]), tray(R22, 2), {
+      idea: 'Going over obstacles',
+      intro: 'A stone wall stands between the pellet and Lucas.',
+      lesson: 'The pellet kept moving after it left the ramp. That forward motion carried it over the wall while gravity pulled it down.',
+      challenges: [lean(1), quick(4)]
+    }),
+    L(6, 1, 'Easy Does It', at(ground(S('meadow'), -20, 120), [30, 4], [62, GROUND], { eatSpeed: 32 }), tray(R22, 2), {
+      idea: 'Too fast to catch',
+      intro: 'Lucas is sleepy today. If the pellet zooms by, he will miss it.',
+      lesson: 'A shorter drop and a gentler slope made the pellet slow enough for Lucas to catch.',
+      challenges: [lean(1), gentle(20)]
+    }),
+    L(7, 1, 'Stepping Stones', at(ledge(ledge(ground(S('meadow'), -20, 120), 40, 58, 48, 'rock'), 66, 120, 40), [12, 6], [80, 40]), tray(R16, 2, BOUNCER, 1), {
+      idea: 'Planning a path',
+      intro: 'Lucas is at the top of the stepping stones.',
+      lesson: 'Breaking the trip into steps helped: each part only had to get the pellet to the next spot.',
+      challenges: [lean(2), quick(4)]
+    }),
+    L(8, 1, 'Over the Log', at(rock(ground(S('meadow'), -20, 120), 48, 51, 5), [16, 6], [80, GROUND]), tray(R22, 1, BOUNCER, 1), {
+      idea: 'Round obstacles',
+      intro: 'A mossy log is in the way. Over it, or off it?',
+      lesson: 'A round log sends the pellet off at an angle. Where it hits decides where it goes next.',
+      challenges: [lean(1), use('bump', 'rock', 'Log roll: bounce the pellet off the log on the way.')]
+    }),
+    L(9, 1, 'Low Ceiling', at(slab(ground(S('meadow'), -20, 120), 30, 74, 26, 32), [12, 6], [88, GROUND]), tray(R22, 2), {
+      idea: 'Tunnels and clearance',
+      intro: 'A rock shelf hangs over the meadow. The pellet has to fit underneath.',
+      lesson: 'A low, fast roll kept the pellet under the shelf. Rolling needs less room than flying.',
+      challenges: [quick(4), gentle(30)]
+    }),
+    L(10, 1, 'Meadow Feast', at(ledge(pillar(ground(S('meadow'), -20, 120), 40, 36, 4), 66, 120, 36), [14, 6], [86, 36]), tray(R22, 2, BOUNCER, 1), {
+      idea: 'Putting it together',
+      intro: 'A wall and a hill. Use everything you have learned in the meadow.',
+      lesson: 'Ramps give speed, bouncers give height, and planning the path got the pellet all the way to the picnic.',
+      challenges: [lean(2), quick(4)]
+    }),
 
-    /* ------------------------------------------------------------------ 2 */
-    {
-      id: 2, slug: 'rover-crossing', name: 'Rover Crossing', free: true, mode: 'bridge',
-      area: 'bridge', tool: 'Beams and supports', concept: 'Beams, supports and stable structures',
-      objective: 'Build a crossing so the rover reaches the far side.',
-      intro: 'The walkway collapsed. Lay beams across the gap. Long spans need a support underneath.',
-      reward: 'A bridge connects two areas of the station.',
-      explain: 'A beam only holds weight between its supports. Adding a post in the middle halves the span, so nothing sags.',
-      reflect: 'Where did the beam need help most?',
-      scene: {
-        rover: { x: 10, y: 37, r: 3 },
-        cliffs: [{ x1: 0, x2: 30, y: 40 }, { x1: 58, x2: 100, y: 40 }],
-        static: [ground(), platform(0, 30, 40), wall(30, 40, GROUND), platform(58, 100, 40), wall(58, 40, GROUND)],
-        zones: [{ type: 'goal', x: 84, y: 28, w: 14, h: 12 }],
-        maxSpan: 20
-      },
-      tray: [{ type: 'beam', len: 30, count: 1 }, { type: 'beam', len: 16, count: 2 }, { type: 'post', h: 16, count: 2 }],
-      initial: [],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'Wider gap', scene: { cliffs: [{ x1: 0, x2: 26, y: 40 }, { x1: 62, x2: 100, y: 40 }], static: [ground(), platform(0, 26, 40), wall(26, 40, GROUND), platform(62, 100, 40), wall(62, 40, GROUND)] }, tray: [{ type: 'beam', len: 30, count: 1 }, { type: 'beam', len: 16, count: 2 }, { type: 'post', h: 16, count: 3 }] },
-        { name: 'Short beams only', tray: [{ type: 'beam', len: 16, count: 2 }, { type: 'post', h: 16, count: 2 }] }
-      ],
-      challenges: [
-        { id: 'two', badge: 'efficiency', text: 'Lean build: cross using only 2 parts.', rule: { type: 'maxParts', n: 2 } },
-        { id: 'short', badge: 'invention', text: 'Short-beam bridge: cross without using the long beam.', rule: { type: 'noPartLen', part: 'beam', len: 30 } }
-      ]
-    },
+    /* =========================== World 2: Windy Hills =========================== */
+    L(11, 2, 'First Breeze', at(wind(ground(S('hills'), -20, 120), 20, 8, 50, 44, 40, 3), [14, 6], [76, GROUND]), tray(R22, 1), {
+      idea: 'Wind is a push',
+      intro: 'The wind is blowing across the hills today. Watch how it moves the pellet.',
+      lesson: 'Gravity pulled the pellet down while the wind pushed it sideways. Two pushes at once make a curved path.',
+      challenges: [gentle(15), quick(3)]
+    }),
+    L(12, 2, 'Headwind', at(wind(ground(S('hills'), -20, 120), 30, 0, 90, 56, -35, 0), [10, 6], [84, GROUND]), tray(R30, 1, FAN, 1), {
+      idea: 'Pushing against the wind',
+      intro: 'The wind blows toward the pellet. It will need extra help.',
+      lesson: 'The wind pushed back, so the pellet needed more speed, or a fan pushing harder the other way, to reach Lucas.',
+      challenges: [gentle(35), quick(4)]
+    }),
+    L(13, 2, 'Fan Club', at(ground(S('hills'), -20, 120), [14, 6], [56, GROUND]), tray(FAN, 1), {
+      idea: 'Fans make wind',
+      intro: 'No ramps today, just a fan. Where should the breeze blow?',
+      lesson: 'The fan pushed air, and the moving air pushed the pellet sideways as it fell. The longer it stayed in the breeze, the farther it drifted.',
+      challenges: [quick(2), { id: 'float', badge: 'invention', text: 'Floaty: let the pellet drift at least 2.5 seconds before Lucas eats it.', rule: { type: 'minTime', s: 2.5 } }]
+    }),
+    L(14, 2, 'Bee Careful', at(bee(ground(S('hills'), -20, 120), 50, 40, 10, 4, 3), [14, 6], [80, GROUND]), tray(R22, 2), {
+      idea: 'Moving obstacles',
+      intro: 'A busy bee buzzes back and forth. Try not to bonk it.',
+      lesson: 'The bee is in a different place every moment. Changing the pellet’s path or speed changes when it passes the bee.',
+      challenges: [avoid(['bee'], 'the bee'), lean(1)]
+    }),
+    L(15, 2, 'Updraft', at(pillar(ground(S('hills'), -20, 120), 50, 26, 4), [16, 6], [78, GROUND]), tray(FAN, 1, R22, 1), {
+      idea: 'Lift from below',
+      intro: 'A tall stone wall. Can a fan lift the pellet over?',
+      lesson: 'A fan blowing upward pushed against gravity and lifted the pellet high enough to clear the wall.',
+      challenges: [gentle(30), quick(4)]
+    }),
+    L(16, 2, 'Crosswinds', at(wind(wind(ground(S('hills'), -20, 120), 0, 0, 60, 28, 45, 4), 30, 28, 70, 28, -40, 3), [10, 4], [80, GROUND]), tray(R22, 1, FAN, 1), {
+      idea: 'Winds in two directions',
+      intro: 'High wind blows right, low wind blows left. Lucas waits on the far side.',
+      lesson: 'The pellet was pushed one way up high and the other way down low. Adding up all the pushes tells you where it lands.',
+      challenges: [lean(1), without('fan', 'the fan')]
+    }),
+    L(17, 2, 'Busy Bees', at(bee(bee(ground(S('hills'), -20, 120), 40, 30, 8, 5, 2.6), 66, 44, 9, 3, 3.4, 1), [12, 6], [86, GROUND]), tray(R22, 2, BLOCK, 1), {
+      idea: 'Timing',
+      intro: 'Two bees are out collecting nectar. Plan a path between them.',
+      lesson: 'Two moving obstacles make timing tricky. A faster or slower path changes which gaps the pellet meets.',
+      challenges: [avoid(['bee'], 'any bee'), lean(2)]
+    }),
+    L(18, 2, 'Kite Hill', at(wind(ledge(hill(ground(S('hills'), -20, 120), 40, GROUND, 82, 32), 82, 120, 32), 36, 10, 64, 46, 30, 2.5), [12, 6], [92, 32]), tray(R22, 1, BOUNCER, 1), {
+      idea: 'Climbing a hill',
+      intro: 'Lucas is flying a kite at the top of the hill. The wind helps if you let it.',
+      lesson: 'Rolling uphill trades speed for height. The wind’s extra push gave the pellet enough energy to reach the top.',
+      challenges: [lean(1), use('wind', null, 'Wind rider: let the wind push the pellet on the way.')]
+    }),
+    L(19, 2, 'Windy Gap', at(wind(ground(ground(S('hills'), -20, 40), 64, 120), 30, 8, 40, 42, 30, 3), [12, 6], [84, GROUND]), tray(R30, 1, FAN, 1), {
+      idea: 'Crossing a gap',
+      intro: 'There is a gap in the hill. Do not let the pellet fall in!',
+      lesson: 'To cross a gap the pellet needs enough sideways speed before gravity pulls it down. Wind can supply some of that speed.',
+      challenges: [without('fan', 'the fan', 'efficiency'), quick(4)]
+    }),
+    L(20, 2, 'Windmill Picnic', at(bee(wind(ledge(pillar(ground(S('hills'), -20, 120), 58, 40, 4), 80, 120, 44), 50, 0, 50, 40, -30, 3), 70, 30, 6, 3, 3), [16, 4], [90, 44]), tray(R22, 2, FAN, 1, BOUNCER, 1), {
+      idea: 'Putting it together',
+      intro: 'Wind, a wall and a bee guard Lucas’s picnic spot.',
+      lesson: 'Every force on the way, gravity, the wind and your fan, added up to one path. Change one and the whole journey changes.',
+      challenges: [lean(2), avoid(['bee'], 'the bee')]
+    }),
 
-    /* ------------------------------------------------------------------ 3 */
-    {
-      id: 3, slug: 'cargo-balance', name: 'Cargo Balance', free: true, mode: 'balance',
-      area: 'greenhouse', tool: 'Cargo crates', concept: 'Mass distribution and balance',
-      objective: 'Load every crate so the delivery cart stays level.',
-      intro: 'The greenhouse needs supplies. Place all the crates so the cart balances on its pivot.',
-      reward: 'The greenhouse receives its supplies and blooms.',
-      explain: 'A crate far from the pivot tips the cart more than the same crate near it. You matched the turning effect on each side.',
-      reflect: 'Which crate had the biggest effect on the tilt?',
-      scene: { slots: [-3, -2, -1, 0, 1, 2, 3], crates: [3, 2, 1, 1], blocked: [] },
-      tray: [], initial: [],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'Five crates', scene: { slots: [-3, -2, -1, 0, 1, 2, 3], crates: [3, 3, 2, 1, 1], blocked: [] } },
-        { name: 'Broken middle', scene: { slots: [-3, -2, -1, 0, 1, 2, 3], crates: [2, 2, 1, 1], blocked: [0] } }
-      ],
-      challenges: [
-        { id: 'edge', badge: 'efficiency', text: 'Big lever: balance with the heaviest crate on an end slot.', rule: { type: 'heavyOnEdge' } },
-        { id: 'hollow', badge: 'invention', text: 'Hollow middle: balance with the centre slot empty.', rule: { type: 'centreEmpty' } }
-      ]
-    },
+    /* ============================== World 3: Pond ============================== */
+    L(21, 3, 'Splash Down', at(pond(bed(ledge(S('pond'), -20, 44, 38), 44, 120), 44, 120, 38, 0), [14, 6], [72, GROUND]), tray(R22, 1), {
+      idea: 'Water slows things down',
+      intro: 'Lucas lives in the pond! Get the pellet into the water above him.',
+      lesson: 'In water the pellet slowed down (drag) and sank gently because the water held it up a little (buoyancy).',
+      challenges: [gentle(15), quick(5)]
+    }),
+    L(22, 3, 'Go With the Flow', at(pond(bed(ledge(S('pond'), -20, 34, 36), 34, 120), 34, 120, 36, 30), [12, 6], [90, GROUND]), tray(R22, 1), {
+      idea: 'Currents carry things',
+      intro: 'The pond has a current today. It flows toward Lucas.',
+      lesson: 'The current is moving water, and it carried the sinking pellet along with it, all the way to Lucas.',
+      challenges: [gentle(10), quick(5)]
+    }),
+    L(23, 3, 'Against the Current', at(pond(bed(ledge(S('pond'), -20, 30, 34), 30, 120), 30, 120, 34, -22), [12, 6], [78, GROUND]), tray(R30, 1, BOUNCER, 1), {
+      idea: 'Working against a current',
+      intro: 'This time the current flows away from Lucas.',
+      lesson: 'The current pushed the pellet back, so it had to enter the water close to Lucas and sink before it drifted away.',
+      challenges: [quick(5), gentle(40)]
+    }),
+    L(24, 3, 'Fish Crossing', at(fish(pond(bed(ledge(S('pond'), -20, 36, 36), 36, 120), 36, 120, 36, 0), 66, 46, 12, 3), [14, 6], [82, GROUND]), tray(R22, 2), {
+      idea: 'Moving water life',
+      intro: 'A friendly fish swims across the pond. It might bump the pellet.',
+      lesson: 'The fish and the pellet were both moving. When they met, both changed direction, so timing and path both mattered.',
+      challenges: [avoid(['fish'], 'the fish'), lean(1)]
+    }),
+    L(25, 3, 'Island Picnic', at(ledge(pond(bed(ledge(S('pond'), -20, 24, 30), 24, 120), 24, 120, 40, 0), 70, 90, 40, 'rock'), [16, 6], [80, 40]), tray(R22, 1, BOUNCER, 1), {
+      idea: 'Landing on target',
+      intro: 'Lucas is sunbathing on a rock island. Miss, and the pellet sinks.',
+      lesson: 'To land on the island the pellet needed just the right speed. Too slow falls short, too fast flies over.',
+      challenges: [quick(4), dodge('splash', 'Dry delivery: feed Lucas without the pellet touching the water.')]
+    }),
+    L(26, 3, 'Deep Dive', at(pond(bed(ledge(S('pond'), -20, 26, 24), 26, 120), 26, 120, 24, 18), [10, 4], [88, GROUND]), tray(R22, 2), {
+      idea: 'Sinking takes time',
+      intro: 'The pond is deep today. Lucas waits at the very bottom.',
+      lesson: 'A deep pond means a long, slow sink. The gentle current had lots of time to carry the pellet along.',
+      challenges: [lean(1), quick(7)]
+    }),
+    L(27, 3, 'School of Fish', at(fish(fish(fish(pond(bed(ledge(S('pond'), -20, 30, 34), 30, 120), 30, 120, 34, 0), 50, 42, 6, 2.5), 64, 50, 8, 3.2, 1), 74, 40, 6, 2, 2), [12, 6], [86, GROUND]), tray(R22, 2, BLOCK, 1), {
+      idea: 'Many moving things',
+      intro: 'A whole school of fish is swimming by.',
+      lesson: 'With many moving fish, the safest path was the one that spent the least time where they swim.',
+      challenges: [quick(11), lean(1)]
+    }),
+    L(28, 3, 'Stream Race', at(rock(pond(bed(ledge(S('pond'), -20, 20, 30), 20, 120), 20, 120, 44, 40), 60, 52, 3.5), [12, 6], [92, GROUND]), tray(R30, 1, BLOCK, 1), {
+      idea: 'Fast water',
+      intro: 'A fast stream races toward Lucas. Rocks stick up from the bottom.',
+      lesson: 'The fast current did most of the work. The pellet just had to get into the stream without getting stuck behind the rock.',
+      challenges: [lean(1), use('bump', 'rock', 'Rock hop: bounce off the rock in the stream.')]
+    }),
+    L(29, 3, 'Bubble Lift', at(slab(ledge(bubbles(pond(bed(ledge(S('pond'), -20, 30, 30), 30, 120), 30, 120, 30, 10), 52, 62, 30, -70), 62, 100, 44, 'rock'), 62, 100, 20, 30, 'rock'), [12, 6], [80, 44]), tray(R22, 2), {
+      idea: 'Upward push in water',
+      intro: 'Lucas is hiding in an underwater cave. Bubbles rise from a spring by the entrance.',
+      lesson: 'The pellet sank past the cave, then the rising bubbles lifted it back up and the current carried it inside. An upward push can beat gravity.',
+      challenges: [gentle(30), quick(7)]
+    }),
+    L(30, 3, 'Pond Party', at(rock(fish(pond(bed(ledge(S('pond'), -20, 30, 32), 30, 120), 30, 120, 32, 15), 58, 44, 8, 2.8), 70, 50, 3), [12, 6], [90, GROUND]), tray(R22, 2, BOUNCER, 1, BLOCK, 1), {
+      idea: 'Putting it together',
+      intro: 'Fish, rocks and a current. It is a pond party!',
+      lesson: 'Drag, buoyancy, the current and the fish all acted at once. Watching each run showed which one to plan around.',
+      challenges: [lean(1), avoid(['fish'], 'the fish')]
+    }),
 
-    /* ------------------------------------------------------------------ 4 */
-    {
-      id: 4, slug: 'gentle-landing', name: 'Gentle Landing', free: false, mode: 'physics',
-      area: 'launcher', tool: 'Launcher', concept: 'Stored energy, trajectory and changing one variable',
-      objective: 'Launch the capsule onto the landing pad without overshooting.',
-      intro: 'The delivery launcher is back but untuned. Set its power and angle, then run. Change one thing at a time.',
-      reward: 'The delivery launcher starts working.',
-      explain: 'More power stores more energy, so the capsule flies farther. The angle decides how much of that goes up versus along.',
-      reflect: 'Did power or angle change the landing spot more?',
-      scene: {
-        launcher: { x: 12, y: 50, power: 3, angle: 45, powers: [1, 2, 3, 4, 5, 6], angles: [15, 30, 45, 60, 75] },
-        capsule: { r: 2.2 },
-        static: [ground(), platform(52, 68, 34), wall(52, 34, GROUND), wall(68, 34, GROUND)],
-        zones: [{ type: 'pad', x: 52, y: 26, w: 16, h: 8 }]
-      },
-      tray: [{ type: 'bumper', h: 8, count: 1 }],
-      initial: [],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'High pad', scene: { static: [ground(), platform(60, 76, 26), wall(60, 26, GROUND), wall(76, 26, GROUND)], zones: [{ type: 'pad', x: 60, y: 18, w: 16, h: 8 }] } },
-        { name: 'Far pad', scene: { static: [ground(), platform(70, 86, 44), wall(70, 44, GROUND), wall(86, 44, GROUND)], zones: [{ type: 'pad', x: 70, y: 36, w: 16, h: 8 }] } }
-      ],
-      challenges: [
-        { id: 'nobumper', badge: 'efficiency', text: 'Pure aim: land with launcher settings alone, no bumper.', rule: { type: 'maxParts', n: 0 } },
-        { id: 'lob', badge: 'invention', text: 'High lob: land with the angle set to 60° or more.', rule: { type: 'launcherAngleMin', a: 60 } }
-      ]
-    },
-
-    /* ------------------------------------------------------------------ 5 */
-    {
-      id: 5, slug: 'wind-works', name: 'Wind Works', free: false, mode: 'physics',
-      area: 'vents', tool: 'Fans and barriers', concept: 'Forces and comparing alternative routes',
-      objective: 'Use fans and barriers to guide the falling capsule into the basket.',
-      intro: 'The ventilation station is quiet. Fans push the capsule sideways while gravity pulls it down.',
-      reward: 'The ventilation station returns.',
-      explain: 'Two forces acted at once: gravity pulling down and the fan pushing sideways. Together they bent the capsule’s path.',
-      reflect: 'What would happen with the fan turned the other way?',
-      scene: {
-        spawn: { x: 14, y: 6 }, capsule: { r: 2.2 },
-        static: [ground()],
-        zones: [{ type: 'basket', x: 50, y: 46, w: 12, h: 10 }]
-      },
-      tray: [{ type: 'fan', count: 2 }, { type: 'barrier', len: 12, count: 2 }],
-      initial: [],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'Blow it back', scene: { spawn: { x: 82, y: 6 }, zones: [{ type: 'basket', x: 40, y: 46, w: 12, h: 10 }] } },
-        { name: 'Over the pipe', scene: { static: [ground(), platform(36, 48, 36), wall(36, 36, GROUND), wall(48, 36, GROUND)], zones: [{ type: 'basket', x: 62, y: 46, w: 12, h: 10 }] } }
-      ],
-      challenges: [
-        { id: 'onefan', badge: 'efficiency', text: 'One breeze: deliver with a single fan and nothing else.', rule: { type: 'maxParts', n: 1 } },
-        { id: 'barrier', badge: 'invention', text: 'Bounce route: deliver using at least one barrier.', rule: { type: 'minPartType', part: 'barrier', n: 1 } }
-      ]
-    },
-
-    /* ------------------------------------------------------------------ 6 */
-    {
-      id: 6, slug: 'gear-lift', name: 'Gear Lift', free: false, mode: 'gears',
-      area: 'platform', tool: 'Gears', concept: 'Gear ratios and mechanical advantage',
-      objective: 'Choose gears so the lift can raise the crate to the observation platform.',
-      intro: 'The motor is small. A bigger gear on the lift turns slower but with more force.',
-      reward: 'The observation platform becomes accessible.',
-      explain: 'The lift gear has more teeth than the motor gear, so it turns slower but with more turning force. That is mechanical advantage.',
-      reflect: 'What did the middle gear change, and what did it not change?',
-      scene: {
-        motor: { teeth: 8, rpm: 120 },
-        slots: ['idler', 'lift'],
-        lift: { height: 24, unitsPerRev: 2, needRatio: 3, timeLimit: 30 },
-        gears: [8, 16, 24, 32]
-      },
-      tray: [], initial: [],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'Heavy crate', scene: { motor: { teeth: 8, rpm: 120 }, slots: ['idler', 'lift'], lift: { height: 24, unitsPerRev: 2, needRatio: 4, timeLimit: 30 }, gears: [8, 16, 24, 32] } },
-        { name: 'Hurry up', scene: { motor: { teeth: 8, rpm: 120 }, slots: ['idler', 'lift'], lift: { height: 24, unitsPerRev: 2, needRatio: 3, timeLimit: 20 }, gears: [8, 16, 24, 32] } }
-      ],
-      challenges: [
-        { id: 'direct', badge: 'efficiency', text: 'Direct drive: lift the crate with no middle gear.', rule: { type: 'noIdler' } },
-        { id: 'sameway', badge: 'invention', text: 'Same spin: make the lift gear turn the same way as the motor.', rule: { type: 'liftSameDirection' } }
-      ]
-    },
-
-    /* ------------------------------------------------------------------ 7 */
-    {
-      id: 7, slug: 'light-the-lab', name: 'Light the Lab', free: false, mode: 'circuit',
-      area: 'lab', tool: 'Wires and a switch', concept: 'Closed circuits and simple diagnosis',
-      objective: 'Connect the battery, the switch and the lamp in one closed loop.',
-      intro: 'The lab is dark. Electricity only flows around a complete loop. Tap a tile to rotate it; tap the switch to open or close it.',
-      reward: 'The laboratory lights up.',
-      explain: 'Current needs an unbroken loop from the battery, through the lamp, and back. The switch is a gap you can open and close.',
-      reflect: 'What happened when the switch was open?',
-      scene: {
-        rows: 3, cols: 5,
-        fixed: [{ r: 1, c: 1, kind: 'battery' }, { r: 1, c: 3, kind: 'lamp' }],
-        blocked: [],
-        needSwitch: true
-      },
-      tray: [{ type: 'wire', count: 8 }, { type: 'corner', count: 6 }, { type: 'switch', count: 1 }],
-      initial: [],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'Around the pipe', scene: { rows: 3, cols: 5, fixed: [{ r: 1, c: 1, kind: 'battery' }, { r: 1, c: 3, kind: 'lamp' }], blocked: [{ r: 1, c: 2 }], needSwitch: true } },
-        { name: 'Two lamps', scene: { rows: 3, cols: 5, fixed: [{ r: 1, c: 1, kind: 'battery' }, { r: 0, c: 3, kind: 'lamp' }, { r: 2, c: 3, kind: 'lamp' }], blocked: [{ r: 1, c: 2 }], needSwitch: true } }
-      ],
-      challenges: [
-        { id: 'tight', badge: 'efficiency', text: 'Tight loop: light the lab using 6 tiles or fewer.', rule: { type: 'maxTiles', n: 6 } },
-        { id: 'grand', badge: 'invention', text: 'Grand tour: build a loop that uses 8 tiles or more.', rule: { type: 'minTiles', n: 8 } }
-      ]
-    },
-
-    /* ------------------------------------------------------------------ 8 */
-    {
-      id: 8, slug: 'rover-routine', name: 'Rover Routine', free: false, mode: 'code',
-      area: 'rover', tool: 'Action blocks', concept: 'Sequencing and debugging',
-      objective: 'Arrange action blocks so the rover delivers to every station.',
-      intro: 'The helper rover follows your blocks in order, top to bottom. Deliver at each station marker.',
-      reward: 'A helper rover joins the station.',
-      explain: 'The rover ran your steps in exactly the order you gave them. Watching where it went wrong told you which step to fix.',
-      reflect: 'Which block did you change after the first run?',
-      scene: {
-        rows: 4, cols: 6,
-        map: ['......', '.S....', '......', 'R..S..'],
-        start: { r: 3, c: 0, dir: 'E' },
-        loops: false, maxBlocks: 24
-      },
-      tray: [], initial: [],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'Rocky path', scene: { rows: 4, cols: 6, map: ['....S.', '.##...', '..#...', 'R.....'], start: { r: 3, c: 0, dir: 'E' }, loops: false, maxBlocks: 24 } },
-        { name: 'Three stops', scene: { rows: 4, cols: 6, map: ['S.....', '......', '..S..S', 'R.....'], start: { r: 3, c: 0, dir: 'E' }, loops: false, maxBlocks: 24 } }
-      ],
-      challenges: [
-        { id: 'tidy', badge: 'efficiency', text: 'Tidy program: deliver everywhere in 11 blocks or fewer.', rule: { type: 'maxBlocks', n: 11 } },
-        { id: 'noturnback', badge: 'invention', text: 'No left turns: deliver everywhere using only right turns.', rule: { type: 'noBlock', block: 'L' } }
-      ]
-    },
-
-    /* ------------------------------------------------------------------ 9 */
-    {
-      id: 9, slug: 'loop-the-route', name: 'Loop the Route', free: false, mode: 'code',
-      area: 'routes', tool: 'Repeat blocks', concept: 'Patterns and efficient algorithms',
-      objective: 'Replace repeated rover instructions with a loop.',
-      intro: 'The rover now services several stations. Find the pattern that repeats and wrap it in a Repeat block.',
-      reward: 'The rover services several stations.',
-      explain: 'A loop runs the same steps again without you writing them twice. Fewer blocks, same route.',
-      reflect: 'How many blocks did the loop save?',
-      scene: {
-        rows: 4, cols: 7,
-        map: ['.......', 'R.S.S.S', '.......', '.......'],
-        start: { r: 1, c: 0, dir: 'E' },
-        loops: true, maxBlocks: 24
-      },
-      tray: [], initial: [],
-      variations: [
-        { name: 'Main mission' },
-        { name: 'Staircase', scene: { rows: 4, cols: 7, map: ['......S', '....S..', '..S....', 'R......'], start: { r: 3, c: 0, dir: 'N' }, loops: true, maxBlocks: 24 } },
-        { name: 'Square patrol', scene: { rows: 4, cols: 7, map: ['R..S...', '.......', '.......', 'S..S...'], start: { r: 0, c: 0, dir: 'E' }, loops: true, maxBlocks: 24 } }
-      ],
-      challenges: [
-        { id: 'loopy', badge: 'efficiency', text: 'Loop master: deliver everywhere in 7 blocks or fewer.', rule: { type: 'maxBlocks', n: 7 } },
-        { id: 'nested', badge: 'invention', text: 'Double loop: use a Repeat block inside another Repeat block.', rule: { type: 'nestedLoop' } }
-      ]
-    },
-
-    /* ----------------------------------------------------------------- 10 */
-    {
-      id: 10, slug: 'research-station-rescue', name: 'Research Station Rescue', free: false, mode: 'sequence',
-      area: 'station', tool: 'Everything you learned', concept: 'Planning and applying earlier ideas',
-      objective: 'Bring the whole station online in three stages.',
-      intro: 'One last rescue. Deliver power cells, close the main circuit, then send the rover on its final route. Each stage is saved as a checkpoint.',
-      reward: 'The full station comes alive in a celebration.',
-      explain: 'You planned three systems in a row and used what each earlier mission taught: slopes, loops of current, and step-by-step instructions.',
-      reflect: 'Which earlier mission helped you most here?',
-      stages: [
-        {
-          name: 'Stage 1: Power cell drop', mode: 'physics',
-          scene: { spawn: { x: 16, y: 6 }, capsule: { r: 2.2 }, static: [ground()], zones: [{ type: 'basket', x: 64, y: 48, w: 12, h: 8 }] },
-          tray: [{ type: 'ramp', len: 22, count: 2 }], initial: [{ type: 'ramp', x: 24, y: 14, angle: 0, len: 22 }]
-        },
-        {
-          name: 'Stage 2: Main breaker', mode: 'circuit',
-          scene: { rows: 3, cols: 5, fixed: [{ r: 0, c: 1, kind: 'battery' }, { r: 2, c: 3, kind: 'lamp' }], blocked: [{ r: 1, c: 2 }], needSwitch: true },
-          tray: [{ type: 'wire', count: 8 }, { type: 'corner', count: 6 }, { type: 'switch', count: 1 }], initial: []
-        },
-        {
-          name: 'Stage 3: Final route', mode: 'code',
-          scene: { rows: 4, cols: 7, map: ['R..S...', '..#....', '..#.S..', '......S'], start: { r: 0, c: 0, dir: 'E' }, loops: true, maxBlocks: 24 },
-          tray: [], initial: []
-        }
-      ],
-      tray: [], initial: [], scene: {},
-      variations: [{ name: 'Main mission' }],
-      challenges: [
-        { id: 'clean', badge: 'efficiency', text: 'Clean sweep: finish all three stages with no failed runs.', rule: { type: 'noFailedRuns' } },
-        { id: 'loopfinal', badge: 'invention', text: 'Loop finale: use a Repeat block in the final route.', rule: { type: 'usesLoop' } }
-      ]
-    }
+    /* ========================= World 4: Waterfall Canyon ========================= */
+    L(31, 4, 'The Falls', at(falls(ledge(ground(S('canyon'), -20, 120), -20, 30, 30), 46, 52, 0), [12, 6], [80, GROUND]), tray(R30, 1), {
+      idea: 'Waterfalls pull down',
+      intro: 'A waterfall pours down between the pellet and Lucas.',
+      lesson: 'Falling water pulls things down with it. Moving fast sideways meant less time in the waterfall.',
+      challenges: [quick(5), gentle(30)]
+    }),
+    L(32, 4, 'Behind the Falls', at(pond(bed(falls(ground(S('canyon'), -20, 36), 44, 52, 0), 36, 64), 36, 64, 46, 0), [12, 6], [50, GROUND]), tray(R22, 1), {
+      idea: 'Using a force',
+      intro: 'Lucas is splashing in the pool right under the waterfall.',
+      lesson: 'Sometimes a force helps. The waterfall pulled the pellet straight down into Lucas’s pool.',
+      challenges: [use('falls', null, 'Waterslide: ride the waterfall down to Lucas.'), gentle(15)]
+    }),
+    L(33, 4, 'Misty Ledge', at(ledge(falls(ledge(ground(S('canyon'), -20, 120), -20, 20, 20), 40, 46, 0), 58, 120, 46), [12, 6], [72, 46]), tray(R22, 1, BOUNCER, 1), {
+      idea: 'Keeping height',
+      intro: 'Lucas is on a misty ledge past the falls.',
+      lesson: 'The pellet had to keep enough height to land on the ledge. Every bit of height lost to the waterfall was hard to get back.',
+      challenges: [lean(1), quick(4)]
+    }),
+    L(34, 4, 'Canyon Wind', at(falls(wind(ground(S('canyon'), -20, 120), 20, 10, 40, 30, 35, 3), 62, 68, 0), [12, 6], [84, GROUND]), tray(R22, 1, FAN, 1), {
+      idea: 'Wind vs waterfall',
+      intro: 'Wind blows through the canyon toward a waterfall.',
+      lesson: 'The wind gave the pellet sideways speed, and that speed decided whether it crossed the falls or got pulled down.',
+      challenges: [without('fan', 'the fan', 'efficiency'), quick(4)]
+    }),
+    L(35, 4, 'Salmon Leap', at(fish(fish(pond(bed(falls(ground(S('canyon'), -20, 30), 40, 46, 0), 30, 120), 30, 120, 44, 20), 60, 50, 10, 2.4), 80, 48, 8, 3, 1.5), [14, 6], [88, GROUND]), tray(R22, 2), {
+      idea: 'Everything moves',
+      intro: 'Salmon leap in the plunge pool below the falls.',
+      lesson: 'The waterfall, the current and the fish all moved the pellet. Watching the ghost trail showed which one changed the path most.',
+      challenges: [quick(9), lean(1)]
+    }),
+    L(36, 4, 'Canyon Gap', at(slab(ground(ground(S('canyon'), -20, 36), 60, 120), 40, 70, 18, 22), [12, 6], [84, GROUND]), tray(R30, 1, BOUNCER, 1), {
+      idea: 'Arcs and ceilings',
+      intro: 'A deep gap, and a rock arch overhead. Not too high, not too low.',
+      lesson: 'The pellet flew in a curve called an arc. It had to be long enough to cross the gap but low enough to miss the arch.',
+      challenges: [without('bouncer', 'the bouncer', 'efficiency'), quick(3)]
+    }),
+    L(37, 4, 'Twin Falls', at(falls(falls(ground(S('canyon'), -20, 120), 34, 40, 0), 64, 70, 0), [12, 6], [52, GROUND]), tray(R22, 2), {
+      idea: 'Precision',
+      intro: 'Two waterfalls, and Lucas sits right between them.',
+      lesson: 'Landing between the falls needed just enough speed: through the first gap, then stopping before the second.',
+      challenges: [quick(4), lean(1)]
+    }),
+    L(38, 4, 'Bee Canyon', at(falls(bee(bee(ground(S('canyon'), -20, 120), 36, 34, 8, 4, 2.8), 56, 44, 7, 4, 3.6, 2), 72, 78, 0), [12, 6], [88, GROUND]), tray(R22, 2, FAN, 1), {
+      idea: 'Choosing a route',
+      intro: 'Bees buzz in the canyon and a waterfall guards Lucas.',
+      lesson: 'There was more than one path. Comparing runs showed which route dodged the bees and crossed the falls.',
+      challenges: [avoid(['bee'], 'any bee'), without('fan', 'the fan')]
+    }),
+    L(39, 4, 'Rapids', at(rock(rock(pond(bed(ledge(S('canyon'), -20, 26, 30), 26, 120), 26, 120, 40, 45), 50, 52, 3), 72, 50, 3), [12, 6], [94, GROUND]), tray(R22, 1, BLOCK, 2), {
+      idea: 'Strong currents',
+      intro: 'White-water rapids rush toward Lucas.',
+      lesson: 'A strong current carries things fast. Rocks in the way can stop the pellet or send it bouncing.',
+      challenges: [lean(1), avoid(['rock'], 'a rock')]
+    }),
+    L(40, 4, 'Lucas’s Feast', at(fish(pond(bed(falls(bee(wind(ground(S('canyon'), -20, 60), 16, 6, 30, 30, 30, 3), 44, 30, 6, 4, 3), 60, 66, 0), 60, 120), 60, 120, 42, 10), 82, 50, 8, 3), [12, 4], [92, GROUND]), tray(R22, 2, BOUNCER, 1, FAN, 1, BLOCK, 1), {
+      idea: 'Everything you learned',
+      intro: 'The grand feast! Wind, a bee, a waterfall and a fish stand between the pellet and Lucas.',
+      lesson: 'You used gravity, wind, water and timing together, testing and improving until the whole journey worked. That is how engineers solve big problems.',
+      challenges: [lean(2), avoid(['bee', 'fish'], 'the bee or the fish')]
+    })
   ];
 
-  /* Station areas, in the order they appear on the map, and the decoration each
-     completed mission earns. A small deterministic collection: no randomness. */
-  var AREAS = [
-    { id: 'dock', label: 'Supply dock', decor: 'Dock flag' },
-    { id: 'bridge', label: 'Bridge', decor: 'Bridge lanterns' },
-    { id: 'greenhouse', label: 'Greenhouse', decor: 'Sunflower' },
-    { id: 'launcher', label: 'Launcher', decor: 'Launch pennant' },
-    { id: 'vents', label: 'Ventilation', decor: 'Wind sock' },
-    { id: 'platform', label: 'Observation platform', decor: 'Telescope' },
-    { id: 'lab', label: 'Laboratory', decor: 'Lab poster' },
-    { id: 'rover', label: 'Rover bay', decor: 'Rover bell' },
-    { id: 'routes', label: 'Rover routes', decor: 'Route signs' },
-    { id: 'station', label: 'Whole station', decor: 'Celebration lights' }
+  var WORLDS = [
+    { id: 1, name: 'Meadow', theme: 'meadow', blurb: 'Ramps, bouncers and gravity' },
+    { id: 2, name: 'Windy Hills', theme: 'hills', blurb: 'Wind, fans and bees' },
+    { id: 3, name: 'Pond', theme: 'pond', blurb: 'Water, currents and fish' },
+    { id: 4, name: 'Waterfall Canyon', theme: 'canyon', blurb: 'Waterfalls and everything together' }
   ];
 
-  var FREE_LEVELS = 3;
-  var KEY_COST = 1;
+  /* Pellet skins. `rule` decides how each is earned; `keys` means it is bought
+     with Pond Keys (price configurable on the site). Deterministic, never random. */
+  var SKINS = [
+    { id: 'pink', name: 'Classic Pellet', colors: ['#f7a8c0', '#e0527d'], pattern: 'plain', rule: { type: 'free' } },
+    { id: 'blueberry', name: 'Blueberry', colors: ['#8fb8ff', '#3056c9'], pattern: 'dots', rule: { type: 'stars', n: 5 } },
+    { id: 'lime', name: 'Lime Swirl', colors: ['#d8f59a', '#5c9e1c'], pattern: 'swirl', rule: { type: 'world', world: 1 } },
+    { id: 'sunny', name: 'Sunflower', colors: ['#ffe27a', '#e09a00'], pattern: 'petals', rule: { type: 'world', world: 2 } },
+    { id: 'mango', name: 'Mango', colors: ['#ffc38a', '#e2671b'], pattern: 'stripes', rule: { type: 'stars', n: 30 } },
+    { id: 'bubble', name: 'Bubble', colors: ['#d9f4ff', '#2aa6d6'], pattern: 'bubbles', rule: { type: 'world', world: 3 } },
+    { id: 'lava', name: 'Lava Rock', colors: ['#ff9b6b', '#8a2b0f'], pattern: 'cracks', rule: { type: 'world', world: 4 } },
+    { id: 'rainbow', name: 'Rainbow', colors: ['#ff8fb1', '#7bd3ff'], pattern: 'rainbow', rule: { type: 'stars', n: 80 } },
+    { id: 'golden', name: 'Golden Shrimp', colors: ['#fff0a8', '#c99700'], pattern: 'shine', rule: { type: 'stars', n: 120 } },
+    { id: 'galaxy', name: 'Galaxy', colors: ['#6d5bd0', '#141033'], pattern: 'stars', trail: 'sparkle', rule: { type: 'keys' } },
+    { id: 'pearl', name: 'Ocean Pearl', colors: ['#ffffff', '#b9c7d8'], pattern: 'shine', trail: 'bubbles', rule: { type: 'keys' } },
+    { id: 'disco', name: 'Disco Ball', colors: ['#e8ecf2', '#7a8494'], pattern: 'tiles', trail: 'sparkle', rule: { type: 'keys' } }
+  ];
 
-  return { LEVELS: LEVELS, AREAS: AREAS, FREE_LEVELS: FREE_LEVELS, KEY_COST: KEY_COST, GROUND: GROUND };
+  /* Defaults for everything the site can change through the ascend_rl_config
+     option (readable and writable over MCP). The plugin sends the live values. */
+  var CONFIG = { freeLevels: 3, keyCost: 1, dailyUnlock: true, skinPrices: { galaxy: 1, pearl: 1, disco: 1 } };
+
+  return { LEVELS: LEVELS, WORLDS: WORLDS, SKINS: SKINS, CONFIG: CONFIG, GROUND: GROUND, FREE_LEVELS: CONFIG.freeLevels, KEY_COST: CONFIG.keyCost };
 });

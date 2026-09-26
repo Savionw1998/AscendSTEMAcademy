@@ -22,7 +22,7 @@ const config = {
 };
 
 const css = read('rescue-lab.css').replace(/@import url\([^)]*\);\s*/g, '');
-const js = ['levels.js', 'engine.js', 'progress.js', 'rescue-lab.js'].map(read).join('\n;\n');
+const js = ['levels.js', 'engine.js', 'progress.js', 'art.js', 'rescue-lab.js'].map(read).join('\n;\n');
 
 /* Compact copy for the site page body: comment lines and indentation removed,
    code otherwise untouched (verified with node --check by the build). */

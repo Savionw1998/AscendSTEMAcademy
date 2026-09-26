@@ -1,182 +1,112 @@
 # STEM-a-lotl: Rescue Lab
 
-An engineering game for the Ascend STEM Academy Axolotl Games family. The player is a
-junior engineer helping Lucas the axolotl (the STEM-a-lotl mascot) bring an
-interconnected research station back to life: ramps, bridges, balanced cargo, a
-launcher, fans, gears, a circuit and a programmable rover. Every delivery visibly
-repairs a part of the station.
+A physics puzzle game for the Ascend STEM Academy Axolotl Games family. In each of
+40 puzzles a food pellet drops from the dispenser, and the child builds a path with
+ramps, bouncers, fans and stone blocks so it reaches Lucas the axolotl, who eats it.
+Wind, bees, water, currents, fish, bubbles, rocks and waterfalls get in the way or help.
 
-Loop: **build → run → observe → improve → celebrate**. After a miss the game says what
-actually happened (from the simulation, never a guessed cause), keeps the build intact
-and offers a one-tap retry.
+Loop: **build → run → watch the journey → improve → feed Lucas**. A miss is explained
+from what the simulation actually did, and the build stays put for a retry. Every meal
+ends with a recap of the pellet's real journey, the puzzle's lesson, and short science
+notes for the things the pellet met on the way.
 
-## Contents
+## The 40 puzzles
 
-| Path | What it is |
+| World | Puzzles | Ideas |
+| --- | --- | --- |
+| Meadow | 1–10 | Ramps and gravity, starting height, speed, bouncers, walls, too fast to catch, planning, round obstacles, clearance |
+| Windy Hills | 11–20 | Wind as a push, headwinds, fans, moving bees, updrafts, crosswinds, timing, hills, gaps |
+| Pond | 21–30 | Drag and buoyancy, currents with and against, fish, landing on an island, deep water, fast streams, bubble lift |
+| Waterfall Canyon | 31–40 | Waterfalls pull down or help, keeping height, wind vs falls, arcs under an arch, precision, strong rapids, the grand feast |
+
+Every puzzle has three stars: feed Lucas, plus two optional challenges (a lean build,
+a time limit, gentle slopes, avoiding bees or fish, riding the wind, and so on).
+
+## How puzzles open
+
+- Puzzles 1–3 are free for everyone, including guests.
+- **Daily puzzle:** each calendar day (site timezone) a logged-in student visits, the
+  lowest-numbered locked puzzle opens free. One per day. Days they don't visit are not banked.
+- **Pond Keys:** one key opens any locked puzzle straight away, for good. Replays never cost a key.
+- **Full Pond Pass:** opens every puzzle.
+- The server decides all of this. A local edit cannot open a puzzle.
+
+## Pellet colours
+
+Twelve pellets in the pellet locker. Nine are earned: 5, 30, 80 and 120 stars, and finishing each
+world. Three (Galaxy, Ocean Pearl, Disco Ball, with trails) are bought with Pond Keys, 1 key each
+by default. Colours change the look only, never the physics. Nothing is random.
+
+## Settings, including over MCP
+
+All settings are WordPress options that Royal MCP can read and write, through the same filters the
+Axolotl Games plugin uses. They are also on **Axolotl Games → Rescue Lab** in wp-admin.
+
+| Option | What it holds |
 | --- | --- |
-| `ascend-stem-a-lotl-rescue-lab.php` | The WordPress plugin: shortcodes, REST progress sync, Pond Key unlock, admin screen |
-| `assets/levels.js` | The ten authored missions: scenes, trays, variations, badge challenges, copy |
-| `assets/engine.js` | Deterministic simulation (physics, bridge, balance, gears, circuit, code) and diagnosis |
-| `assets/progress.js` | Progress record, monotonic merge, level access states, decorations, practice challenge |
-| `assets/rescue-lab.js` | The game front end (station map, build tools, run loop, unlock flow, saves) |
-| `assets/rescue-lab.css` | Styles in the Ascend Axolotl Games shell |
-| `tests/` | `node --test` suite: solvability of every mission/variation/challenge, determinism, reset, merge |
-| `tools/build-preview.js` | Builds the standalone preview (`preview/index.html`) and the site page body |
-| `tools/smoke.js` | Playwright play-through on phone and desktop viewports with screenshots |
-| `preview/` | Built preview files: `index.html` (open in any browser, no server needed), `wp-page-body.html` (paste into an HTML block on a draft page to preview inside the site's theme before installing the plugin), `artifact.html` (the claude.ai preview) |
+| `ascend_rl_config` | `freeLevels` (3), `keyCost` (1), `dailyUnlock` (true), `skinPrices` ({galaxy:1, pearl:1, disco:1}). JSON strings are accepted and values are clamped. |
+| `ascend_rl_level_text` | Per-puzzle text overrides: `{"12": {"name": "...", "intro": "...", "lesson": "...", "hint": "..."}}` |
+| `ascend_rl_mascot_url` | Header mascot image (defaults to the STEM-a-lotl scientist sticker) |
+| `ascend_rl_hub_url` | Exit link (defaults to `/user/`) |
+
+Layouts and physics are code, not settings, because every layout is proven solvable by the tests.
 
 ## Install on the site
 
-1. Back up the site (UpdraftPlus or WPvivid, both installed).
-2. Zip the `ascend-stem-a-lotl-rescue-lab` folder and upload it in **Plugins → Add New → Upload**, then activate.
-   The Ascend Axolotl Games plugin (v2.3.0) must stay active; Rescue Lab calls its key functions.
-3. Publish the draft page **STEM-a-lotl: Rescue Lab** (page ID 7303, created by this build). It contains
-   `[ascend_rescue_lab]`, like the other game pages contain their shortcodes. To see the game inside the
-   theme before installing, paste `preview/wp-page-body.html` into an HTML block on any draft page; that
-   copy runs in preview mode (no keys, local saves only) and can be deleted afterwards.
-4. Add the page to the **Logged in Menu → Games** submenu (Appearance → Menus, menu ID 24), next to Grow-a-lotl.
-5. Optional: add `[ascend_rescue_lab_summary]` to the `/user/` dashboard page next to `[ascend_game_stats]`
-   for the compact parent summary.
-6. Settings live under **Axolotl Games → Rescue Lab** (mascot image URLs, hub URL, a support-only
-   "grant a mission without a key" form, and the unlock log).
+1. Back up the site (UpdraftPlus or WPvivid).
+2. Zip this folder and upload it in **Plugins → Add New → Upload**, then activate. Keep Ascend
+   Axolotl Games active; Rescue Lab uses its Pond Key functions.
+3. Publish the draft page **STEM-a-lotl: Rescue Lab** (page 7303), which holds `[ascend_rescue_lab]`.
+4. Add it to **Logged in Menu → Games** next to Grow-a-lotl.
+5. Add `[ascend_rescue_lab_summary]` to the `/user/` dashboard for the parent summary.
+6. Update the Pond Key and Full Pond Pass product text: in Rescue Lab a key opens a puzzle for good,
+   and the pass opens every puzzle.
 
-Rollback: deactivate the plugin. It adds three user meta keys (`ascend_rl_progress`,
-`ascend_rl_owned`, `ascend_rl_unlock_log`) and three options (`ascend_rl_*`) and touches
-nothing else.
+Upgrading from 1.0 keeps any keys already spent: the old ownership list is read as key-opened puzzles.
+User meta: `ascend_rl_progress`, `ascend_rl_owned`, `ascend_rl_last_daily`, `ascend_rl_skins`, `ascend_rl_unlock_log`.
 
-## The missions
+## Files
 
-| # | Mission | Mechanic and idea | Station reward | Access |
-| --- | --- | --- | --- | --- |
-| 1 | Supply Slide | Ramp angle, gravity, observing motion | Supply dock opens | Free |
-| 2 | Rover Crossing | Beams, supports, spans | Bridge connects two areas | Free |
-| 3 | Cargo Balance | Mass × distance on a pivot | Greenhouse blooms | Free |
-| 4 | Gentle Landing | Launch power and angle, one variable at a time | Launcher works | 1 Pond Key |
-| 5 | Wind Works | Forces: gravity plus fans, barriers | Ventilation returns | 1 Pond Key |
-| 6 | Gear Lift | Gear ratio, mechanical advantage, idler direction | Observation platform | 1 Pond Key |
-| 7 | Light the Lab | Closed loop, switch, open-circuit diagnosis | Lab lights up | 1 Pond Key |
-| 8 | Rover Routine | Sequencing and debugging action blocks | Helper rover | 1 Pond Key |
-| 9 | Loop the Route | Repeat blocks, nested loops | Rover services stations | 1 Pond Key |
-| 10 | Research Station Rescue | Three checkpointed stages using earlier tools | Whole station celebrates | 1 Pond Key |
+| Path | What it is |
+| --- | --- |
+| `ascend-stem-a-lotl-rescue-lab.php` | Plugin: shortcodes, REST routes (`state`, `daily`, `progress`, `unlock`, `skin`), settings, admin, MCP filters |
+| `assets/levels.js` | The 40 puzzles, 4 worlds, 12 pellets and default settings |
+| `assets/engine.js` | Deterministic pellet physics, diagnoses, journey recap and science notes |
+| `assets/art.js` | Canvas art: Lucas, worlds, water, waterfalls, wind, bees, fish, parts, pellets |
+| `assets/progress.js` | Progress record, merge, access rules, daily rule, pellet unlocks |
+| `assets/rescue-lab.js` / `.css` | The game screens in the Axolotl Games style |
+| `tests/` | Node tests, PHP rule tests, and `solutions.json` (a verified design for every puzzle and star) |
+| `tools/tune.js` | Searches for solutions and rewrites `solutions.json` |
+| `tools/build-preview.js`, `smoke.js`, `gallery.js` | Preview build, browser play-through, frame-by-frame review of all 40 |
+| `preview/` | `index.html` runs anywhere; `screenshots/` shows the game |
 
-Each mission has a main mission, two optional badge challenges (efficiency, invention) and
-two or three tested variations, all included in the same unlock. Every one is proven
-solvable by the test suite, which searches for a solution rather than trusting a stored answer.
-Badge challenges are designed for the main mission; some are impossible on a variation by
-construction (for example "cross with two parts" on the wider gap) and the UI says so.
+## Physics
 
-Progress states shown on the map: Free, 1 Pond Key, Owned · ready, Completed (with
-variations done), Mastered (all three badges). Ownership is separate from prerequisites:
-no mission requires another; the previous mission is only suggested as a warm-up.
+Fixed 1/120 s steps, bounded speeds and snapped designs make every run repeatable. The pellet
+falls at g, rolls down slopes at 5/7 · g · sin θ like a solid ball (measured within 3% on ice),
+and has per-material bounce and rolling resistance. In water it feels buoyancy (80% of gravity),
+drag and the current. Waterfalls add a strong downward pull, bubbles lift, and fans and wind push
+sideways. Bees and fish move on fixed timetables, so timing puzzles are fair. Lucas eats the pellet
+when it touches the ring around his mouth slowly enough.
 
-## Reused from the existing games
-
-- **Shell and look**: max-width centered column, Roboto body, 'Baloo 2' titles, navy `#173e63`,
-  blue `#009CDE` / `#045C82`, green `#1D4010` / `#BFE0B4`, pink `#E07FA3`, stat pills, the dashed
-  "How to play ▾" toggle, pale-blue instruction and tip boxes, the confetti congrats overlay and
-  its `prefers-reduced-motion` handling, all taken from Guess-a-lotl / Cross-a-lotl in
-  `ascend-axolotl-games.php`.
-- **Mascot**: the existing STEM-a-lotl sticker artwork (media 6253, scientist) in the header and
-  "Lucas the Axolotl - Winking" (media 6052) for the happy reaction, both configurable in the
-  admin screen. Lucas is the guide name used in the site's own media library. The small inline
-  axolotl SVG comes from the Code-a-lotl plugin and is the fallback when an image cannot load.
-- **Plugin layout and progress sync**: the Code-a-lotl pattern (plugin folder + `assets/` + `tests/`,
-  REST progress route with monotonic merge, `ascend:game-complete` DOM event,
-  `do_action('ascend_rl_progress_saved')` for the dashboard and transcript plugins).
-- **Login and hub**: `/login/` for the login link, `/user/` dashboard as the games hub exit.
-- **Keys**: the Pond Key currency and functions of the Ascend Axolotl Games plugin (below).
-
-## Key integration and the accounting difference
-
-The site sells two things today: a **Pond Key** (product 7289, SKU `ASCEND-POND-KEY`, $1.00,
-stored as a count in user meta `ascend_games_skips`) and a **Full Pond Pass** (product 7189, stored
-as `ascend_games_pass_until = -1`). WooCommerce fulfilment is idempotent per order and lives in
-the shared plugin; refunds and prices are untouched.
-
-Difference, stated explicitly: in the daily puzzle games one Pond Key opens **one extra puzzle
-today**. In Rescue Lab one Pond Key opens **one mission permanently** on the student account,
-retries, challenges and variations included, and reopening never costs another key. Both games
-spend the same currency through the shared `ascend_games_consume_skip()`; Rescue Lab records the
-result in its own `ascend_rl_owned` meta and never edits the key balance directly. A Full Pond
-Pass opens every Rescue Lab mission, matching its "every axolotl game" promise. The first three
-missions are free; the site defines no other free-tier rule for a campaign game.
-
-Server behaviour (`ascend_rl_unlock_level`):
-- already owned or pass holder → success, nothing spent (so a retry after a lost connection is safe);
-- MySQL `GET_LOCK` per student plus a re-read inside the lock → concurrent taps cannot double-spend;
-- no keys → HTTP 402 with a plain message, nothing spent; key system missing → 409, nothing spent.
-- Local saves can never grant paid access: `owned` and `keys` come only from the server on every load,
-  and the progress sanitiser drops any ownership-looking fields. Guests can play the free missions
-  with local saves only.
-
-Buy links come from `ascend_games_pass_url('skip'|'life')` when the shared plugin provides them,
-else from the Pond Key SKU. If neither exists no button is shown. The preview build shows
-"Keys: preview" and states that nothing in it is a purchase.
-
-## Saves and resume
-
-- Progress and saved inventions: `localStorage` for everyone, merged with user meta over
-  `/wp-json/ascend-rl/v1/progress` for logged-in students (GET on load, POST after each change).
-  Merge is monotonic on both sides: nothing earned is lost, whichever copy is newer.
-- In-progress builds autosave per mission/variation/stage as local drafts, so a closed tab or a
-  backgrounded app resumes with the construction intact. The simulation pauses while the tab is hidden.
-- Family model: one Ultimate Member student account per child, as the existing games use. Progress
-  and ownership are per account; there is no cross-family access because every route uses the
-  logged-in user only.
-
-## Accessibility and mobile
-
-44px targets, visible focus rings, `aria-pressed` on toggles, live regions for messages, keyboard
-reachable controls, `touch-action: none` on the scene only (the page scrolls normally elsewhere),
-canvas sized to the container (280–640px), pointer events for mouse, touch and pen, text scaling
-through relative units, `prefers-reduced-motion` respected (no confetti, no hops, faster runs),
-sound off/on toggle (short WebAudio blips, only after a tap), ghost trail toggle, and an assist
-mode that gives a nudge after two misses without solving the mission.
-
-## What was tested
-
-- `node --test ascend-stem-a-lotl-rescue-lab/tests`: 68 tests. Every mission, variation and stage
-  is solvable by search; every badge challenge is achievable on its main mission; identical
-  designs give identical results, timings and trails; reset never inherits state; designs snap to
-  the grid; tray limits hold; each mechanic's diagnoses name the observed failure; progress merge
-  keeps the best of both and drops junk; ownership never comes from the progress record.
-- `node tools/smoke.js` (Playwright, Chromium): 37 checks on a 390px phone viewport with touch and
-  a 900px desktop viewport. One tap from the map into mission 1; a flat-ramp run gives the
-  "stopped on the ramp" diagnosis with the build kept; rotate and run delivers; progress persists
-  across reload; the dock lights on the map; touch tap selects a part; handle drag rotates and
-  Undo restores; one mission of every mechanic plays to success; the preview unlock modal states
-  that no key is redeemed. Screenshots in `tools/shots/`.
-- `php -l` on the plugin.
-
-Not tested here, and why: anything on the live site. This environment cannot reach
-ascendstemacademy.com (network policy), and plugins cannot be installed through the site's
-MCP connector. So the WordPress REST routes, the Pond Key redemption against the real
-`ascend_games_*` functions, WooCommerce fulfilment end to end, Ultimate Member login, the
-Astra theme's button styles around the game, and real Android devices remain to be checked
-after upload. The unlock path is written against the shared plugin's public functions as
-read from its source on the `claude/hexalotl-vocabulary-expansion-s2js82` branch (v2.x);
-the live site runs v2.3.0, so confirm the function names still exist (the admin screen reports
-"connected" or "not found").
-
-## Integration boundary (honest list)
-
-- **Not built**: a purchase flow. Buying keys stays in the WooCommerce shop and the parent's cart.
-- **Not built**: offline downloads of owned levels. Free missions work offline from the browser cache
-  after a first load; owned missions need one online load per device to learn ownership.
-- **Not built**: notifications and analytics. No SDKs were added; the `ascend:game-complete` event
-  and `ascend_rl_progress_saved` action are the only hooks.
-- **Not changed**: the daily games' key accounting, prices, products, refunds, family sharing.
-- **Parent view**: `[ascend_rescue_lab_summary]` is provided but not yet placed on `/user/`, because
-  the plugin is not installed and an unknown shortcode would render as text.
-
-## Development
+## Verified
 
 ```
-node --test ascend-stem-a-lotl-rescue-lab/tests
-node ascend-stem-a-lotl-rescue-lab/tools/build-preview.js
-NODE_PATH=/opt/node22/lib/node_modules node ascend-stem-a-lotl-rescue-lab/tools/smoke.js
+node --test ascend-stem-a-lotl-rescue-lab/tests/          # 59 tests
+php ascend-stem-a-lotl-rescue-lab/tests/plugin-test.php    # 25 checks
+NODE_PATH=/opt/node22/lib/node_modules node ascend-stem-a-lotl-rescue-lab/tools/smoke.js   # 40 browser checks
 ```
 
-Adding a mission: append to `LEVELS` in `assets/levels.js` (one new idea per mission, a main
-mission first in `variations`, two `challenges`), add its area to `AREAS`, bump `ASCEND_RL_LEVELS`
-in the plugin, and run the tests: they fail until the new content is solvable.
+- Every puzzle and all 80 challenges replay a verified design, and no starting layout wins by itself.
+- Runs are identical twice over, and reset leaves no state behind. Free fall, rolling, water, current, wind,
+  waterfall, bubble and bouncer behaviour are checked against expected physics.
+- The plugin rules are checked against stand-ins for WordPress and the key API: once per day, no rollover,
+  keys spent once, a busy lock refuses a second concurrent request, config and text are cleaned, and options
+  are exposed to MCP.
+- In Chromium on a phone viewport with touch and on desktop, the checks cover the first minute, the miss,
+  tilt and feed flow, drag, undo and keyboard editing, resume after reload, the daily demo, a key unlock
+  and a pellet purchase. All 40 reference runs also feed Lucas in the browser.
+
+Not verified here: the live site. This environment can't reach ascendstemacademy.com or install plugins,
+so the REST routes, real Pond Key spending, WooCommerce and real devices need a check after upload.
+The admin screen shows whether the key system is connected.
