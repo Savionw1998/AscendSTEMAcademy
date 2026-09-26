@@ -1,0 +1,2396 @@
+<!-- wp:html -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+#rl-game,.rl-overlay{--blue:#009CDE;--dblue:#045C82;--navy:#173e63;--green:#1D4010;--lgreen:#BFE0B4;--pink:#F5B9CF;--dpink:#E07FA3;--ink:#24332a;--muted:#62676c;--line:#e4e1da;--soft:#eef6fb;--softline:#d4e7f2;--sand:#f4f2ec;--gold:#ffd166;}
+.rl-overlay{font-family:Roboto,Arial,sans-serif;line-height:1.45;}
+.rl-overlay *{box-sizing:border-box;}
+.rl-overlay button{font-family:inherit;}
+#rl-game{max-width:640px;margin:0 auto;padding:22px 16px 50px;font-family:Roboto,Arial,sans-serif;color:var(--ink);line-height:1.45;font-size:15px;-webkit-text-size-adjust:100%;}
+#rl-game *{box-sizing:border-box;}
+#rl-game button{font-family:inherit;}
+#rl-game [hidden]{display:none!important;}
+#rl-game .rl-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.rl-mascot{text-align:center;margin-bottom:6px;}
+.rl-mascot img{max-width:120px;width:100%;height:auto;}
+.rl-title{text-align:center;font-size:clamp(28px,5vw,40px);margin:0;color:var(--navy);font-weight:700;letter-spacing:0;font-family:'Baloo 2',Roboto,Arial,sans-serif;line-height:1.1;}
+.rl-subtitle{text-align:center;color:var(--muted);margin:8px 0 16px;font-size:15px;}
+.rl-stats{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.rl-stat{background:#fff;border:1px solid var(--line);border-radius:14px;padding:8px 14px;font-size:14px;}
+.rl-stat strong{color:var(--blue);}
+.rl-toggle-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:2px;}
+.rl-toggle{background:transparent;border:1px dashed #c9c5b8;border-radius:8px;padding:8px 14px;font-size:12px;color:#77705f;cursor:pointer;min-height:36px;}
+.rl-toggle:hover{border-color:#999;color:#555;}
+.rl-toggle[aria-pressed="true"]{border-style:solid;border-color:var(--blue);color:var(--dblue);background:var(--soft);}
+.rl-instructions{margin-top:10px;background:var(--soft);border:1px solid var(--softline);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--ink);text-align:left;}
+.rl-instructions p{margin:0 0 8px;}
+.rl-instructions p:last-child{margin:0;}
+.rl-live{text-align:center;font-size:13px;color:#1474aa;margin:10px 0 12px;min-height:16px;}
+.rl-notice{margin:10px 0;border-radius:12px;padding:10px 14px;background:#fff8e1;border:1px solid #f3dd9a;color:#5b4700;font-size:13px;text-align:center;}
+.rl-notice a{color:#5b4700;font-weight:700;}
+.rl-btn{border:0;border-radius:12px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:var(--ink);border:1px solid var(--line);min-height:42px;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;}
+.rl-btn:hover{border-color:var(--blue);}
+.rl-btn:focus-visible,.rl-toggle:focus-visible,.rl-level:focus-visible,.rl-tray-btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+.rl-btn:disabled{opacity:.45;cursor:default;}
+.rl-btn.primary{background:var(--dpink);color:#fff;border-color:var(--dpink);}
+.rl-btn.primary:hover{background:#c9678b;}
+.rl-btn.blue{background:var(--blue);color:#fff;border-color:var(--blue);}
+.rl-btn.blue:hover{background:var(--dblue);}
+.rl-btn.pass{background:var(--dblue);color:#fff;border-color:var(--dblue);}
+.rl-btn.pass:hover{background:var(--blue);}
+.rl-btn.big{font-size:16px;padding:14px 26px;border-radius:14px;}
+.rl-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:10px 0;}
+.rl-row.left{justify-content:flex-start;}
+.rl-station{background:linear-gradient(180deg,#eaf6fc 0%,#fff 100%);border:1px solid var(--softline);border-radius:16px;padding:10px;margin:6px 0 14px;}
+.rl-station svg{width:100%;height:auto;display:block;}
+.rl-station .rl-area-off{fill:#e6e3dc;stroke:#c9c5b8;stroke-dasharray:4 3;}
+.rl-station .rl-area-on{fill:#BFE0B4;stroke:#1D4010;}
+.rl-station text{font-family:Roboto,Arial,sans-serif;font-size:5px;font-weight:700;fill:#24332a;}
+.rl-station .rl-glow{animation:rlGlow 2.4s ease-in-out infinite;}
+@keyframes rlGlow{0%,100%{opacity:.55;}50%{opacity:1;}}
+.rl-decor-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:12px;color:var(--muted);margin-top:6px;}
+.rl-decor{background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 10px;}
+.rl-levels{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0;}
+.rl-level{display:flex;flex-direction:column;gap:4px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 12px;cursor:pointer;color:var(--ink);font-size:13px;min-height:84px;}
+.rl-level:hover{border-color:var(--blue);}
+.rl-level .rl-lnum{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.rl-level .rl-lname{font-family:'Baloo 2',Roboto,Arial,sans-serif;font-size:17px;color:var(--navy);line-height:1.1;}
+.rl-level .rl-lconcept{color:var(--muted);font-size:12px;}
+.rl-chip{display:inline-block;border-radius:999px;padding:2px 9px;font-size:11px;font-weight:700;background:var(--sand);color:#5f5a4d;border:1px solid #e0dccf;margin-top:auto;align-self:flex-start;}
+.rl-chip.free{background:var(--lgreen);color:var(--green);border-color:#a9d59a;}
+.rl-chip.owned{background:var(--soft);color:var(--dblue);border-color:var(--softline);}
+.rl-chip.locked{background:#fff;color:var(--dblue);border-color:var(--dblue);}
+.rl-chip.done{background:var(--green);color:#fff;border-color:var(--green);}
+.rl-chip.mastery{background:var(--gold);color:#5b4700;border-color:#e8bd4a;}
+.rl-level.is-locked{background:#fbfaf7;}
+.rl-level.is-next{border:2px solid var(--dpink);}
+.rl-badges{font-size:12px;color:var(--muted);}
+.rl-badge{display:inline-block;margin-right:6px;}
+.rl-badge.earned{color:#9a6a00;font-weight:700;}
+@media(max-width:420px){.rl-levels{grid-template-columns:1fr;}}
+.rl-card{margin:10px 0;border-radius:12px;padding:14px 16px;background:var(--soft);border:1px solid var(--softline);color:var(--ink);font-size:13px;}
+.rl-card h3{margin:0 0 6px;font-family:'Baloo 2',Roboto,Arial,sans-serif;font-size:18px;color:var(--navy);font-weight:700;}
+.rl-card p{margin:0 0 6px;}
+.rl-card.sand{background:var(--sand);border-color:#e0dccf;color:#5f5a4d;}
+.rl-card.done{background:#eaf5e6;border-color:#bfe0b4;}
+.rl-levelhead{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:6px;}
+.rl-levelhead h2{margin:0;font-family:'Baloo 2',Roboto,Arial,sans-serif;font-size:22px;color:var(--navy);font-weight:700;line-height:1.1;}
+.rl-levelhead .rl-lnum{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase;display:block;}
+.rl-variants{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 10px;}
+.rl-variants button{border-radius:999px;border:1px solid var(--line);background:#fff;padding:5px 11px;font-size:12px;cursor:pointer;color:var(--ink);min-height:32px;}
+.rl-variants button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy);}
+.rl-variants button.done::after{content:" ✓";color:inherit;}
+.rl-objective{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:10px;}
+.rl-guide{flex:0 0 46px;width:46px;height:46px;border-radius:50%;background:var(--pink);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.rl-guide svg,.rl-guide img{width:40px;height:40px;object-fit:contain;}
+.rl-guide.happy{animation:rlHop .6s 2;}
+.rl-guide.puzzled{animation:rlTilt .7s 1;}
+@keyframes rlHop{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@keyframes rlTilt{0%,100%{transform:rotate(0);}30%{transform:rotate(-12deg);}70%{transform:rotate(10deg);}}
+.rl-bubble{flex:1;font-size:13px;}
+.rl-bubble strong{color:var(--navy);}
+.rl-bubble .rl-who{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:2px;}
+.rl-scene-wrap{position:relative;border-radius:14px;overflow:hidden;border:2px solid var(--softline);background:#e8f4fb;touch-action:none;}
+.rl-scene{display:block;width:100%;height:auto;touch-action:none;-webkit-user-select:none;user-select:none;cursor:default;}
+.rl-scene.placing{cursor:copy;}
+.rl-scene.grabbing{cursor:grabbing;}
+.rl-stagebar{display:flex;gap:6px;justify-content:center;margin:0 0 8px;font-size:12px;color:var(--muted);flex-wrap:wrap;}
+.rl-stagebar span{padding:3px 10px;border-radius:999px;background:var(--sand);border:1px solid #e0dccf;}
+.rl-stagebar span.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+.rl-stagebar span.done{background:var(--green);color:#fff;border-color:var(--green);}
+.rl-tray{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0 4px;}
+.rl-tray-btn{border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;display:inline-flex;align-items:center;gap:6px;color:var(--ink);}
+.rl-tray-btn:hover{border-color:var(--blue);}
+.rl-tray-btn[aria-pressed="true"]{border-color:var(--dpink);background:#fde4ec;}
+.rl-tray-btn:disabled{opacity:.4;cursor:default;}
+.rl-tray-btn small{font-weight:400;color:var(--muted);}
+.rl-tray-btn .rl-ico{width:26px;height:16px;display:inline-block;}
+.rl-tools{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 0;min-height:34px;}
+.rl-tools .rl-btn{padding:6px 12px;min-height:36px;font-size:12px;}
+.rl-tools .rl-toolname{align-self:center;font-size:12px;color:var(--muted);}
+.rl-controls{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0 6px;}
+.rl-controls .rl-btn.run{background:var(--green);color:#fff;border-color:var(--green);padding:12px 30px;font-size:15px;}
+.rl-controls .rl-btn.run:hover{background:#2f6b1c;}
+.rl-message{text-align:center;min-height:24px;font-size:14px;font-weight:700;margin:6px 0;}
+.rl-diag{margin:10px 0;border-radius:12px;padding:12px 14px;background:var(--soft);border:1px solid var(--softline);color:var(--ink);font-size:13px;}
+.rl-diag.bad{background:#fff3f5;border-color:#f4c6d3;}
+.rl-diag.good{background:#eaf5e6;border-color:#bfe0b4;}
+.rl-diag strong{color:var(--navy);}
+.rl-diag p{margin:0 0 6px;}
+.rl-diag p:last-child{margin:0;}
+.rl-diag .rl-hint{color:#1474aa;}
+.rl-challenges{margin:10px 0;font-size:13px;}
+.rl-challenges h4{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.rl-challenge{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-top:1px dashed var(--line);}
+.rl-challenge .rl-cbadge{flex:0 0 auto;font-size:11px;font-weight:700;border-radius:999px;padding:2px 8px;background:var(--sand);color:#5f5a4d;}
+.rl-challenge.earned .rl-cbadge{background:var(--gold);color:#5b4700;}
+.rl-challenge.earned{color:var(--green);}
+.rl-palette{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:10px 0 4px;}
+.rl-program{min-height:64px;padding:10px;border-radius:12px;border:2px dashed var(--line);background:#fbfdfe;display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:6px 0;}
+.rl-block{display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 8px;border-radius:9px;background:var(--dpink);color:#fff;font-size:15px;font-weight:700;cursor:pointer;border:0;}
+.rl-block.deliver{background:var(--green);}
+.rl-block.is-bad{outline:3px solid #e05252;outline-offset:2px;animation:rlShake .5s;}
+.rl-block.is-now{box-shadow:0 0 0 3px var(--gold);}
+@keyframes rlShake{10%,90%{transform:translateX(-2px);}20%,80%{transform:translateX(3px);}30%,50%,70%{transform:translateX(-4px);}40%,60%{transform:translateX(4px);}}
+.rl-loop{display:inline-flex;flex-wrap:wrap;align-items:center;gap:4px;padding:4px 6px;border-radius:10px;border:2px solid var(--blue);background:var(--soft);}
+.rl-loop.is-open{border-style:dashed;}
+.rl-loop-label{font-size:12px;font-weight:700;color:var(--dblue);}
+.rl-loop-body{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;min-width:20px;min-height:36px;}
+.rl-caret{width:3px;height:28px;background:var(--blue);border-radius:2px;animation:rlBlink 1s steps(1) infinite;}
+@keyframes rlBlink{50%{opacity:0;}}
+.rl-empty{color:var(--muted);font-size:13px;}
+.rl-count{min-width:2.5ch;text-align:center;font-weight:700;align-self:center;}
+.rl-dials{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0;}
+.rl-dial{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px 10px;display:flex;align-items:center;gap:8px;font-size:13px;}
+.rl-dial strong{min-width:3.5ch;text-align:center;color:var(--dblue);font-size:16px;}
+.rl-dial .rl-btn{padding:0;width:36px;min-height:36px;}
+.rl-success{margin:12px 0;border-radius:14px;padding:16px;background:#fff;border:2px solid var(--lgreen);text-align:center;}
+.rl-success h3{margin:0;font-family:'Baloo 2',Roboto,Arial,sans-serif;font-size:24px;color:var(--dblue);font-weight:700;}
+.rl-success .rl-reward{margin:6px 0;color:var(--green);font-weight:700;}
+.rl-success .rl-explain{margin:8px auto;max-width:460px;font-size:13px;color:var(--ink);}
+.rl-success details{font-size:13px;color:var(--muted);margin-top:6px;}
+.rl-success summary{cursor:pointer;color:var(--dblue);font-weight:700;}
+.rl-success textarea{width:100%;max-width:420px;border:1px solid var(--line);border-radius:10px;padding:8px;font-family:inherit;font-size:13px;margin-top:6px;}
+.rl-shelf{margin:10px 0;}
+.rl-shelf h4{margin:0 0 6px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.rl-shelf-items{display:flex;flex-wrap:wrap;gap:6px;}
+.rl-shelf-item{background:#fff;border:1px solid var(--line);border-radius:12px;padding:6px 10px;font-size:12px;display:inline-flex;gap:6px;align-items:center;}
+.rl-shelf-item button{border:0;background:transparent;color:var(--dblue);font-weight:700;cursor:pointer;font-size:12px;padding:4px;}
+.rl-overlay{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(9,32,48,.55);opacity:0;transition:opacity .3s ease;pointer-events:none;padding:16px;}
+.rl-overlay.show{opacity:1;pointer-events:auto;}
+.rl-modal{position:relative;background:#fff;border-radius:20px;padding:24px 26px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.28);transform:scale(.9);transition:transform .3s cubic-bezier(.2,.9,.3,1.4);max-width:440px;width:100%;max-height:92vh;overflow:auto;font-size:14px;color:var(--ink);}
+.rl-overlay.show .rl-modal{transform:scale(1);}
+.rl-modal h3{font-family:'Baloo 2',Roboto,Arial,sans-serif;font-size:clamp(22px,6vw,30px);color:var(--dblue);font-weight:700;line-height:1.15;margin:0 0 6px;}
+.rl-modal p{margin:6px 0;}
+.rl-modal .rl-sub{color:var(--green);font-weight:700;}
+.rl-modal ul{text-align:left;margin:8px 0 8px 1.1em;padding:0;font-size:13px;color:var(--ink);}
+.rl-modal .rl-keys{display:inline-block;background:var(--sand);border:1px solid #e0dccf;border-radius:999px;padding:4px 12px;font-weight:700;font-size:13px;margin:6px 0;}
+.rl-modal .rl-fine{font-size:12px;color:var(--muted);}
+.rl-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:20px;}
+.rl-confetti i{position:absolute;top:-16px;width:9px;height:14px;border-radius:2px;animation:rlFall 2.4s linear forwards;}
+@keyframes rlFall{0%{transform:translateY(-20px) rotate(0);opacity:1;}100%{transform:translateY(102vh) rotate(700deg);opacity:.85;}}
+.rl-foot{margin-top:18px;color:var(--muted);font-size:13px;}
+.rl-foot summary{cursor:pointer;font-weight:700;color:var(--dblue);}
+.rl-foot p{margin:6px 0;}
+.rl-exit{text-align:center;margin-top:10px;font-size:13px;}
+.rl-exit a{color:var(--dblue);font-weight:700;}
+@media(prefers-reduced-motion:reduce){
+#rl-game *{animation:none!important;transition:none!important;}
+.rl-confetti{display:none;}
+}
+@media(max-width:420px){
+#rl-game{padding:16px 16px 40px;font-size:14px;}
+.rl-btn.big{width:100%;}
+.rl-controls .rl-btn.run{flex:1 1 100%;}
+}
+</style>
+<div class="rl-root" id="rl-game"><noscript>STEM-a-lotl: Rescue Lab needs JavaScript turned on to play.</noscript></div>
+<script>window.AscendRL = {"preview":true,"loggedIn":false,"hubUrl":"https://ascendstemacademy.com/user/","loginUrl":"https://ascendstemacademy.com/login/","mascotUrl":"https://ascendstemacademy.com/wp-content/uploads/2026/09/stem-a-lotl-scientist-sticker.png","mascotHappyUrl":"https://ascendstemacademy.com/wp-content/uploads/2026/09/lucas-axolotl-wink.png"};</script>
+<script>
+(function (root, factory) {
+if (typeof module !== 'undefined' && module.exports) module.exports = factory();
+else root.AscendRLLevels = factory();
+})(typeof self !== 'undefined' ? self : this, function () {
+'use strict';
+var GROUND = 56;
+function seg(x1, y1, x2, y2, opts) {
+var s = { x1: x1, y1: y1, x2: x2, y2: y2 };
+if (opts) for (var k in opts) s[k] = opts[k];
+return s;
+}
+function ground() { return seg(-20, GROUND, 120, GROUND, { kind: 'ground' }); }
+function platform(x1, x2, y) { return seg(x1, y, x2, y, { kind: 'platform' }); }
+function wall(x, y1, y2) { return seg(x, y1, x, y2, { kind: 'wall' }); }
+var LEVELS = [
+{
+id: 1, slug: 'supply-slide', name: 'Supply Slide', free: true, mode: 'physics',
+area: 'dock', tool: 'Ramp', concept: 'Ramp angle, gravity and observing motion',
+objective: 'Deliver the supply capsule into the collection basket.',
+intro: 'The supply dock is closed. Tilt the ramp so the capsule rolls into the basket.',
+reward: 'The supply dock opens.',
+explain: 'A steeper ramp lets gravity speed the capsule up more, so it travels farther before it lands. You matched the slope to the basket.',
+reflect: 'What changed when you tilted the ramp more?',
+scene: {
+spawn: { x: 16, y: 6 }, capsule: { r: 2.2 },
+static: [ground()],
+zones: [{ type: 'basket', x: 50, y: 48, w: 12, h: 8 }]
+},
+tray: [{ type: 'ramp', len: 22, count: 1 }],
+initial: [{ type: 'ramp', x: 24, y: 14, angle: 0, len: 22 }],
+variations: [
+{ name: 'Main mission' },
+{ name: 'Farther basket', scene: { zones: [{ type: 'basket', x: 60, y: 48, w: 12, h: 8 }] }, tray: [{ type: 'ramp', len: 30, count: 1 }], initial: [{ type: 'ramp', x: 26, y: 14, angle: 0, len: 30 }] },
+{ name: 'Small basket', scene: { zones: [{ type: 'basket', x: 52, y: 48, w: 8, h: 8 }] } }
+],
+challenges: [
+{ id: 'quick', badge: 'efficiency', text: 'Quick delivery: the capsule settles within 4 seconds.', rule: { type: 'maxTime', s: 4 } },
+{ id: 'gentle', badge: 'invention', text: 'Gentle slope: deliver with the ramp tilted 12° or less.', rule: { type: 'partAngleMax', part: 'ramp', deg: 12 } }
+]
+},
+{
+id: 2, slug: 'rover-crossing', name: 'Rover Crossing', free: true, mode: 'bridge',
+area: 'bridge', tool: 'Beams and supports', concept: 'Beams, supports and stable structures',
+objective: 'Build a crossing so the rover reaches the far side.',
+intro: 'The walkway collapsed. Lay beams across the gap. Long spans need a support underneath.',
+reward: 'A bridge connects two areas of the station.',
+explain: 'A beam only holds weight between its supports. Adding a post in the middle halves the span, so nothing sags.',
+reflect: 'Where did the beam need help most?',
+scene: {
+rover: { x: 10, y: 37, r: 3 },
+cliffs: [{ x1: 0, x2: 30, y: 40 }, { x1: 58, x2: 100, y: 40 }],
+static: [ground(), platform(0, 30, 40), wall(30, 40, GROUND), platform(58, 100, 40), wall(58, 40, GROUND)],
+zones: [{ type: 'goal', x: 84, y: 28, w: 14, h: 12 }],
+maxSpan: 20
+},
+tray: [{ type: 'beam', len: 30, count: 1 }, { type: 'beam', len: 16, count: 2 }, { type: 'post', h: 16, count: 2 }],
+initial: [],
+variations: [
+{ name: 'Main mission' },
+{ name: 'Wider gap', scene: { cliffs: [{ x1: 0, x2: 26, y: 40 }, { x1: 62, x2: 100, y: 40 }], static: [ground(), platform(0, 26, 40), wall(26, 40, GROUND), platform(62, 100, 40), wall(62, 40, GROUND)] }, tray: [{ type: 'beam', len: 30, count: 1 }, { type: 'beam', len: 16, count: 2 }, { type: 'post', h: 16, count: 3 }] },
+{ name: 'Short beams only', tray: [{ type: 'beam', len: 16, count: 2 }, { type: 'post', h: 16, count: 2 }] }
+],
+challenges: [
+{ id: 'two', badge: 'efficiency', text: 'Lean build: cross using only 2 parts.', rule: { type: 'maxParts', n: 2 } },
+{ id: 'short', badge: 'invention', text: 'Short-beam bridge: cross without using the long beam.', rule: { type: 'noPartLen', part: 'beam', len: 30 } }
+]
+},
+{
+id: 3, slug: 'cargo-balance', name: 'Cargo Balance', free: true, mode: 'balance',
+area: 'greenhouse', tool: 'Cargo crates', concept: 'Mass distribution and balance',
+objective: 'Load every crate so the delivery cart stays level.',
+intro: 'The greenhouse needs supplies. Place all the crates so the cart balances on its pivot.',
+reward: 'The greenhouse receives its supplies and blooms.',
+explain: 'A crate far from the pivot tips the cart more than the same crate near it. You matched the turning effect on each side.',
+reflect: 'Which crate had the biggest effect on the tilt?',
+scene: { slots: [-3, -2, -1, 0, 1, 2, 3], crates: [3, 2, 1, 1], blocked: [] },
+tray: [], initial: [],
+variations: [
+{ name: 'Main mission' },
+{ name: 'Five crates', scene: { slots: [-3, -2, -1, 0, 1, 2, 3], crates: [3, 3, 2, 1, 1], blocked: [] } },
+{ name: 'Broken middle', scene: { slots: [-3, -2, -1, 0, 1, 2, 3], crates: [2, 2, 1, 1], blocked: [0] } }
+],
+challenges: [
+{ id: 'edge', badge: 'efficiency', text: 'Big lever: balance with the heaviest crate on an end slot.', rule: { type: 'heavyOnEdge' } },
+{ id: 'hollow', badge: 'invention', text: 'Hollow middle: balance with the centre slot empty.', rule: { type: 'centreEmpty' } }
+]
+},
+{
+id: 4, slug: 'gentle-landing', name: 'Gentle Landing', free: false, mode: 'physics',
+area: 'launcher', tool: 'Launcher', concept: 'Stored energy, trajectory and changing one variable',
+objective: 'Launch the capsule onto the landing pad without overshooting.',
+intro: 'The delivery launcher is back but untuned. Set its power and angle, then run. Change one thing at a time.',
+reward: 'The delivery launcher starts working.',
+explain: 'More power stores more energy, so the capsule flies farther. The angle decides how much of that goes up versus along.',
+reflect: 'Did power or angle change the landing spot more?',
+scene: {
+launcher: { x: 12, y: 50, power: 3, angle: 45, powers: [1, 2, 3, 4, 5, 6], angles: [15, 30, 45, 60, 75] },
+capsule: { r: 2.2 },
+static: [ground(), platform(52, 68, 34), wall(52, 34, GROUND), wall(68, 34, GROUND)],
+zones: [{ type: 'pad', x: 52, y: 26, w: 16, h: 8 }]
+},
+tray: [{ type: 'bumper', h: 8, count: 1 }],
+initial: [],
+variations: [
+{ name: 'Main mission' },
+{ name: 'High pad', scene: { static: [ground(), platform(60, 76, 26), wall(60, 26, GROUND), wall(76, 26, GROUND)], zones: [{ type: 'pad', x: 60, y: 18, w: 16, h: 8 }] } },
+{ name: 'Far pad', scene: { static: [ground(), platform(70, 86, 44), wall(70, 44, GROUND), wall(86, 44, GROUND)], zones: [{ type: 'pad', x: 70, y: 36, w: 16, h: 8 }] } }
+],
+challenges: [
+{ id: 'nobumper', badge: 'efficiency', text: 'Pure aim: land with launcher settings alone, no bumper.', rule: { type: 'maxParts', n: 0 } },
+{ id: 'lob', badge: 'invention', text: 'High lob: land with the angle set to 60° or more.', rule: { type: 'launcherAngleMin', a: 60 } }
+]
+},
+{
+id: 5, slug: 'wind-works', name: 'Wind Works', free: false, mode: 'physics',
+area: 'vents', tool: 'Fans and barriers', concept: 'Forces and comparing alternative routes',
+objective: 'Use fans and barriers to guide the falling capsule into the basket.',
+intro: 'The ventilation station is quiet. Fans push the capsule sideways while gravity pulls it down.',
+reward: 'The ventilation station returns.',
+explain: 'Two forces acted at once: gravity pulling down and the fan pushing sideways. Together they bent the capsule’s path.',
+reflect: 'What would happen with the fan turned the other way?',
+scene: {
+spawn: { x: 14, y: 6 }, capsule: { r: 2.2 },
+static: [ground()],
+zones: [{ type: 'basket', x: 50, y: 46, w: 12, h: 10 }]
+},
+tray: [{ type: 'fan', count: 2 }, { type: 'barrier', len: 12, count: 2 }],
+initial: [],
+variations: [
+{ name: 'Main mission' },
+{ name: 'Blow it back', scene: { spawn: { x: 82, y: 6 }, zones: [{ type: 'basket', x: 40, y: 46, w: 12, h: 10 }] } },
+{ name: 'Over the pipe', scene: { static: [ground(), platform(36, 48, 36), wall(36, 36, GROUND), wall(48, 36, GROUND)], zones: [{ type: 'basket', x: 62, y: 46, w: 12, h: 10 }] } }
+],
+challenges: [
+{ id: 'onefan', badge: 'efficiency', text: 'One breeze: deliver with a single fan and nothing else.', rule: { type: 'maxParts', n: 1 } },
+{ id: 'barrier', badge: 'invention', text: 'Bounce route: deliver using at least one barrier.', rule: { type: 'minPartType', part: 'barrier', n: 1 } }
+]
+},
+{
+id: 6, slug: 'gear-lift', name: 'Gear Lift', free: false, mode: 'gears',
+area: 'platform', tool: 'Gears', concept: 'Gear ratios and mechanical advantage',
+objective: 'Choose gears so the lift can raise the crate to the observation platform.',
+intro: 'The motor is small. A bigger gear on the lift turns slower but with more force.',
+reward: 'The observation platform becomes accessible.',
+explain: 'The lift gear has more teeth than the motor gear, so it turns slower but with more turning force. That is mechanical advantage.',
+reflect: 'What did the middle gear change, and what did it not change?',
+scene: {
+motor: { teeth: 8, rpm: 120 },
+slots: ['idler', 'lift'],
+lift: { height: 24, unitsPerRev: 2, needRatio: 3, timeLimit: 30 },
+gears: [8, 16, 24, 32]
+},
+tray: [], initial: [],
+variations: [
+{ name: 'Main mission' },
+{ name: 'Heavy crate', scene: { motor: { teeth: 8, rpm: 120 }, slots: ['idler', 'lift'], lift: { height: 24, unitsPerRev: 2, needRatio: 4, timeLimit: 30 }, gears: [8, 16, 24, 32] } },
+{ name: 'Hurry up', scene: { motor: { teeth: 8, rpm: 120 }, slots: ['idler', 'lift'], lift: { height: 24, unitsPerRev: 2, needRatio: 3, timeLimit: 20 }, gears: [8, 16, 24, 32] } }
+],
+challenges: [
+{ id: 'direct', badge: 'efficiency', text: 'Direct drive: lift the crate with no middle gear.', rule: { type: 'noIdler' } },
+{ id: 'sameway', badge: 'invention', text: 'Same spin: make the lift gear turn the same way as the motor.', rule: { type: 'liftSameDirection' } }
+]
+},
+{
+id: 7, slug: 'light-the-lab', name: 'Light the Lab', free: false, mode: 'circuit',
+area: 'lab', tool: 'Wires and a switch', concept: 'Closed circuits and simple diagnosis',
+objective: 'Connect the battery, the switch and the lamp in one closed loop.',
+intro: 'The lab is dark. Electricity only flows around a complete loop. Tap a tile to rotate it; tap the switch to open or close it.',
+reward: 'The laboratory lights up.',
+explain: 'Current needs an unbroken loop from the battery, through the lamp, and back. The switch is a gap you can open and close.',
+reflect: 'What happened when the switch was open?',
+scene: {
+rows: 3, cols: 5,
+fixed: [{ r: 1, c: 1, kind: 'battery' }, { r: 1, c: 3, kind: 'lamp' }],
+blocked: [],
+needSwitch: true
+},
+tray: [{ type: 'wire', count: 8 }, { type: 'corner', count: 6 }, { type: 'switch', count: 1 }],
+initial: [],
+variations: [
+{ name: 'Main mission' },
+{ name: 'Around the pipe', scene: { rows: 3, cols: 5, fixed: [{ r: 1, c: 1, kind: 'battery' }, { r: 1, c: 3, kind: 'lamp' }], blocked: [{ r: 1, c: 2 }], needSwitch: true } },
+{ name: 'Two lamps', scene: { rows: 3, cols: 5, fixed: [{ r: 1, c: 1, kind: 'battery' }, { r: 0, c: 3, kind: 'lamp' }, { r: 2, c: 3, kind: 'lamp' }], blocked: [{ r: 1, c: 2 }], needSwitch: true } }
+],
+challenges: [
+{ id: 'tight', badge: 'efficiency', text: 'Tight loop: light the lab using 6 tiles or fewer.', rule: { type: 'maxTiles', n: 6 } },
+{ id: 'grand', badge: 'invention', text: 'Grand tour: build a loop that uses 8 tiles or more.', rule: { type: 'minTiles', n: 8 } }
+]
+},
+{
+id: 8, slug: 'rover-routine', name: 'Rover Routine', free: false, mode: 'code',
+area: 'rover', tool: 'Action blocks', concept: 'Sequencing and debugging',
+objective: 'Arrange action blocks so the rover delivers to every station.',
+intro: 'The helper rover follows your blocks in order, top to bottom. Deliver at each station marker.',
+reward: 'A helper rover joins the station.',
+explain: 'The rover ran your steps in exactly the order you gave them. Watching where it went wrong told you which step to fix.',
+reflect: 'Which block did you change after the first run?',
+scene: {
+rows: 4, cols: 6,
+map: ['......', '.S....', '......', 'R..S..'],
+start: { r: 3, c: 0, dir: 'E' },
+loops: false, maxBlocks: 24
+},
+tray: [], initial: [],
+variations: [
+{ name: 'Main mission' },
+{ name: 'Rocky path', scene: { rows: 4, cols: 6, map: ['....S.', '.##...', '..#...', 'R.....'], start: { r: 3, c: 0, dir: 'E' }, loops: false, maxBlocks: 24 } },
+{ name: 'Three stops', scene: { rows: 4, cols: 6, map: ['S.....', '......', '..S..S', 'R.....'], start: { r: 3, c: 0, dir: 'E' }, loops: false, maxBlocks: 24 } }
+],
+challenges: [
+{ id: 'tidy', badge: 'efficiency', text: 'Tidy program: deliver everywhere in 11 blocks or fewer.', rule: { type: 'maxBlocks', n: 11 } },
+{ id: 'noturnback', badge: 'invention', text: 'No left turns: deliver everywhere using only right turns.', rule: { type: 'noBlock', block: 'L' } }
+]
+},
+{
+id: 9, slug: 'loop-the-route', name: 'Loop the Route', free: false, mode: 'code',
+area: 'routes', tool: 'Repeat blocks', concept: 'Patterns and efficient algorithms',
+objective: 'Replace repeated rover instructions with a loop.',
+intro: 'The rover now services several stations. Find the pattern that repeats and wrap it in a Repeat block.',
+reward: 'The rover services several stations.',
+explain: 'A loop runs the same steps again without you writing them twice. Fewer blocks, same route.',
+reflect: 'How many blocks did the loop save?',
+scene: {
+rows: 4, cols: 7,
+map: ['.......', 'R.S.S.S', '.......', '.......'],
+start: { r: 1, c: 0, dir: 'E' },
+loops: true, maxBlocks: 24
+},
+tray: [], initial: [],
+variations: [
+{ name: 'Main mission' },
+{ name: 'Staircase', scene: { rows: 4, cols: 7, map: ['......S', '....S..', '..S....', 'R......'], start: { r: 3, c: 0, dir: 'N' }, loops: true, maxBlocks: 24 } },
+{ name: 'Square patrol', scene: { rows: 4, cols: 7, map: ['R..S...', '.......', '.......', 'S..S...'], start: { r: 0, c: 0, dir: 'E' }, loops: true, maxBlocks: 24 } }
+],
+challenges: [
+{ id: 'loopy', badge: 'efficiency', text: 'Loop master: deliver everywhere in 7 blocks or fewer.', rule: { type: 'maxBlocks', n: 7 } },
+{ id: 'nested', badge: 'invention', text: 'Double loop: use a Repeat block inside another Repeat block.', rule: { type: 'nestedLoop' } }
+]
+},
+{
+id: 10, slug: 'research-station-rescue', name: 'Research Station Rescue', free: false, mode: 'sequence',
+area: 'station', tool: 'Everything you learned', concept: 'Planning and applying earlier ideas',
+objective: 'Bring the whole station online in three stages.',
+intro: 'One last rescue. Deliver power cells, close the main circuit, then send the rover on its final route. Each stage is saved as a checkpoint.',
+reward: 'The full station comes alive in a celebration.',
+explain: 'You planned three systems in a row and used what each earlier mission taught: slopes, loops of current, and step-by-step instructions.',
+reflect: 'Which earlier mission helped you most here?',
+stages: [
+{
+name: 'Stage 1: Power cell drop', mode: 'physics',
+scene: { spawn: { x: 16, y: 6 }, capsule: { r: 2.2 }, static: [ground()], zones: [{ type: 'basket', x: 64, y: 48, w: 12, h: 8 }] },
+tray: [{ type: 'ramp', len: 22, count: 2 }], initial: [{ type: 'ramp', x: 24, y: 14, angle: 0, len: 22 }]
+},
+{
+name: 'Stage 2: Main breaker', mode: 'circuit',
+scene: { rows: 3, cols: 5, fixed: [{ r: 0, c: 1, kind: 'battery' }, { r: 2, c: 3, kind: 'lamp' }], blocked: [{ r: 1, c: 2 }], needSwitch: true },
+tray: [{ type: 'wire', count: 8 }, { type: 'corner', count: 6 }, { type: 'switch', count: 1 }], initial: []
+},
+{
+name: 'Stage 3: Final route', mode: 'code',
+scene: { rows: 4, cols: 7, map: ['R..S...', '..#....', '..#.S..', '......S'], start: { r: 0, c: 0, dir: 'E' }, loops: true, maxBlocks: 24 },
+tray: [], initial: []
+}
+],
+tray: [], initial: [], scene: {},
+variations: [{ name: 'Main mission' }],
+challenges: [
+{ id: 'clean', badge: 'efficiency', text: 'Clean sweep: finish all three stages with no failed runs.', rule: { type: 'noFailedRuns' } },
+{ id: 'loopfinal', badge: 'invention', text: 'Loop finale: use a Repeat block in the final route.', rule: { type: 'usesLoop' } }
+]
+}
+];
+var AREAS = [
+{ id: 'dock', label: 'Supply dock', decor: 'Dock flag' },
+{ id: 'bridge', label: 'Bridge', decor: 'Bridge lanterns' },
+{ id: 'greenhouse', label: 'Greenhouse', decor: 'Sunflower' },
+{ id: 'launcher', label: 'Launcher', decor: 'Launch pennant' },
+{ id: 'vents', label: 'Ventilation', decor: 'Wind sock' },
+{ id: 'platform', label: 'Observation platform', decor: 'Telescope' },
+{ id: 'lab', label: 'Laboratory', decor: 'Lab poster' },
+{ id: 'rover', label: 'Rover bay', decor: 'Rover bell' },
+{ id: 'routes', label: 'Rover routes', decor: 'Route signs' },
+{ id: 'station', label: 'Whole station', decor: 'Celebration lights' }
+];
+var FREE_LEVELS = 3;
+var KEY_COST = 1;
+return { LEVELS: LEVELS, AREAS: AREAS, FREE_LEVELS: FREE_LEVELS, KEY_COST: KEY_COST, GROUND: GROUND };
+});
+;
+(function (root, factory) {
+if (typeof module !== 'undefined' && module.exports) module.exports = factory(require('./levels.js'));
+else root.AscendRLEngine = factory(root.AscendRLLevels);
+})(typeof self !== 'undefined' ? self : this, function (Levels) {
+'use strict';
+var DT = 1 / 120;           // fixed simulation step, seconds
+var GRAVITY = 60;           // scene units / s^2
+var MAX_SPEED = 110;        // bounded velocity keeps every run stable
+var MAX_TIME = 14;          // seconds before a physics run is called a timeout
+var SETTLE_SPEED = 1.6;
+var SETTLE_TIME = 0.5;
+var GROUND = Levels.GROUND;
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+function deg2rad(d) { return d * Math.PI / 180; }
+function snapDeg(d) { return Math.round(d / 5) * 5; }
+function resolve(level, variationIndex, stageIndex) {
+var v = level.variations[variationIndex || 0] || level.variations[0];
+var base = level;
+if (level.mode === 'sequence') base = level.stages[stageIndex || 0];
+var spec = {
+levelId: level.id, mode: base.mode, variation: variationIndex || 0, stage: stageIndex || 0,
+scene: clone(base.scene), tray: clone(base.tray || []), initial: clone(base.initial || []),
+challenges: level.challenges, name: base.name || level.name
+};
+if (v.scene) for (var k in v.scene) spec.scene[k] = clone(v.scene[k]);
+if (v.tray) spec.tray = clone(v.tray);
+if (v.initial) spec.initial = clone(v.initial);
+return spec;
+}
+function newDesign(spec) {
+switch (spec.mode) {
+case 'physics':
+return { parts: clone(spec.initial), launcher: spec.scene.launcher ? { power: spec.scene.launcher.power, angle: spec.scene.launcher.angle } : null };
+case 'bridge': return { parts: clone(spec.initial) };
+case 'balance': return { placements: [] };
+case 'gears': return { slots: spec.scene.slots.map(function () { return null; }) };
+case 'circuit': return { tiles: [], fixedAxis: {} };
+case 'code': return { program: [] };
+}
+return {};
+}
+function normalizeDesign(spec, design) {
+if (design.parts) design.parts.forEach(function (p) {
+p.x = Math.round(p.x); p.y = Math.round(p.y);
+if (p.angle != null) p.angle = snapDeg(p.angle);
+});
+return design;
+}
+function trayLimit(spec, type, len) {
+var n = 0;
+spec.tray.forEach(function (t) { if (t.type === type && (len == null || t.len === len)) n += t.count; });
+return n;
+}
+function trayUsed(design, type, len) {
+return (design.parts || []).filter(function (p) { return p.type === type && (len == null || p.len === len); }).length;
+}
+function partSegments(p) {
+var segs = [];
+if (p.type === 'ramp' || p.type === 'beam' || p.type === 'barrier') {
+var a = deg2rad(p.angle || 0), h = (p.len || 20) / 2;
+segs.push({ x1: p.x - Math.cos(a) * h, y1: p.y - Math.sin(a) * h, x2: p.x + Math.cos(a) * h, y2: p.y + Math.sin(a) * h, kind: p.type, part: p });
+} else if (p.type === 'post') {
+segs.push({ x1: p.x, y1: GROUND - (p.h || 16), x2: p.x, y2: GROUND, kind: 'post', part: p });
+} else if (p.type === 'bumper') {
+segs.push({ x1: p.x, y1: p.y - (p.h || 8), x2: p.x, y2: p.y, kind: 'bumper', part: p });
+}
+return segs;
+}
+function zoneSegments(z) {
+if (z.type === 'basket') {
+return [
+{ x1: z.x, y1: z.y, x2: z.x, y2: z.y + z.h, kind: 'basket' },
+{ x1: z.x + z.w, y1: z.y, x2: z.x + z.w, y2: z.y + z.h, kind: 'basket' },
+{ x1: z.x, y1: z.y + z.h, x2: z.x + z.w, y2: z.y + z.h, kind: 'basket' }
+];
+}
+if (z.type === 'pad') {
+return [
+{ x1: z.x, y1: z.y + z.h - 3, x2: z.x, y2: z.y + z.h, kind: 'basket' },
+{ x1: z.x + z.w, y1: z.y + z.h - 3, x2: z.x + z.w, y2: z.y + z.h, kind: 'basket' }
+];
+}
+return [];
+}
+function inRect(x, y, z) { return x >= z.x && x <= z.x + z.w && y >= z.y && y <= z.y + z.h; }
+function collide(b, s, e, friction) {
+var dx = s.x2 - s.x1, dy = s.y2 - s.y1, l2 = dx * dx + dy * dy;
+var t = l2 ? clamp(((b.x - s.x1) * dx + (b.y - s.y1) * dy) / l2, 0, 1) : 0;
+var px = s.x1 + dx * t, py = s.y1 + dy * t;
+var nx = b.x - px, ny = b.y - py, d = Math.sqrt(nx * nx + ny * ny);
+if (d >= b.r || d === 0) return null;
+nx /= d; ny /= d;
+var pen = b.r - d;
+b.x += nx * pen; b.y += ny * pen;
+var vn = b.vx * nx + b.vy * ny;
+if (vn < 0) {
+b.vx -= (1 + e) * vn * nx; b.vy -= (1 + e) * vn * ny;
+var tx = -ny, ty = nx, vt = b.vx * tx + b.vy * ty;
+b.vx -= vt * friction * tx; b.vy -= vt * friction * ty;
+}
+return { nx: nx, ny: ny, seg: s, vn: vn };
+}
+var FRICTION = { ground: 2.5, platform: 2.5, basket: 2.5, wall: 0.3, ramp: 0.15, beam: 0.3, barrier: 0.2, bumper: 0.3, post: 0.3 };
+var BOUNCE = { ground: 0.3, platform: 0.25, wall: 0.3, ramp: 0.15, beam: 0.15, barrier: 0.55, bumper: 0.05, basket: 0.25, post: 0.2 };
+function PhysicsSim(spec, design) {
+var sc = spec.scene;
+this.spec = spec; this.design = design;
+this.segs = clone(sc.static || []);
+this.zones = clone(sc.zones || []);
+var self = this;
+this.zones.forEach(function (z) { zoneSegments(z).forEach(function (s) { self.segs.push(s); }); });
+(design.parts || []).forEach(function (p) { partSegments(p).forEach(function (s) { self.segs.push(s); }); });
+this.fans = (design.parts || []).filter(function (p) { return p.type === 'fan'; });
+var r = (sc.capsule && sc.capsule.r) || 2.2;
+if (sc.launcher) {
+var L = sc.launcher, P = design.launcher || { power: L.power, angle: L.angle };
+var v = 18 + P.power * 9, a = deg2rad(P.angle);
+this.body = { x: L.x, y: L.y - 4, vx: Math.cos(a) * v, vy: -Math.sin(a) * v, r: r };
+} else {
+this.body = { x: sc.spawn.x, y: sc.spawn.y, vx: 0, vy: 0, r: r };
+}
+this.t = 0; this.settled = 0; this.running = true; this.result = null; this.diag = null;
+this.trail = []; this.events = []; this.touched = {}; this.inTarget = false; this.wasInTarget = false;
+this.steps = 0; this.lastContact = null;
+}
+PhysicsSim.prototype.snapshot = function () {
+return { body: { x: this.body.x, y: this.body.y, vx: this.body.vx, vy: this.body.vy, r: this.body.r }, t: this.t, running: this.running, result: this.result };
+};
+PhysicsSim.prototype.step = function () {
+if (!this.running) return false;
+var b = this.body, self = this;
+b.vy += GRAVITY * DT;
+this.fans.forEach(function (f) {
+var z = fanZone(f);
+if (inRect(b.x, b.y, z)) { b.vx += z.fx * DT; b.vy += z.fy * DT; }
+});
+var sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+if (sp > MAX_SPEED) { b.vx *= MAX_SPEED / sp; b.vy *= MAX_SPEED / sp; }
+b.x += b.vx * DT; b.y += b.vy * DT;
+var contact = null;
+for (var it = 0; it < 2; it++) {
+for (var i = 0; i < this.segs.length; i++) {
+var s = this.segs[i];
+var c = collide(b, s, BOUNCE[s.kind] != null ? BOUNCE[s.kind] : 0.2, it === 0 ? (FRICTION[s.kind] != null ? FRICTION[s.kind] : 0.3) * DT : 0);
+if (c) {
+contact = c;
+if (s.part && !this.touched[s.kind]) { this.touched[s.kind] = true; this.events.push({ t: this.t, type: 'touch', kind: s.kind }); }
+if (c.vn < -18) this.events.push({ t: this.t, type: 'bounce', kind: s.kind, x: b.x, y: b.y });
+}
+}
+}
+this.lastContact = contact;
+this.t += DT; this.steps++;
+if (this.steps % 4 === 0) this.trail.push([Math.round(b.x * 10) / 10, Math.round(b.y * 10) / 10]);
+var target = this.zones[0];
+var inside = target && inRect(b.x, b.y, target);
+if (inside && !this.inTarget) this.events.push({ t: this.t, type: 'enter_target' });
+if (!inside && this.inTarget) this.events.push({ t: this.t, type: 'exit_target' });
+if (inside) this.wasInTarget = true;
+this.inTarget = inside;
+sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+this.settled = sp < SETTLE_SPEED ? this.settled + DT : 0;
+if (b.y > 72 || b.x < -12 || b.x > 112) return this.finish('lost');
+if (this.settled >= SETTLE_TIME) return this.finish(inside ? 'success' : 'settled');
+if (this.t >= MAX_TIME) return this.finish('timeout');
+return true;
+};
+PhysicsSim.prototype.finish = function (code) {
+this.running = false;
+this.result = code === 'success' ? 'success' : code;
+this.diag = physicsDiag(this, code);
+return false;
+};
+function fanZone(f) {
+var dirs = { E: [1, 0], W: [-1, 0], N: [0, -1], S: [0, 1] };
+var d = dirs[f.dir || 'E'], reach = 26, width = 14, str = 85;
+if (d[0]) return { x: d[0] > 0 ? f.x : f.x - reach, y: f.y - width / 2, w: reach, h: width, fx: d[0] * str, fy: 0 };
+return { x: f.x - width / 2, y: d[1] > 0 ? f.y : f.y - reach, w: width, h: reach, fx: 0, fy: d[1] * str };
+}
+function physicsDiag(sim, code) {
+var b = sim.body, z = sim.zones[0], tname = z && z.type === 'pad' ? 'landing pad' : 'basket';
+var touchedPart = Object.keys(sim.touched).length > 0;
+if (code === 'success') {
+var bounces = sim.events.filter(function (e) { return e.type === 'bounce'; }).length;
+return { code: 'success', text: 'Delivered! The capsule settled in the ' + tname + ' after ' + sim.t.toFixed(1) + ' seconds' + (bounces ? ' and ' + bounces + ' bounce' + (bounces > 1 ? 's' : '') : '') + '.' };
+}
+if (code === 'lost') return { code: 'lost', text: 'The capsule left the station area.', hint: 'Aim it back toward the ' + tname + '.' };
+if (code === 'timeout') return { code: 'timeout', text: 'The capsule was still moving after ' + MAX_TIME + ' seconds and never settled.', hint: 'Something keeps it bouncing. Try a softer landing.' };
+if (sim.wasInTarget) return { code: 'bounced_out', text: 'The capsule reached the ' + tname + ' but bounced back out.', hint: 'It arrived too fast. Slow it down with a gentler slope or a shorter drop.' };
+var onPart = sim.lastContact && sim.lastContact.seg.part;
+if (onPart && sim.lastContact.seg.kind === 'ramp') return { code: 'stuck', text: 'The capsule stopped on the ramp at x = ' + Math.round(b.x) + '.', hint: 'Tilt the ramp so gravity can pull the capsule along it.' };
+if (!touchedPart && (sim.design.parts || []).length && !sim.spec.scene.launcher) return { code: 'missed_part', text: 'The capsule never touched your ' + sim.design.parts[0].type + '. It fell straight down and stopped at x = ' + Math.round(b.x) + '.', hint: 'Move the part under the drop point.' };
+if (z && b.x > z.x + z.w) return { code: 'overshot', text: 'The capsule overshot: it passed the ' + tname + ' and stopped ' + Math.round(b.x - (z.x + z.w)) + ' units past it.', hint: 'It had too much speed. Try a gentler slope, less power, or move the ramp closer.' };
+if (z && b.x < z.x) return { code: 'short', text: 'The capsule stopped ' + Math.round(z.x - b.x) + ' units before the ' + tname + '.', hint: 'It needs more speed or a better direction. Try a steeper slope or more power.' };
+return { code: 'settled', text: 'The capsule settled outside the ' + tname + '.', hint: 'Watch where it lands and adjust one thing.' };
+}
+function beamSupports(spec, design, beam) {
+var segs = partSegments(beam)[0], sc = spec.scene;
+var x1 = Math.min(segs.x1, segs.x2), x2 = Math.max(segs.x1, segs.x2);
+var yAt = function (x) { return segs.y1 + (segs.y2 - segs.y1) * ((x - segs.x1) / ((segs.x2 - segs.x1) || 1)); };
+var pts = [];
+(sc.cliffs || []).forEach(function (c) {
+var lo = Math.max(x1, c.x1), hi = Math.min(x2, c.x2);
+if (hi - lo >= 1 && Math.abs(yAt((lo + hi) / 2) - c.y) <= 2.5) { pts.push(lo); pts.push(hi); }
+});
+(design.parts || []).forEach(function (p) {
+if (p.type !== 'post') return;
+var top = GROUND - (p.h || 16);
+if (p.x >= x1 - 1 && p.x <= x2 + 1 && Math.abs(yAt(clamp(p.x, x1, x2)) - top) <= 2.5) pts.push(clamp(p.x, x1, x2));
+});
+(design.parts || []).forEach(function (p) {
+if (p === beam || p.type !== 'beam') return;
+var o = partSegments(p)[0];
+[[o.x1, o.y1], [o.x2, o.y2]].forEach(function (end) {
+if (end[0] >= x1 - 1 && end[0] <= x2 + 1 && Math.abs(yAt(clamp(end[0], x1, x2)) - end[1]) <= 2.5) pts.push(clamp(end[0], x1, x2));
+});
+});
+pts.sort(function (a, b) { return a - b; });
+var weak = null, maxSpan = sc.maxSpan || 20;
+if (!pts.length) weak = { kind: 'unsupported', from: x1, to: x2 };
+else {
+if (pts[0] - x1 > 6) weak = { kind: 'overhang', from: x1, to: pts[0] };
+if (!weak && x2 - pts[pts.length - 1] > 6) weak = { kind: 'overhang', from: pts[pts.length - 1], to: x2 };
+for (var i = 1; i < pts.length && !weak; i++) if (pts[i] - pts[i - 1] > maxSpan) weak = { kind: 'span', from: pts[i - 1], to: pts[i] };
+}
+return { supports: pts, weak: weak, x1: x1, x2: x2 };
+}
+function BridgeSim(spec, design) {
+var sc = spec.scene, self = this;
+this.spec = spec; this.design = design;
+this.segs = clone(sc.static || []);
+this.beams = [];
+(design.parts || []).forEach(function (p) {
+var segs = partSegments(p);
+if (p.type === 'beam') { var info = beamSupports(spec, design, p); self.beams.push({ part: p, seg: segs[0], info: info, broken: false }); }
+segs.forEach(function (s) { self.segs.push(s); });
+});
+this.zones = clone(sc.zones || []);
+this.body = { x: sc.rover.x, y: sc.rover.y, vx: 0, vy: 0, r: sc.rover.r };
+this.t = 0; this.running = true; this.result = null; this.diag = null; this.trail = []; this.events = [];
+this.steps = 0; this.stuck = 0; this.contactAge = 1; this.broke = null; this.fellAt = null;
+}
+BridgeSim.prototype.snapshot = function () {
+return { body: { x: this.body.x, y: this.body.y, vx: this.body.vx, vy: this.body.vy, r: this.body.r }, t: this.t, running: this.running, result: this.result, broken: this.beams.filter(function (b) { return b.broken; }).map(function (b) { return b.part; }) };
+};
+BridgeSim.prototype.step = function () {
+if (!this.running) return false;
+var b = this.body, self = this;
+b.vy += GRAVITY * DT;
+if (this.contactAge < 0.08) { b.vx += 40 * DT; if (b.vx > 14) b.vx = 14; }
+b.x += b.vx * DT; b.y += b.vy * DT;
+var contact = false;
+for (var it = 0; it < 2; it++) {
+for (var i = 0; i < this.segs.length; i++) {
+var s = this.segs[i];
+if (s.kind === 'beam' && this.isBroken(s)) continue;
+if (collide(b, s, 0.05, it === 0 ? 1.5 * DT : 0)) contact = true;
+}
+}
+this.contactAge = contact ? 0 : this.contactAge + DT;
+this.beams.forEach(function (bm) {
+if (bm.broken || !bm.info.weak) return;
+var w = bm.info.weak;
+if (b.x > w.from + 2 && b.x < w.to - 2 && Math.abs(b.y - (bm.seg.y1 + bm.seg.y2) / 2) < 6) {
+bm.broken = true; self.broke = bm; self.events.push({ t: self.t, type: 'beam_broke', x: b.x });
+}
+});
+this.t += DT; this.steps++;
+if (this.steps % 4 === 0) this.trail.push([Math.round(b.x * 10) / 10, Math.round(b.y * 10) / 10]);
+var sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy);
+this.stuck = sp < 0.6 ? this.stuck + DT : 0;
+if (b.y > 46 && this.fellAt == null) { this.fellAt = Math.round(b.x); this.events.push({ t: this.t, type: 'fell', x: b.x }); }
+var goal = this.zones[0];
+if (goal && inRect(b.x, b.y, goal)) return this.finish('success');
+if (this.fellAt != null && (this.stuck > 0.4 || b.y > 70)) return this.finish('fell');
+if (this.stuck >= 1) return this.finish('stuck');
+if (this.t >= MAX_TIME) return this.finish('timeout');
+return true;
+};
+BridgeSim.prototype.isBroken = function (seg) {
+for (var i = 0; i < this.beams.length; i++) if (this.beams[i].part === seg.part) return this.beams[i].broken;
+return false;
+};
+BridgeSim.prototype.finish = function (code) {
+this.running = false; this.result = code;
+var d;
+if (code === 'success') d = { code: 'success', text: 'The rover crossed and reached the far side in ' + this.t.toFixed(1) + ' seconds.' };
+else if (this.broke) {
+var w = this.broke.info.weak, span = Math.round(w.to - w.from);
+d = w.kind === 'overhang'
+? { code: 'overhang', text: 'A beam tipped: ' + span + ' units of it hung past its last support.', hint: 'Rest both ends of a beam on a cliff or a post.' }
+: { code: 'sagged', text: 'The beam sagged and gave way: ' + span + ' units had nothing underneath.', hint: 'Beams here hold ' + (this.spec.scene.maxSpan || 20) + ' units between supports. Put a post under the middle.' };
+} else if (code === 'fell') d = { code: 'fell', text: 'The rover drove off the edge at x = ' + this.fellAt + ' because nothing was there to drive on.', hint: 'Lay a beam across the gap so the rover has a road.' };
+else if (code === 'stuck') d = { code: 'stuck', text: 'The rover stopped at x = ' + Math.round(this.body.x) + ' and could not go on.', hint: 'Check for a step or a slope it cannot climb. Beams should be level with the cliffs.' };
+else d = { code: 'timeout', text: 'The rover was still going after ' + MAX_TIME + ' seconds without reaching the far side.', hint: 'Make sure the beams lead all the way across.' };
+this.diag = d;
+return false;
+};
+function BalanceSim(spec, design) {
+var sc = spec.scene;
+this.spec = spec; this.design = design;
+this.crates = sc.crates.slice();
+this.placed = {};
+var self = this, left = 0, right = 0, tl = 0, tr = 0;
+(design.placements || []).forEach(function (p) {
+var m = self.crates[p.crate];
+if (m == null) return;
+self.placed[p.crate] = p.slot;
+if (p.slot < 0) { left += m; tl += m * -p.slot; } else if (p.slot > 0) { right += m; tr += m * p.slot; }
+});
+this.torqueLeft = tl; this.torqueRight = tr; this.torque = tr - tl;
+this.unplaced = this.crates.length - Object.keys(this.placed).length;
+this.t = 0; this.running = true; this.result = null; this.diag = null; this.trail = []; this.events = [];
+this.balanced = this.unplaced === 0 && this.torque === 0;
+this.tilt = clamp(this.torque * 6, -28, 28);
+}
+BalanceSim.prototype.snapshot = function () {
+var p = clamp(this.t / 3, 0, 1);
+return { t: this.t, running: this.running, result: this.result, progress: p, tilt: this.balanced ? 0 : this.tilt * clamp(this.t / 0.8, 0, 1), cartX: this.balanced ? 20 + p * 56 : 20 + clamp(this.t / 0.8, 0, 1) * 8, torque: this.torque };
+};
+BalanceSim.prototype.step = function () {
+if (!this.running) return false;
+this.t += DT;
+if (this.unplaced > 0 && this.t >= 0.3) return this.finish('unloaded');
+if (!this.balanced && this.t >= 2.2) return this.finish('tipped');
+if (this.balanced && this.t >= 3.2) return this.finish('success');
+return true;
+};
+BalanceSim.prototype.finish = function (code) {
+this.running = false; this.result = code;
+if (code === 'success') this.diag = { code: 'success', text: 'Balanced! Turning effect on the left: ' + this.torqueLeft + ', on the right: ' + this.torqueRight + '. The cart rolled to the greenhouse.' };
+else if (code === 'unloaded') this.diag = { code: 'unloaded', text: this.unplaced + ' crate' + (this.unplaced > 1 ? 's are' : ' is') + ' still on the ground.', hint: 'Every crate needs a slot on the cart.' };
+else this.diag = { code: 'tipped', text: 'The cart tipped to the ' + (this.torque < 0 ? 'left' : 'right') + '. Turning effect left: ' + this.torqueLeft + ', right: ' + this.torqueRight + '.', hint: 'Turning effect is mass times distance from the pivot. Move a crate toward the lighter side, or farther from the middle on the lighter side.' };
+return false;
+};
+function gearsEval(spec, design) {
+var sc = spec.scene, lift = design.slots[design.slots.length - 1], idler = design.slots.length > 1 ? design.slots[0] : null;
+if (!lift) return { ok: false, code: 'nolift', ratio: 0 };
+var ratio = lift / sc.motor.teeth;
+var rpm = sc.motor.rpm / ratio;
+var seconds = sc.lift.height / (sc.lift.unitsPerRev * rpm / 60);
+var direction = idler ? 1 : -1; // motor is +1 (clockwise); each mesh flips
+var ok = ratio >= sc.lift.needRatio && seconds <= sc.lift.timeLimit;
+var code = ok ? 'success' : (ratio < sc.lift.needRatio ? 'stall' : 'slow');
+return { ok: ok, code: code, ratio: ratio, rpm: rpm, seconds: seconds, direction: direction, idler: idler, lift: lift };
+}
+function GearsSim(spec, design) {
+this.spec = spec; this.design = design; this.ev = gearsEval(spec, design);
+this.t = 0; this.running = true; this.result = null; this.diag = null; this.trail = []; this.events = [];
+var sc = spec.scene;
+this.duration = this.ev.ok ? Math.min(this.ev.seconds, 6) : (this.ev.code === 'slow' ? 4 : 2.5);
+this.simSpeed = this.ev.ok ? this.ev.seconds / this.duration : 1; // shown faster when the real lift is slow
+this.liftHeight = sc.lift.height;
+}
+GearsSim.prototype.snapshot = function () {
+var e = this.ev, sc = this.spec.scene, motorAngle = (this.t * this.simSpeed * sc.motor.rpm / 60) * 360;
+var liftAngle = e.lift ? motorAngle / e.ratio * e.direction : 0;
+var idlerAngle = e.idler ? -motorAngle * sc.motor.teeth / e.idler : 0;
+var h = 0;
+if (e.code === 'success') h = clamp(this.t * this.simSpeed / e.seconds, 0, 1) * this.liftHeight;
+else if (e.code === 'slow') h = clamp(this.t * this.simSpeed / e.seconds, 0, 1) * this.liftHeight;
+else if (e.code === 'stall') h = Math.max(0, Math.sin(this.t * 6) * 0.6);
+return { t: this.t, running: this.running, result: this.result, motorAngle: motorAngle, idlerAngle: idlerAngle, liftAngle: e.code === 'stall' ? liftAngle * 0.05 : liftAngle, liftHeight: h, eval: e };
+};
+GearsSim.prototype.step = function () {
+if (!this.running) return false;
+this.t += DT;
+if (this.t >= this.duration) return this.finish(this.ev.code);
+return true;
+};
+GearsSim.prototype.finish = function (code) {
+var e = this.ev, sc = this.spec.scene;
+this.running = false; this.result = code;
+if (code === 'success') this.diag = { code: 'success', text: 'Lifted! Ratio ' + e.ratio + ':1, so the lift turned at ' + Math.round(e.rpm) + ' rpm and took ' + Math.round(e.seconds) + ' seconds.' };
+else if (code === 'nolift') this.diag = { code: 'nolift', text: 'There is no gear on the lift axle, so the motor spun on its own.', hint: 'Tap the lift slot and pick a gear.' };
+else if (code === 'stall') this.diag = { code: 'stall', text: 'The lift stalled. Ratio ' + e.ratio + ':1 is not enough turning force for this crate (it needs ' + sc.lift.needRatio + ':1 or more).', hint: 'A bigger gear on the lift turns slower but pulls harder.' };
+else this.diag = { code: 'slow', text: 'Strong but slow: ratio ' + e.ratio + ':1 would take ' + Math.round(e.seconds) + ' seconds, and the crate must arrive within ' + sc.lift.timeLimit + '.', hint: 'Try a slightly smaller lift gear: less force, more speed.' };
+return false;
+};
+var SIDES = ['N', 'E', 'S', 'W'];
+var OPP = { N: 'S', S: 'N', E: 'W', W: 'E' };
+var STEP = { N: [-1, 0], E: [0, 1], S: [1, 0], W: [0, -1] };
+function tilePorts(tile) {
+var base;
+if (tile.type === 'wire' || tile.type === 'switch') base = ['E', 'W'];
+else if (tile.type === 'corner') base = ['N', 'E'];
+else if (tile.type === 'fixed') base = tile.axis === 'V' ? ['N', 'S'] : ['E', 'W'];
+else return [];
+return base.map(function (s) { return SIDES[(SIDES.indexOf(s) + (tile.rot || 0)) % 4]; });
+}
+function circuitGrid(spec, design) {
+var sc = spec.scene, grid = {};
+sc.fixed.forEach(function (f) { grid[f.r + ',' + f.c] = { type: 'fixed', kind: f.kind, r: f.r, c: f.c, axis: (design.fixedAxis || {})[f.r + ',' + f.c] || 'H' }; });
+(design.tiles || []).forEach(function (t) { if (!grid[t.r + ',' + t.c]) grid[t.r + ',' + t.c] = { type: t.type, rot: t.rot || 0, closed: !!t.closed, r: t.r, c: t.c }; });
+return grid;
+}
+function circuitEval(spec, design) {
+var sc = spec.scene, grid = circuitGrid(spec, design);
+var battery = sc.fixed.filter(function (f) { return f.kind === 'battery'; })[0];
+var lamps = sc.fixed.filter(function (f) { return f.kind === 'lamp'; });
+var bt = grid[battery.r + ',' + battery.c], ports = tilePorts(bt);
+var visited = [], r = battery.r, c = battery.c, side = ports[0], steps = 0, openAt = null, openSwitch = null, sawSwitch = false;
+while (steps++ < 100) {
+var nr = r + STEP[side][0], nc = c + STEP[side][1], key = nr + ',' + nc, t = grid[key];
+if (nr < 0 || nc < 0 || nr >= sc.rows || nc >= sc.cols || !t) { openAt = { r: r, c: c, side: side }; break; }
+var tp = tilePorts(t), enter = OPP[side];
+if (tp.indexOf(enter) === -1) { openAt = { r: nr, c: nc, side: enter, kind: 'noport' }; break; }
+if (t.type === 'fixed' && t.kind === 'battery') { if (tp[0] === enter || tp[1] === enter) return finishEval(true); break; }
+visited.push(key);
+if (t.type === 'switch') { sawSwitch = true; if (!t.closed) { openSwitch = { r: nr, c: nc }; break; } }
+side = tp[0] === enter ? tp[1] : tp[0];
+r = nr; c = nc;
+}
+return finishEval(false);
+function finishEval(closed) {
+var lampsHit = lamps.filter(function (l) { return visited.indexOf(l.r + ',' + l.c) !== -1; }).length;
+var res = { closed: closed, lampsHit: lampsHit, lampsTotal: lamps.length, sawSwitch: sawSwitch, openAt: openAt, openSwitch: openSwitch, tiles: (design.tiles || []).length, loopLength: visited.length };
+if (openSwitch) res.code = 'switch_open';
+else if (!closed) res.code = 'open';
+else if (lampsHit < lamps.length) res.code = 'no_lamp';
+else if (sc.needSwitch && !sawSwitch) res.code = 'no_switch';
+else res.code = 'success';
+res.ok = res.code === 'success';
+return res;
+}
+}
+function CircuitSim(spec, design) {
+this.spec = spec; this.design = design; this.ev = circuitEval(spec, design);
+this.t = 0; this.running = true; this.result = null; this.diag = null; this.trail = []; this.events = [];
+}
+CircuitSim.prototype.snapshot = function () { return { t: this.t, running: this.running, result: this.result, eval: this.ev, glow: clamp(this.t / 1.2, 0, 1) }; };
+CircuitSim.prototype.step = function () {
+if (!this.running) return false;
+this.t += DT;
+if (this.t >= 1.4) return this.finish(this.ev.code);
+return true;
+};
+CircuitSim.prototype.finish = function (code) {
+var e = this.ev;
+this.running = false; this.result = code;
+if (code === 'success') this.diag = { code: 'success', text: 'The loop is closed: current flows from the battery through ' + (e.lampsTotal > 1 ? 'both lamps' : 'the lamp') + ' and back. The lab lights up!' };
+else if (code === 'switch_open') this.diag = { code: 'switch_open', text: 'The switch at row ' + (e.openSwitch.r + 1) + ', column ' + (e.openSwitch.c + 1) + ' is open, so the loop has a gap there.', hint: 'Tap the switch to close it, then run again.' };
+else if (code === 'open') this.diag = { code: 'open', text: 'The path stops at row ' + (e.openAt.r + 1) + ', column ' + (e.openAt.c + 1) + ' on its ' + sideName(e.openAt.side) + ' side. Current cannot cross a gap.', hint: 'Add or rotate a tile so both neighbours connect.' };
+else if (code === 'no_lamp') this.diag = { code: 'no_lamp', text: 'The loop closed, but it skipped ' + (e.lampsTotal - e.lampsHit) + ' lamp' + (e.lampsTotal - e.lampsHit > 1 ? 's' : '') + '. Current only lights what it flows through.', hint: 'Route the loop through every lamp.' };
+else this.diag = { code: 'no_switch', text: 'The lamp lit, but there is no switch in the loop, so the lab could never be turned off.', hint: 'Swap one wire for the switch.' };
+return false;
+};
+function sideName(s) { return { N: 'top', S: 'bottom', E: 'right', W: 'left' }[s] || s; }
+var TURN_L = { N: 'W', W: 'S', S: 'E', E: 'N' };
+var TURN_R = { N: 'E', E: 'S', S: 'W', W: 'N' };
+var MAX_STEPS = 200;
+function countBlocks(program) {
+return program.reduce(function (n, b) { return n + 1 + (b.t === 'loop' ? countBlocks(b.body) : 0); }, 0);
+}
+function hasNested(program, depth) {
+depth = depth || 0;
+for (var i = 0; i < program.length; i++) {
+if (program[i].t === 'loop') { if (depth >= 1) return true; if (hasNested(program[i].body, depth + 1)) return true; }
+}
+return false;
+}
+function hasLoop(program) { return program.some(function (b) { return b.t === 'loop'; }); }
+function usesBlock(program, kind) {
+return program.some(function (b) { return b.t === kind || (b.t === 'loop' && usesBlock(b.body, kind)); });
+}
+function flatten(program, out, path) {
+out = out || []; path = path || [];
+for (var i = 0; i < program.length; i++) {
+var b = program[i], p = path.concat([i]);
+if (b.t === 'loop') { for (var k = 0; k < b.n; k++) { if (flatten(b.body, out, p) === null) return null; } }
+else out.push({ t: b.t, path: p });
+if (out.length > MAX_STEPS) return null;
+}
+return out;
+}
+function codeRun(spec, program) {
+var sc = spec.scene, steps = flatten(program);
+var stations = {}, total = 0;
+sc.map.forEach(function (row, r) { row.split('').forEach(function (ch, c) { if (ch === 'S') { stations[r + ',' + c] = false; total++; } }); });
+var r = sc.start.r, c = sc.start.c, dir = sc.start.dir, frames = [{ r: r, c: c, dir: dir }], delivered = 0, wasted = 0, events = [];
+if (steps === null) return { result: 'toolong', frames: frames, steps: [], events: events, delivered: 0, total: total };
+if (!steps.length) return { result: 'empty', frames: frames, steps: [], events: events, delivered: 0, total: total };
+for (var i = 0; i < steps.length; i++) {
+var s = steps[i];
+if (s.t === 'F') {
+var nr = r + STEP[dir][0], nc = c + STEP[dir][1];
+if (nr < 0 || nc < 0 || nr >= sc.rows || nc >= sc.cols || sc.map[nr][nc] === '#') {
+frames.push({ r: r, c: c, dir: dir, bump: true });
+return { result: 'bump', frames: frames, steps: steps, at: i, events: events, delivered: delivered, total: total, path: s.path };
+}
+r = nr; c = nc; frames.push({ r: r, c: c, dir: dir });
+} else if (s.t === 'L') { dir = TURN_L[dir]; frames.push({ r: r, c: c, dir: dir }); }
+else if (s.t === 'R') { dir = TURN_R[dir]; frames.push({ r: r, c: c, dir: dir }); }
+else if (s.t === 'D') {
+var key = r + ',' + c;
+if (stations[key] === false) { stations[key] = true; delivered++; frames.push({ r: r, c: c, dir: dir, deliver: true }); events.push({ type: 'delivered', step: i }); }
+else { wasted++; frames.push({ r: r, c: c, dir: dir, wasted: true }); events.push({ type: 'wasted', step: i, path: s.path }); }
+}
+if (delivered === total) return { result: 'success', frames: frames, steps: steps, events: events, delivered: delivered, total: total, wasted: wasted, blocks: countBlocks(program) };
+}
+return { result: 'undelivered', frames: frames, steps: steps, events: events, delivered: delivered, total: total, wasted: wasted };
+}
+function CodeSim(spec, design) {
+this.spec = spec; this.design = design; this.run = codeRun(spec, design.program || []);
+this.t = 0; this.running = true; this.result = null; this.diag = null; this.trail = []; this.events = this.run.events;
+this.frameTime = 0.42; this.frame = 0;
+var self = this;
+this.run.frames.forEach(function (f) { self.trail.push([f.c, f.r]); });
+}
+CodeSim.prototype.snapshot = function () {
+var i = Math.min(this.run.frames.length - 1, Math.floor(this.t / this.frameTime));
+return { t: this.t, running: this.running, result: this.result, frame: this.run.frames[i], frameIndex: i, run: this.run };
+};
+CodeSim.prototype.step = function () {
+if (!this.running) return false;
+this.t += DT;
+if (this.t >= this.run.frames.length * this.frameTime) return this.finish(this.run.result);
+return true;
+};
+CodeSim.prototype.finish = function (code) {
+var run = this.run;
+this.running = false; this.result = code;
+var wasted = run.wasted ? ' It also tried to deliver ' + run.wasted + ' time' + (run.wasted > 1 ? 's' : '') + ' where there was no station.' : '';
+if (code === 'success') this.diag = { code: 'success', text: 'Every station got its delivery in ' + run.blocks + ' block' + (run.blocks === 1 ? '' : 's') + '.' + wasted };
+else if (code === 'bump') this.diag = { code: 'bump', text: 'Bonk! At step ' + (run.at + 1) + ' the rover tried to move into ' + (run.frames[run.frames.length - 1] && 'a wall or the edge') + '.', hint: 'Find that block in your program and change the turn before it.', path: run.path };
+else if (code === 'empty') this.diag = { code: 'empty', text: 'The program is empty, so the rover stayed put.', hint: 'Tap the blocks to build a route.' };
+else if (code === 'toolong') this.diag = { code: 'toolong', text: 'That program runs over ' + MAX_STEPS + ' steps.', hint: 'Use smaller repeat numbers.' };
+else this.diag = { code: 'undelivered', text: 'The program finished with ' + (run.total - run.delivered) + ' of ' + run.total + ' station' + (run.total > 1 ? 's' : '') + ' still waiting.' + wasted, hint: 'Drive to each station marker and use a Deliver block there.' };
+return false;
+};
+function createSim(spec, design) {
+design = normalizeDesign(spec, clone(design));
+switch (spec.mode) {
+case 'physics': return new PhysicsSim(spec, design);
+case 'bridge': return new BridgeSim(spec, design);
+case 'balance': return new BalanceSim(spec, design);
+case 'gears': return new GearsSim(spec, design);
+case 'circuit': return new CircuitSim(spec, design);
+case 'code': return new CodeSim(spec, design);
+}
+throw new Error('Unknown mode ' + spec.mode);
+}
+function runToEnd(spec, design) {
+var sim = createSim(spec, design), guard = 0;
+while (sim.step() && guard++ < 200000) { /* run */ }
+return { ok: sim.result === 'success', result: sim.result, diag: sim.diag, t: sim.t, trail: sim.trail, events: sim.events, sim: sim };
+}
+function validateDesign(spec, design) {
+var issues = [];
+if (design.parts) {
+var seen = {};
+design.parts.forEach(function (p) { var k = p.type + ':' + (p.len || ''); seen[k] = (seen[k] || 0) + 1; });
+Object.keys(seen).forEach(function (k) {
+var bits = k.split(':'), lim = trayLimit(spec, bits[0], bits[1] ? Number(bits[1]) : null);
+if (seen[k] > lim) issues.push('Too many ' + bits[0] + 's: the tray has ' + lim + '.');
+});
+}
+return { ok: !issues.length, issues: issues };
+}
+function checkRule(spec, design, run, rule, extra) {
+extra = extra || {};
+var parts = design.parts || [];
+switch (rule.type) {
+case 'maxTime': return run.ok && run.t <= rule.s;
+case 'maxParts': return run.ok && parts.length <= rule.n;
+case 'partAngleMax': return run.ok && parts.some(function (p) { return p.type === rule.part; }) && parts.every(function (p) { return p.type !== rule.part || Math.abs(p.angle || 0) <= rule.deg; });
+case 'noPartLen': return run.ok && !parts.some(function (p) { return p.type === rule.part && p.len === rule.len; });
+case 'minPartType': return run.ok && parts.filter(function (p) { return p.type === rule.part; }).length >= rule.n;
+case 'launcherPowerMax': return run.ok && design.launcher && design.launcher.power <= rule.p;
+case 'launcherAngleMin': return run.ok && design.launcher && design.launcher.angle >= rule.a;
+case 'heavyOnEdge': {
+if (!run.ok) return false;
+var max = Math.max.apply(null, spec.scene.crates), edge = Math.max.apply(null, spec.scene.slots);
+return (design.placements || []).some(function (p) { return spec.scene.crates[p.crate] === max && Math.abs(p.slot) === edge; });
+}
+case 'centreEmpty': return run.ok && !(design.placements || []).some(function (p) { return p.slot === 0; });
+case 'noIdler': return run.ok && !design.slots[0];
+case 'liftSameDirection': return run.ok && run.sim.ev.direction === 1;
+case 'maxTiles': return run.ok && (design.tiles || []).length <= rule.n;
+case 'minTiles': return run.ok && (design.tiles || []).length >= rule.n;
+case 'maxBlocks': return run.ok && countBlocks(design.program || []) <= rule.n;
+case 'noBlock': return run.ok && !usesBlock(design.program || [], rule.block);
+case 'nestedLoop': return run.ok && hasNested(design.program || []);
+case 'usesLoop': return run.ok && hasLoop(design.program || []);
+case 'noFailedRuns': return run.ok && extra.failedRuns === 0;
+}
+return false;
+}
+return {
+DT: DT, GRAVITY: GRAVITY, MAX_TIME: MAX_TIME, GROUND: GROUND,
+resolve: resolve, newDesign: newDesign, normalizeDesign: normalizeDesign,
+createSim: createSim, runToEnd: runToEnd, validateDesign: validateDesign, checkRule: checkRule,
+trayLimit: trayLimit, trayUsed: trayUsed, partSegments: partSegments, fanZone: fanZone,
+beamSupports: beamSupports, gearsEval: gearsEval, circuitEval: circuitEval, circuitGrid: circuitGrid, tilePorts: tilePorts,
+codeRun: codeRun, countBlocks: countBlocks, flatten: flatten, inRect: inRect, clone: clone
+};
+});
+;
+(function (root, factory) {
+if (typeof module !== 'undefined' && module.exports) module.exports = factory(require('./levels.js'));
+else root.AscendRLProgress = factory(root.AscendRLLevels);
+})(typeof self !== 'undefined' ? self : this, function (Levels) {
+'use strict';
+var VERSION = 1;
+var MAX_DESIGNS = 6;
+function empty() {
+return { v: VERSION, levels: {}, settings: { sound: true, ghost: true, assist: false }, runs: 0, fails: 0, practice: {} };
+}
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function sanitize(raw) {
+var p = empty();
+if (!raw || typeof raw !== 'object') return p;
+if (raw.settings && typeof raw.settings === 'object') {
+['sound', 'ghost', 'assist'].forEach(function (k) { if (typeof raw.settings[k] === 'boolean') p.settings[k] = raw.settings[k]; });
+}
+p.runs = Math.max(0, parseInt(raw.runs, 10) || 0);
+p.fails = Math.max(0, parseInt(raw.fails, 10) || 0);
+if (raw.practice && typeof raw.practice === 'object') {
+Object.keys(raw.practice).forEach(function (k) { if (/^[0-9]{4}-W[0-9]{2}$/.test(k) && raw.practice[k] === true) p.practice[k] = true; });
+}
+if (raw.levels && typeof raw.levels === 'object') {
+Object.keys(raw.levels).forEach(function (id) {
+var n = parseInt(id, 10), src = raw.levels[id];
+if (!(n >= 1 && n <= Levels.LEVELS.length) || !src || typeof src !== 'object') return;
+var lv = { done: !!src.done, badges: {}, variations: {}, designs: [], stage: Math.max(0, parseInt(src.stage, 10) || 0), best: null };
+['rescue', 'efficiency', 'invention'].forEach(function (b) { if (src.badges && src.badges[b] === true) lv.badges[b] = true; });
+if (src.variations && typeof src.variations === 'object') Object.keys(src.variations).forEach(function (v) { if (/^[0-9]+$/.test(v) && src.variations[v] === true) lv.variations[v] = true; });
+if (Array.isArray(src.designs)) src.designs.slice(0, MAX_DESIGNS).forEach(function (d) {
+if (d && typeof d === 'object' && d.design) lv.designs.push({ name: String(d.name || 'Design').slice(0, 40), ts: parseInt(d.ts, 10) || 0, variation: parseInt(d.variation, 10) || 0, design: d.design, stats: d.stats && typeof d.stats === 'object' ? d.stats : {} });
+});
+if (src.best && typeof src.best === 'object') lv.best = { time: Number(src.best.time) || 0, parts: parseInt(src.best.parts, 10) || 0 };
+p.levels[n] = lv;
+});
+}
+return p;
+}
+function merge(a, b) {
+a = sanitize(a); b = sanitize(b);
+var out = clone(a);
+out.runs = Math.max(a.runs, b.runs);
+out.fails = Math.max(a.fails, b.fails);
+Object.keys(b.practice).forEach(function (k) { out.practice[k] = true; });
+Object.keys(b.levels).forEach(function (id) {
+var lb = b.levels[id], la = out.levels[id];
+if (!la) { out.levels[id] = clone(lb); return; }
+la.done = la.done || lb.done;
+la.stage = Math.max(la.stage, lb.stage);
+Object.keys(lb.badges).forEach(function (k) { la.badges[k] = true; });
+Object.keys(lb.variations).forEach(function (k) { la.variations[k] = true; });
+if (lb.best && (!la.best || lb.best.time < la.best.time)) la.best = clone(lb.best);
+var seen = {};
+la.designs.forEach(function (d) { seen[JSON.stringify(d.design)] = true; });
+lb.designs.forEach(function (d) { var k = JSON.stringify(d.design); if (!seen[k]) { seen[k] = true; la.designs.push(clone(d)); } });
+la.designs.sort(function (x, y) { return y.ts - x.ts; });
+la.designs = la.designs.slice(0, MAX_DESIGNS);
+});
+if (b.runs > a.runs) out.settings = clone(b.settings);
+return out;
+}
+function level(p, id) {
+if (!p.levels[id]) p.levels[id] = { done: false, badges: {}, variations: {}, designs: [], stage: 0, best: null };
+return p.levels[id];
+}
+function recordSuccess(p, levelId, variation, badges, stats) {
+var lv = level(p, levelId);
+lv.done = true;
+lv.badges.rescue = true;
+lv.variations[variation] = true;
+(badges || []).forEach(function (b) { lv.badges[b] = true; });
+if (stats && typeof stats.time === 'number') {
+if (!lv.best || stats.time < lv.best.time) lv.best = { time: Math.round(stats.time * 100) / 100, parts: stats.parts || 0 };
+}
+return lv;
+}
+function saveDesign(p, levelId, variation, design, name, stats, ts) {
+var lv = level(p, levelId), key = JSON.stringify(design);
+lv.designs = lv.designs.filter(function (d) { return JSON.stringify(d.design) !== key; });
+lv.designs.unshift({ name: name, ts: ts || 0, variation: variation, design: clone(design), stats: stats || {} });
+lv.designs = lv.designs.slice(0, MAX_DESIGNS);
+return lv;
+}
+function levelState(p, lvl, owned, hasPass) {
+var lv = p.levels[lvl.id] || { done: false, badges: {}, variations: {} };
+var badgeCount = Object.keys(lv.badges).length;
+var access = lvl.free ? 'free' : (hasPass || (owned && owned[lvl.id]) ? 'owned' : 'locked');
+var status = !lv.done ? 'new' : (badgeCount >= 3 ? 'mastery' : 'completed');
+return { access: access, status: status, done: !!lv.done, badges: lv.badges, badgeCount: badgeCount, variationsDone: Object.keys(lv.variations).length };
+}
+function decorations(p) {
+var out = [], badges = 0;
+Levels.LEVELS.forEach(function (lvl, i) {
+var lv = p.levels[lvl.id];
+if (lv && lv.done) out.push({ id: Levels.AREAS[i].id, label: Levels.AREAS[i].decor });
+if (lv) badges += Object.keys(lv.badges).length;
+});
+var extras = ['Axolotl plushie', 'Star chart', 'Trophy shelf', 'Rainbow banner', 'Golden wrench'];
+for (var i = 0; i < Math.min(extras.length, Math.floor(badges / 3)); i++) out.push({ id: 'bonus' + i, label: extras[i] });
+return out;
+}
+function weekKey(date) {
+var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+var day = d.getUTCDay() || 7;
+d.setUTCDate(d.getUTCDate() + 4 - day);
+var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+var week = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+return d.getUTCFullYear() + '-W' + (week < 10 ? '0' : '') + week;
+}
+function practice(p, key, owned, hasPass) {
+var pool = [];
+Levels.LEVELS.forEach(function (lvl) {
+var access = lvl.free || hasPass || (owned && owned[lvl.id]);
+if (!access || lvl.mode === 'sequence') return;
+lvl.variations.forEach(function (v, vi) { lvl.challenges.forEach(function (c) { pool.push({ level: lvl, variation: vi, challenge: c }); }); });
+});
+if (!pool.length) return null;
+var n = 0;
+for (var i = 0; i < key.length; i++) n = (n * 31 + key.charCodeAt(i)) % 100003;
+var pick = pool[n % pool.length];
+return { key: key, level: pick.level, variation: pick.variation, challenge: pick.challenge, done: !!p.practice[key] };
+}
+function summary(p) {
+var done = 0, badges = 0, designs = 0, concepts = [];
+Levels.LEVELS.forEach(function (lvl) {
+var lv = p.levels[lvl.id];
+if (!lv) return;
+if (lv.done) { done++; concepts.push(lvl.concept); }
+badges += Object.keys(lv.badges).length;
+designs += lv.designs.length;
+});
+return { missions: done, badges: badges, designs: designs, concepts: concepts, runs: p.runs, fails: p.fails };
+}
+return { VERSION: VERSION, MAX_DESIGNS: MAX_DESIGNS, empty: empty, sanitize: sanitize, merge: merge, level: level, recordSuccess: recordSuccess, saveDesign: saveDesign, levelState: levelState, decorations: decorations, weekKey: weekKey, practice: practice, summary: summary };
+});
+;
+(function () {
+'use strict';
+if (typeof window === 'undefined') return;
+var Levels = window.AscendRLLevels, Engine = window.AscendRLEngine, Progress = window.AscendRLProgress;
+if (!Levels || !Engine || !Progress) return;
+var CFG = window.AscendRL || {};
+var STORE_KEY = 'ascend_rescue_lab_v1', DRAFT_KEY = 'ascend_rescue_lab_drafts_v1';
+var GROUND = Levels.GROUND;
+var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var GUIDE = 'Lucas';
+function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function btn(cls, text, onclick, label) { var b = el('button', cls, text); b.type = 'button'; if (label) b.setAttribute('aria-label', label); if (onclick) b.addEventListener('click', onclick); return b; }
+function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : String(s); return d.innerHTML; }
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+function deg2rad(d) { return d * Math.PI / 180; }
+function now() { return Date.now(); }
+function partLabel(t, p) {
+if (t.type === 'ramp') return 'Ramp' + (t.len ? ' ' + t.len : '');
+if (t.type === 'beam') return 'Beam ' + t.len;
+if (t.type === 'post') return 'Support post';
+if (t.type === 'bumper') return 'Bumper';
+if (t.type === 'fan') return 'Fan';
+if (t.type === 'barrier') return 'Barrier';
+if (t.type === 'wire') return 'Wire';
+if (t.type === 'corner') return 'Corner';
+if (t.type === 'switch') return 'Switch';
+return t.type;
+}
+var store = {
+progress: Progress.empty(), owned: {}, hasPass: false, keys: null, keysAvailable: false, synced: false, drafts: {},
+loadLocal: function () {
+try { var raw = JSON.parse(window.localStorage.getItem(STORE_KEY)); if (raw) this.progress = Progress.sanitize(raw); } catch (e) { /* storage unavailable: memory only */ }
+try { var d = JSON.parse(window.localStorage.getItem(DRAFT_KEY)); if (d && typeof d === 'object') this.drafts = d; } catch (e) { /* ignore */ }
+},
+saveLocal: function () {
+try { window.localStorage.setItem(STORE_KEY, JSON.stringify(this.progress)); } catch (e) { /* ignore */ }
+try { window.localStorage.setItem(DRAFT_KEY, JSON.stringify(this.drafts)); } catch (e) { /* ignore */ }
+},
+applyServer: function (data) {
+if (!data) return;
+if (data.progress) this.progress = Progress.merge(this.progress, data.progress);
+this.owned = {};
+(data.owned || []).forEach(function (id) { store.owned[id] = true; });
+this.hasPass = !!data.hasPass;
+this.keys = typeof data.keys === 'number' ? data.keys : null;
+this.keysAvailable = !!data.keysAvailable;
+this.synced = true;
+},
+pull: function (cb) {
+if (!CFG.loggedIn || !CFG.restUrl || !window.fetch) { if (cb) cb(false); return; }
+var self = this;
+window.fetch(CFG.restUrl, { credentials: 'same-origin', headers: { 'X-WP-Nonce': CFG.nonce || '' } })
+.then(function (r) { return r.ok ? r.json() : null; })
+.then(function (data) { if (data) { self.applyServer(data); self.saveLocal(); self.push(); } if (cb) cb(!!data); })
+.catch(function () { if (cb) cb(false); });
+},
+push: function () {
+if (!CFG.loggedIn || !CFG.restUrl || !window.fetch) return;
+var self = this;
+window.fetch(CFG.restUrl, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': CFG.nonce || '' }, body: JSON.stringify({ progress: this.progress }) })
+.then(function (r) { return r.ok ? r.json() : null; })
+.then(function (data) { if (data) { self.applyServer(data); self.saveLocal(); } })
+.catch(function () { /* offline: local copy keeps playing; next load re-syncs */ });
+},
+save: function () { this.saveLocal(); this.push(); },
+unlock: function (levelId, cb) {
+if (!CFG.loggedIn || !CFG.restUrl || !window.fetch) { cb({ error: 'offline' }); return; }
+var self = this;
+window.fetch(CFG.restUrl.replace(new RegExp('[/]progress[/]?$'), '') + '/unlock', { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'X-WP-Nonce': CFG.nonce || '' }, body: JSON.stringify({ level: levelId }) })
+.then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+.then(function (res) {
+if (res.ok && res.body) { self.applyServer(res.body); self.saveLocal(); cb({ ok: true, body: res.body }); }
+else cb({ error: (res.body && (res.body.message || res.body.code)) || 'error' });
+})
+.catch(function () { cb({ error: 'network' }); });
+},
+draftKey: function (levelId, variation, stage) { return levelId + ':' + variation + ':' + (stage || 0); },
+getDraft: function (k) { return this.drafts[k] ? clone(this.drafts[k]) : null; },
+setDraft: function (k, design) { this.drafts[k] = clone(design); this.saveLocal(); }
+};
+var audio = {
+ctx: null,
+ready: function () {
+if (!store.progress.settings.sound) return null;
+try { if (!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)(); if (this.ctx.state === 'suspended') this.ctx.resume(); return this.ctx; } catch (e) { return null; }
+},
+tone: function (freq, dur, type, vol) {
+var c = this.ready(); if (!c) return;
+try {
+var o = c.createOscillator(), g = c.createGain();
+o.type = type || 'sine'; o.frequency.value = freq;
+g.gain.value = vol || 0.05; g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + dur);
+o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime + dur);
+} catch (e) { /* ignore */ }
+},
+place: function () { this.tone(520, 0.08, 'triangle'); },
+run: function () { this.tone(330, 0.12, 'square', 0.03); },
+bounce: function () { this.tone(220, 0.06, 'sine', 0.03); },
+fail: function () { this.tone(260, 0.18, 'sine'); var s = this; setTimeout(function () { s.tone(200, 0.22, 'sine'); }, 140); },
+success: function () { var s = this; [523, 659, 784, 1047].forEach(function (f, i) { setTimeout(function () { s.tone(f, 0.18, 'triangle', 0.06); }, i * 110); }); }
+};
+var AXO_SVG = '<svg viewBox="0 0 100 100" aria-hidden="true"><path d="M18 55 Q2 48 6 62 Q14 60 22 60 Z" fill="#f59fb8"/><ellipse cx="42" cy="56" rx="26" ry="14" fill="#f7a8c0"/><circle cx="70" cy="50" r="17" fill="#f9b8cc"/><g stroke="#e0527d" stroke-width="3.5" stroke-linecap="round"><path d="M60 38 L52 26"/><path d="M64 35 L60 22"/><path d="M69 34 L69 21"/><path d="M60 62 L52 74"/><path d="M64 65 L60 78"/></g><circle cx="76" cy="46" r="3" fill="#2b1b24"/><circle cx="77" cy="45" r="1" fill="#fff"/><path d="M76 56 Q80 59 84 55" stroke="#2b1b24" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M36 68 L32 76 M50 68 L48 76" stroke="#f59fb8" stroke-width="5" stroke-linecap="round"/></svg>';
+function Game(root) {
+this.root = root;
+this.screen = 'map';
+this.sim = null; this.raf = null; this.acc = 0; this.lastFrame = 0;
+this.ghost = {};
+this.failedRuns = {};
+this.build();
+this.showMap();
+var self = this;
+store.pull(function () { self.refreshHeader(); if (self.screen === 'map') self.showMap(); else if (self.screen === 'level') self.renderChallenges(); });
+document.addEventListener('visibilitychange', function () { if (document.hidden) self.pauseSim(); else self.resumeSim(); });
+window.addEventListener('pagehide', function () { store.saveLocal(); });
+window.addEventListener('resize', function () { self.sizeCanvas(); self.draw(); });
+}
+Game.prototype.build = function () {
+var root = this.root, self = this;
+root.innerHTML = '';
+root.id = 'rl-game';
+var mascot = CFG.mascotUrl;
+if (mascot) { var m = el('div', 'rl-mascot'); var img = el('img'); img.alt = 'STEM-a-lotl, the Ascend axolotl mascot'; img.onerror = function () { m.hidden = true; }; img.src = mascot; m.appendChild(img); root.appendChild(m); }
+root.appendChild(el('h1', 'rl-title', 'STEM-a-lotl: Rescue Lab'));
+root.appendChild(el('p', 'rl-subtitle', 'Build, run, watch, improve. Help ' + GUIDE + ' the axolotl bring the research station back to life.'));
+this.stats = el('div', 'rl-stats'); root.appendChild(this.stats);
+var row = el('div', 'rl-toggle-row');
+this.helpBtn = btn('rl-toggle', 'How to play ▾', function () { self.toggleHelp(); });
+this.soundBtn = btn('rl-toggle', '', function () { self.setSetting('sound', !store.progress.settings.sound); });
+this.ghostBtn = btn('rl-toggle', '', function () { self.setSetting('ghost', !store.progress.settings.ghost); });
+this.assistBtn = btn('rl-toggle', '', function () { self.setSetting('assist', !store.progress.settings.assist); });
+row.appendChild(this.helpBtn); row.appendChild(this.soundBtn); row.appendChild(this.ghostBtn); row.appendChild(this.assistBtn);
+root.appendChild(row);
+this.help = el('div', 'rl-instructions'); this.help.hidden = true; root.appendChild(this.help);
+this.live = el('div', 'rl-live'); this.live.setAttribute('aria-live', 'polite'); root.appendChild(this.live);
+this.area = el('div', 'rl-play-area'); root.appendChild(this.area);
+var foot = el('details', 'rl-foot');
+foot.appendChild(el('summary', null, 'For parents & teachers'));
+this.footBody = el('div'); foot.appendChild(this.footBody);
+root.appendChild(foot);
+var exit = el('div', 'rl-exit');
+var a = el('a', null, '← Back to the games hub'); a.href = CFG.hubUrl || '/user/'; exit.appendChild(a);
+root.appendChild(exit);
+this.overlay = el('div', 'rl-overlay'); this.overlay.setAttribute('role', 'dialog'); this.overlay.setAttribute('aria-modal', 'true');
+this.overlay.addEventListener('click', function (e) { if (e.target === self.overlay) self.closeOverlay(); });
+document.body.appendChild(this.overlay);
+this.refreshHeader();
+};
+Game.prototype.setSetting = function (k, v) { store.progress.settings[k] = v; store.save(); this.refreshHeader(); if (k === 'ghost') this.draw(); if (k === 'assist' && this.screen === 'level') this.renderDiag(); };
+Game.prototype.refreshHeader = function () {
+var s = store.progress.settings, sum = Progress.summary(store.progress);
+this.soundBtn.textContent = 'Sound: ' + (s.sound ? 'on' : 'off'); this.soundBtn.setAttribute('aria-pressed', String(s.sound));
+this.ghostBtn.textContent = 'Ghost trail: ' + (s.ghost ? 'on' : 'off'); this.ghostBtn.setAttribute('aria-pressed', String(s.ghost));
+this.assistBtn.textContent = 'Assist: ' + (s.assist ? 'on' : 'off'); this.assistBtn.setAttribute('aria-pressed', String(s.assist));
+var keys;
+if (CFG.preview) keys = 'Keys: <strong>preview</strong>';
+else if (!CFG.loggedIn) keys = 'Keys: <strong>log in</strong>';
+else if (store.hasPass) keys = 'Pond Pass: <strong>active</strong>';
+else if (store.keys != null) keys = 'Pond Keys: <strong>' + store.keys + '</strong>';
+else keys = 'Pond Keys: <strong>…</strong>';
+this.stats.innerHTML = '<div class="rl-stat">Missions: <strong>' + sum.missions + '</strong> / ' + Levels.LEVELS.length + '</div>' +
+'<div class="rl-stat">Badges: <strong>' + sum.badges + '</strong></div>' +
+'<div class="rl-stat">' + keys + '</div>';
+this.footBody.innerHTML = '<p>Rescue Lab practices engineering thinking: build something, run it, watch what happens, and change one thing. Each mission has one learning idea (ramps and gravity, beams and supports, balance, launch energy, forces, gear ratios, closed circuits, sequencing and loops).</p>' +
+'<p>Progress so far: ' + sum.missions + ' mission' + (sum.missions === 1 ? '' : 's') + ' completed, ' + sum.badges + ' badge' + (sum.badges === 1 ? '' : 's') + ', ' + sum.designs + ' saved invention' + (sum.designs === 1 ? '' : 's') + ', ' + sum.runs + ' experiment run' + (sum.runs === 1 ? '' : 's') + '. ' +
+(sum.concepts.length ? 'Ideas practised: ' + esc(sum.concepts.join('; ')) + '.' : '') + '</p>' +
+'<p>These are practice observations from play, not a graded assessment, attendance, or course credit. School records stay separate.</p>' +
+'<p>Keys: the first three missions are free. One Pond Key permanently opens one more mission, with its challenges and variations included; reopening it never costs another key.' + (CFG.loggedIn ? '' : ' Log in to use keys and keep progress across devices.') + '</p>';
+};
+Game.prototype.toggleHelp = function () {
+var hidden = this.help.hidden;
+this.help.innerHTML = '<p><strong>Build.</strong> Tap a part in the tray, then tap the scene to place it, or drag a part around. Tap a part to select it, then use Rotate, Turn or Remove.</p>' +
+'<p><strong>Run.</strong> Press Run and watch. If it misses, ' + GUIDE + ' tells you what actually happened. Your build stays where it is, so change one thing and try again.</p>' +
+'<p><strong>Celebrate.</strong> Every delivery brings part of the station back to life. Try the optional badge challenges, or save your design to the inventions shelf.</p>' +
+'<p><strong>Ghost trail</strong> shows the path from your last run. <strong>Assist</strong> offers a nudge after a couple of misses without solving the mission for you.</p>';
+this.help.hidden = !hidden;
+this.helpBtn.textContent = hidden ? 'Hide instructions ▴' : 'How to play ▾';
+};
+Game.prototype.showMap = function () {
+this.stopSim();
+this.screen = 'map';
+var area = this.area, self = this;
+area.innerHTML = '';
+var next = this.nextLevel();
+var top = el('div', 'rl-row');
+var play = btn('rl-btn primary big', next.done ? 'Play again' : (Progress.summary(store.progress).missions ? 'Continue: ' + next.name : 'Play'), function () { self.openLevel(next.id, 0); });
+top.appendChild(play);
+area.appendChild(top);
+area.appendChild(this.renderStation());
+if (CFG.preview) {
+var n = el('div', 'rl-notice'); n.innerHTML = 'Preview build. Missions 4–10 are opened here for review only. On the Ascend site they open with Pond Keys through the existing parent-controlled shop. Nothing here is a purchase.'; area.appendChild(n);
+} else if (!CFG.loggedIn) {
+var n2 = el('div', 'rl-notice'); n2.innerHTML = 'You can play the three free missions right away. <a href="' + esc(CFG.loginUrl || '/login/') + '">Log in</a> to keep progress across devices and use Pond Keys for missions 4–10.'; area.appendChild(n2);
+}
+var list = el('div', 'rl-levels');
+Levels.LEVELS.forEach(function (lvl) {
+var st = Progress.levelState(store.progress, lvl, store.owned, store.hasPass);
+var b = btn('rl-level' + (st.access === 'locked' && !CFG.preview ? ' is-locked' : '') + (lvl.id === next.id ? ' is-next' : ''), '', function () {
+if (st.access === 'locked' && !CFG.preview) self.openUnlock(lvl); else self.openLevel(lvl.id, 0);
+});
+b.innerHTML = '<span class="rl-lnum">Mission ' + lvl.id + '</span><span class="rl-lname">' + esc(lvl.name) + '</span><span class="rl-lconcept">' + esc(lvl.concept) + '</span>' +
+'<span class="rl-badges">' + ['rescue', 'efficiency', 'invention'].map(function (k) { return '<span class="rl-badge' + (st.badges[k] ? ' earned' : '') + '">' + (st.badges[k] ? '★' : '☆') + ' ' + k + '</span>'; }).join('') + '</span>';
+var chip;
+if (st.status === 'mastery') chip = ['mastery', 'Mastered'];
+else if (st.done) chip = ['done', 'Completed' + (lvl.variations.length > 1 ? ' · ' + st.variationsDone + '/' + lvl.variations.length + ' variations' : '')];
+else if (st.access === 'free') chip = ['free', 'Free'];
+else if (st.access === 'owned') chip = ['owned', 'Owned · ready'];
+else chip = ['locked', CFG.preview ? 'Preview' : '1 Pond Key'];
+var c = el('span', 'rl-chip ' + chip[0], chip[1]); b.appendChild(c);
+b.setAttribute('aria-label', 'Mission ' + lvl.id + ' ' + lvl.name + ', ' + chip[1]);
+list.appendChild(b);
+});
+area.appendChild(list);
+var pr = Progress.practice(store.progress, Progress.weekKey(new Date()), store.owned, store.hasPass);
+if (pr) {
+var card = el('div', 'rl-card' + (pr.done ? ' done' : ''));
+card.innerHTML = '<h3>This week’s practice challenge' + (pr.done ? ' ✓' : '') + '</h3><p><strong>' + esc(pr.level.name) + '</strong> · ' + esc(pr.level.variations[pr.variation].name) + '</p><p>' + esc(pr.challenge.text) + '</p><p class="rl-fine">Open all week. It never resets anything you earned.</p>';
+var r = el('div', 'rl-row left'); r.appendChild(btn('rl-btn blue', pr.done ? 'Play it again' : 'Try it', function () { self.openLevel(pr.level.id, pr.variation); })); card.appendChild(r);
+area.appendChild(card);
+}
+var sum = Progress.summary(store.progress);
+if (sum.missions >= Levels.FREE_LEVELS && !store.hasPass && !CFG.preview) {
+var nextLocked = Levels.LEVELS.filter(function (l) { return Progress.levelState(store.progress, l, store.owned, store.hasPass).access === 'locked'; })[0];
+if (nextLocked) {
+var c2 = el('div', 'rl-card sand');
+c2.innerHTML = '<h3>Nice work, engineer!</h3><p>You finished the free missions, and you can replay them any time. Next up: <strong>' + esc(nextLocked.name) + '</strong> — ' + esc(nextLocked.concept.toLowerCase()) + '.</p>';
+var r2 = el('div', 'rl-row left'); r2.appendChild(btn('rl-btn pass', 'Preview mission ' + nextLocked.id, function () { self.openUnlock(nextLocked); })); c2.appendChild(r2);
+area.appendChild(c2);
+}
+}
+this.live.textContent = '';
+this.refreshHeader();
+};
+Game.prototype.nextLevel = function () {
+for (var i = 0; i < Levels.LEVELS.length; i++) {
+var l = Levels.LEVELS[i], st = Progress.levelState(store.progress, l, store.owned, store.hasPass);
+if (!st.done && (st.access !== 'locked' || CFG.preview)) return l;
+}
+return Levels.LEVELS[0];
+};
+Game.prototype.renderStation = function () {
+var wrap = el('div', 'rl-station');
+var lit = {}, decor = Progress.decorations(store.progress);
+Levels.LEVELS.forEach(function (l) { var lv = store.progress.levels[l.id]; if (lv && lv.done) lit[l.area] = true; });
+var all = lit.station;
+var s = '<svg viewBox="0 0 200 74" role="img" aria-label="Station map: ' + Object.keys(lit).length + ' of 10 areas restored">';
+s += '<rect x="0" y="60" width="200" height="14" fill="#BFE0B4"/><rect x="0" y="60" width="200" height="1.2" fill="#1D4010"/>';
+var areas = [
+['dock', 6, 34, 30, 26, 'Dock'], ['bridge', 40, 44, 26, 16, 'Bridge'], ['greenhouse', 70, 30, 26, 30, 'Greenhouse'], ['launcher', 100, 40, 20, 20, 'Launcher'], ['vents', 124, 34, 22, 26, 'Vents'],
+['platform', 150, 8, 26, 20, 'Platform'], ['lab', 150, 32, 44, 28, 'Lab'], ['rover', 100, 10, 24, 22, 'Rover bay'], ['routes', 40, 14, 54, 12, 'Routes'], ['station', 6, 6, 28, 22, 'Core']
+];
+areas.forEach(function (a) {
+var on = lit[a[0]] || all;
+s += '<g><rect x="' + a[1] + '" y="' + a[2] + '" width="' + a[3] + '" height="' + a[4] + '" rx="3" class="' + (on ? 'rl-area-on' : 'rl-area-off') + '" stroke-width="1"/>';
+s += '<text x="' + (a[1] + a[3] / 2) + '" y="' + (a[2] + a[4] / 2 + 2) + '" text-anchor="middle">' + a[5] + '</text>';
+if (on) s += '<circle cx="' + (a[1] + a[3] - 4) + '" cy="' + (a[2] + 4) + '" r="1.8" fill="#ffd166" class="rl-glow"/>';
+s += '</g>';
+});
+if (lit.greenhouse || all) s += '<g fill="#E07FA3"><circle cx="76" cy="26" r="2.4"/><circle cx="84" cy="24" r="2.4"/><circle cx="92" cy="27" r="2.4"/></g><g stroke="#1D4010" stroke-width="1"><path d="M76 28v4M84 26v6M92 29v3"/></g>';
+if (lit.bridge || all) s += '<path d="M40 44 Q53 36 66 44" stroke="#045C82" stroke-width="1.5" fill="none"/>';
+if (lit.rover || all) s += '<rect x="106" y="24" width="10" height="5" rx="1.5" fill="#045C82"/><circle cx="108" cy="30" r="1.6" fill="#24332a"/><circle cx="114" cy="30" r="1.6" fill="#24332a"/>';
+if (lit.launcher || all) s += '<path d="M104 40 L112 30" stroke="#E07FA3" stroke-width="2"/>';
+if (lit.vents || all) s += '<g stroke="#009CDE" stroke-width="1" fill="none"><path d="M128 40h14M128 44h14M128 48h14"/></g>';
+if (lit.lab || all) s += '<circle cx="172" cy="40" r="3" fill="#ffd166" class="rl-glow"/>';
+if (lit.platform || all) s += '<path d="M156 26 L168 12" stroke="#045C82" stroke-width="1.5"/><circle cx="168" cy="12" r="1.5" fill="#045C82"/>';
+if (lit.routes || all) s += '<path d="M42 20 H92" stroke="#E07FA3" stroke-width="1" stroke-dasharray="3 2"/>';
+if (all) s += '<g fill="#ffd166"><circle cx="20" cy="4" r="1.5" class="rl-glow"/><circle cx="60" cy="10" r="1.5" class="rl-glow"/><circle cx="130" cy="6" r="1.5" class="rl-glow"/><circle cx="190" cy="4" r="1.5" class="rl-glow"/></g>';
+s += '</svg>';
+wrap.innerHTML = s;
+var d = el('div', 'rl-decor-row');
+if (decor.length) decor.forEach(function (x) { d.appendChild(el('span', 'rl-decor', x.label)); });
+else d.appendChild(el('span', null, 'Complete missions to earn habitat decorations.'));
+wrap.appendChild(d);
+return wrap;
+};
+Game.prototype.openUnlock = function (lvl) {
+var self = this, m = el('div', 'rl-modal');
+var keys = store.keys, cost = Levels.KEY_COST;
+var html = '<h3>Mission ' + lvl.id + ': ' + esc(lvl.name) + '</h3><p class="rl-sub">' + esc(lvl.objective) + '</p>' +
+'<ul><li><strong>New tool:</strong> ' + esc(lvl.tool) + '</li><li><strong>Practises:</strong> ' + esc(lvl.concept) + '</li><li><strong>Included:</strong> the main mission, ' + lvl.challenges.length + ' optional badge challenges and ' + lvl.variations.length + ' tested variation' + (lvl.variations.length > 1 ? 's' : '') + ', all replayable forever</li>' +
+'<li><strong>Needs:</strong> nothing else first — every mission can be played on its own' + (lvl.id > 1 ? ' (mission ' + (lvl.id - 1) + ' is a friendly warm-up)' : '') + '</li></ul>';
+if (CFG.preview) {
+html += '<p class="rl-fine">Preview build: on the Ascend site this mission opens with ' + cost + ' Pond Key from the shop. Keys are never redeemed here.</p>';
+} else if (!CFG.loggedIn) {
+html += '<p class="rl-keys">Cost: ' + cost + ' Pond Key</p><p class="rl-fine">Log in to the student account to use keys. Keys are bought by a parent in the Ascend shop and never expire.</p>';
+} else if (!store.keysAvailable) {
+html += '<p class="rl-fine">The key system is not reachable right now, so this mission cannot be opened yet. Your progress is safe; please try again later.</p>';
+} else {
+html += '<p class="rl-keys">Cost: ' + cost + ' Pond Key · You have ' + (keys == null ? '…' : keys) + (keys != null ? ' → ' + Math.max(0, keys - cost) + ' after' : '') + '</p>' +
+'<p class="rl-fine">One key opens this mission permanently on this student account. Reopening it never costs another key.</p>';
+}
+m.innerHTML = html;
+var row = el('div', 'rl-row');
+if (CFG.preview) row.appendChild(btn('rl-btn pass', 'Open for review', function () { self.closeOverlay(); self.openLevel(lvl.id, 0); }));
+else if (!CFG.loggedIn) { var a = el('a', 'rl-btn pass', 'Log in'); a.href = CFG.loginUrl || '/login/'; row.appendChild(a); }
+else if (store.keysAvailable && keys != null && keys >= cost) {
+var u = btn('rl-btn pass', 'Unlock with ' + cost + ' key', function () {
+u.disabled = true; u.textContent = 'Unlocking…';
+store.unlock(lvl.id, function (res) {
+if (res.ok) { self.closeOverlay(); self.refreshHeader(); self.openLevel(lvl.id, 0); self.live.textContent = 'Mission ' + lvl.id + ' is yours. It stays unlocked on this account.'; }
+else { u.disabled = false; u.textContent = 'Unlock with ' + cost + ' key'; var e = el('p', 'rl-fine', res.error === 'network' ? 'No connection. Nothing was spent. Try again when you are back online.' : ('Could not unlock: ' + res.error + '. No key was taken.')); m.appendChild(e); }
+});
+});
+row.appendChild(u);
+} else if (store.keysAvailable) {
+if (CFG.buyUrl) { var b = el('a', 'rl-btn pass', 'Get a Pond Key (parent shop)'); b.href = CFG.buyUrl; row.appendChild(b); }
+if (CFG.passUrl) { var p = el('a', 'rl-btn', 'Full Pond Pass'); p.href = CFG.passUrl; row.appendChild(p); }
+}
+row.appendChild(btn('rl-btn', 'Not now', function () { self.closeOverlay(); }));
+m.appendChild(row);
+this.showOverlay(m);
+};
+Game.prototype.showOverlay = function (content) { this.overlay.innerHTML = ''; this.overlay.appendChild(content); this.overlay.classList.add('show'); var f = content.querySelector('button, a'); if (f) f.focus(); };
+Game.prototype.closeOverlay = function () { this.overlay.classList.remove('show'); this.overlay.innerHTML = ''; };
+Game.prototype.openLevel = function (levelId, variation) {
+var lvl = Levels.LEVELS[levelId - 1];
+var st = Progress.levelState(store.progress, lvl, store.owned, store.hasPass);
+if (st.access === 'locked' && !CFG.preview) { this.openUnlock(lvl); return; }
+this.stopSim();
+this.screen = 'level';
+this.level = lvl; this.variation = variation || 0;
+this.stage = lvl.mode === 'sequence' ? Math.min((store.progress.levels[lvl.id] || {}).stage || 0, lvl.stages.length - 1) : 0;
+this.loadStage();
+};
+Game.prototype.loadStage = function () {
+var lvl = this.level;
+this.spec = Engine.resolve(lvl, this.variation, this.stage);
+var key = store.draftKey(lvl.id, this.variation, this.stage);
+this.design = store.getDraft(key) || Engine.newDesign(this.spec);
+this.undo = []; this.selected = null; this.placing = null; this.lastRun = null; this.drag = null; this.stack = []; this.finalSim = null;
+this.repeatCount = 3;
+if (!this.failedRuns[lvl.id]) this.failedRuns[lvl.id] = 0;
+this.renderLevel();
+this.say(lvl.mode === 'sequence' ? this.spec.name + '. ' + lvl.intro : lvl.intro, 'intro');
+var v = lvl.variations[this.variation];
+this.live.textContent = v.name === 'Main mission' ? '' : 'Variation: ' + v.name;
+};
+Game.prototype.renderLevel = function () {
+var self = this, lvl = this.level, spec = this.spec, area = this.area;
+area.innerHTML = '';
+var head = el('div', 'rl-levelhead');
+var h = el('div'); h.innerHTML = '<span class="rl-lnum">Mission ' + lvl.id + '</span>'; var h2 = el('h2', null, lvl.name); h.appendChild(h2); head.appendChild(h);
+head.appendChild(btn('rl-btn', '← Station map', function () { self.showMap(); }));
+area.appendChild(head);
+if (lvl.variations.length > 1) {
+var vr = el('div', 'rl-variants'); vr.setAttribute('role', 'group'); vr.setAttribute('aria-label', 'Variations');
+lvl.variations.forEach(function (v, i) {
+var done = !!((store.progress.levels[lvl.id] || { variations: {} }).variations[i]);
+var b = btn('' + (done ? 'done' : ''), v.name, function () { self.stopSim(); self.variation = i; self.loadStage(); });
+b.setAttribute('aria-pressed', String(i === self.variation)); vr.appendChild(b);
+});
+area.appendChild(vr);
+}
+if (lvl.mode === 'sequence') {
+var sb = el('div', 'rl-stagebar');
+lvl.stages.forEach(function (s, i) { sb.appendChild(el('span', i < self.stage ? 'done' : (i === self.stage ? 'on' : ''), s.name)); });
+area.appendChild(sb);
+}
+var obj = el('div', 'rl-objective');
+this.guide = el('div', 'rl-guide'); this.guide.innerHTML = AXO_SVG; obj.appendChild(this.guide);
+this.bubble = el('div', 'rl-bubble'); obj.appendChild(this.bubble); area.appendChild(obj);
+this.sceneWrap = el('div', 'rl-scene-wrap');
+this.canvas = el('canvas', 'rl-scene'); this.canvas.setAttribute('role', 'img'); this.canvas.setAttribute('aria-label', lvl.objective);
+this.sceneWrap.appendChild(this.canvas); area.appendChild(this.sceneWrap);
+this.bindPointer();
+this.tray = el('div', 'rl-tray'); area.appendChild(this.tray);
+this.tools = el('div', 'rl-tools'); area.appendChild(this.tools);
+this.editor = el('div'); area.appendChild(this.editor);
+var controls = el('div', 'rl-controls');
+this.runBtn = btn('rl-btn run', '▶ Run', function () { self.run(); });
+this.undoBtn = btn('rl-btn', 'Undo', function () { self.doUndo(); });
+this.resetBtn = btn('rl-btn', 'Reset build', function () { self.resetDesign(); });
+controls.appendChild(this.runBtn); controls.appendChild(this.undoBtn); controls.appendChild(this.resetBtn);
+area.appendChild(controls);
+this.message = el('div', 'rl-message'); this.message.setAttribute('role', 'status'); area.appendChild(this.message);
+this.diagBox = el('div'); area.appendChild(this.diagBox);
+this.successBox = el('div'); area.appendChild(this.successBox);
+this.challengeBox = el('div', 'rl-challenges'); area.appendChild(this.challengeBox);
+this.shelfBox = el('div', 'rl-shelf'); area.appendChild(this.shelfBox);
+this.sizeCanvas();
+this.renderTray(); this.renderTools(); this.renderEditor(); this.renderChallenges(); this.renderShelf();
+this.draw();
+if (this.canvas.scrollIntoView && window.innerWidth < 700) this.canvas.scrollIntoView({ block: 'nearest' });
+};
+Game.prototype.say = function (text, mood) {
+var self = this;
+if (!this.bubble) return;
+this.bubble.innerHTML = '<span class="rl-who">' + GUIDE + ' the axolotl</span>' + esc(text);
+this.guide.className = 'rl-guide' + (mood === 'happy' ? ' happy' : (mood === 'puzzled' ? ' puzzled' : ''));
+if (mood === 'happy' && CFG.mascotHappyUrl && !this.mascotFailed) {
+var img = el('img'); img.alt = ''; var g = this.guide;
+img.onerror = function () { self.mascotFailed = true; g.innerHTML = AXO_SVG; };
+img.src = CFG.mascotHappyUrl; this.guide.innerHTML = ''; this.guide.appendChild(img);
+} else this.guide.innerHTML = AXO_SVG;
+};
+Game.prototype.setMessage = function (text) { this.message.textContent = text || ''; };
+Game.prototype.renderTray = function () {
+var self = this, spec = this.spec, tray = this.tray, mode = spec.mode;
+tray.innerHTML = '';
+if (mode === 'physics' || mode === 'bridge') {
+spec.tray.forEach(function (t) {
+var used = Engine.trayUsed(self.design, t.type, t.len), left = t.count - used;
+var b = btn('rl-tray-btn', '', function () { self.placing = (self.placing && self.placing.type === t.type && self.placing.len === t.len) ? null : t; self.selected = null; self.renderTray(); self.renderTools(); self.draw(); self.setMessage(self.placing ? 'Tap the scene to place the ' + partLabel(t).toLowerCase() + '.' : ''); });
+b.innerHTML = trayIcon(t.type) + ' ' + esc(partLabel(t)) + ' <small>×' + left + '</small>';
+b.disabled = left <= 0 || !!self.sim;
+b.setAttribute('aria-pressed', String(!!(self.placing && self.placing.type === t.type && self.placing.len === t.len)));
+tray.appendChild(b);
+});
+if (spec.scene.launcher) {
+var L = spec.scene.launcher, d = this.design.launcher || (this.design.launcher = { power: L.power, angle: L.angle });
+var dials = el('div', 'rl-dials');
+dials.appendChild(this.dial('Power', d.power, L.powers, function (v) { d.power = v; self.afterEdit(); }));
+dials.appendChild(this.dial('Angle', d.angle, L.angles, function (v) { d.angle = v; self.afterEdit(); }, '°'));
+tray.appendChild(dials);
+}
+} else if (mode === 'circuit') {
+spec.tray.forEach(function (t) {
+var used = (self.design.tiles || []).filter(function (x) { return x.type === t.type; }).length, left = t.count - used;
+var b = btn('rl-tray-btn', '', function () { self.placing = (self.placing && self.placing.type === t.type) ? null : t; self.selected = null; self.renderTray(); self.renderTools(); self.draw(); self.setMessage(self.placing ? 'Tap an empty cell to place the ' + partLabel(t).toLowerCase() + '. Tap a placed tile to rotate it.' : ''); });
+b.innerHTML = trayIcon(t.type) + ' ' + esc(partLabel(t)) + ' <small>×' + left + '</small>';
+b.disabled = left <= 0 || !!self.sim;
+b.setAttribute('aria-pressed', String(!!(self.placing && self.placing.type === t.type)));
+tray.appendChild(b);
+});
+} else if (mode === 'gears') {
+spec.scene.gears.forEach(function (teeth) {
+var b = btn('rl-tray-btn', '', function () { self.placing = { type: 'gear', teeth: teeth }; self.renderTray(); self.setMessage('Tap the middle slot or the lift slot to put this gear there.'); self.draw(); });
+b.innerHTML = trayIcon('gear') + ' ' + teeth + ' teeth';
+b.setAttribute('aria-pressed', String(!!(self.placing && self.placing.teeth === teeth)));
+b.disabled = !!self.sim;
+tray.appendChild(b);
+});
+} else if (mode === 'balance') {
+tray.appendChild(el('span', 'rl-toolname', 'Drag each crate onto a slot, or tap a crate and then a slot. Numbers are the crate masses.'));
+}
+};
+Game.prototype.dial = function (label, value, options, onchange, unit) {
+var self = this, d = el('div', 'rl-dial'), i = options.indexOf(value);
+var minus = btn('rl-btn', '−', function () { if (i > 0) { i--; onchange(options[i]); v.textContent = options[i] + (unit || ''); } }, 'Less ' + label);
+var v = el('strong', null, value + (unit || ''));
+var plus = btn('rl-btn', '+', function () { if (i < options.length - 1) { i++; onchange(options[i]); v.textContent = options[i] + (unit || ''); } }, 'More ' + label);
+d.appendChild(el('span', null, label)); d.appendChild(minus); d.appendChild(v); d.appendChild(plus);
+return d;
+};
+function trayIcon(type) {
+var m = {
+ramp: '<svg class="rl-ico" viewBox="0 0 26 16"><path d="M2 12 L24 4" stroke="#E07FA3" stroke-width="4" stroke-linecap="round"/></svg>',
+beam: '<svg class="rl-ico" viewBox="0 0 26 16"><rect x="2" y="6" width="22" height="4" rx="2" fill="#c9a36b"/></svg>',
+post: '<svg class="rl-ico" viewBox="0 0 26 16"><rect x="11" y="2" width="4" height="12" rx="1.5" fill="#8fa3ad"/></svg>',
+bumper: '<svg class="rl-ico" viewBox="0 0 26 16"><rect x="10" y="2" width="6" height="12" rx="2" fill="#ffb347"/></svg>',
+fan: '<svg class="rl-ico" viewBox="0 0 26 16"><circle cx="8" cy="8" r="6" fill="#009CDE"/><path d="M16 5h8M16 8h8M16 11h8" stroke="#009CDE" stroke-width="1.5"/></svg>',
+barrier: '<svg class="rl-ico" viewBox="0 0 26 16"><rect x="2" y="6" width="22" height="4" rx="2" fill="#045C82"/></svg>',
+wire: '<svg class="rl-ico" viewBox="0 0 26 16"><path d="M2 8h22" stroke="#045C82" stroke-width="3"/></svg>',
+corner: '<svg class="rl-ico" viewBox="0 0 26 16"><path d="M13 2v6h11" stroke="#045C82" stroke-width="3" fill="none"/></svg>',
+switch: '<svg class="rl-ico" viewBox="0 0 26 16"><path d="M2 8h8M16 8h8" stroke="#045C82" stroke-width="3"/><path d="M10 8l6-5" stroke="#E07FA3" stroke-width="2.5"/></svg>',
+gear: '<svg class="rl-ico" viewBox="0 0 26 16"><circle cx="13" cy="8" r="6" fill="none" stroke="#045C82" stroke-width="3" stroke-dasharray="2 2"/></svg>'
+};
+return m[type] || '';
+}
+Game.prototype.renderTools = function () {
+var self = this, tools = this.tools, mode = this.spec.mode;
+tools.innerHTML = '';
+if (this.sim) return;
+if ((mode === 'physics' || mode === 'bridge') && this.selected != null) {
+var p = this.design.parts[this.selected];
+if (!p) { this.selected = null; return; }
+tools.appendChild(el('span', 'rl-toolname', partLabel(p) + (p.angle != null ? ' · ' + p.angle + '°' : '')));
+if (p.type === 'ramp' || p.type === 'beam' || p.type === 'barrier') {
+tools.appendChild(btn('rl-btn', '↺ Rotate −15°', function () { self.pushUndo(); p.angle = clamp((p.angle || 0) - 15, -75, 75); self.afterEdit(); }));
+tools.appendChild(btn('rl-btn', '↻ Rotate +15°', function () { self.pushUndo(); p.angle = clamp((p.angle || 0) + 15, -75, 75); self.afterEdit(); }));
+tools.appendChild(btn('rl-btn', 'Flat', function () { self.pushUndo(); p.angle = 0; self.afterEdit(); }));
+}
+if (p.type === 'fan') tools.appendChild(btn('rl-btn', 'Turn fan (' + ({ E: 'right', S: 'down', W: 'left', N: 'up' })[p.dir || 'E'] + ')', function () { self.pushUndo(); p.dir = { E: 'S', S: 'W', W: 'N', N: 'E' }[p.dir || 'E']; self.afterEdit(); }));
+tools.appendChild(btn('rl-btn', 'Remove', function () { self.pushUndo(); self.design.parts.splice(self.selected, 1); self.selected = null; self.afterEdit(); }));
+} else if (mode === 'circuit' && this.selected) {
+var t = this.selected.tile;
+if (t.type === 'fixed') {
+tools.appendChild(el('span', 'rl-toolname', t.kind === 'battery' ? 'Battery' : 'Lamp'));
+tools.appendChild(btn('rl-btn', '↻ Turn (' + (t.axis === 'V' ? 'up-down' : 'left-right') + ')', function () { self.pushUndo(); self.design.fixedAxis[t.r + ',' + t.c] = t.axis === 'V' ? 'H' : 'V'; self.afterEdit(); }));
+} else {
+tools.appendChild(el('span', 'rl-toolname', partLabel(t)));
+tools.appendChild(btn('rl-btn', '↻ Rotate', function () { self.pushUndo(); t.rot = ((t.rot || 0) + 1) % 4; self.afterEdit(); }));
+if (t.type === 'switch') tools.appendChild(btn('rl-btn', t.closed ? 'Open switch' : 'Close switch', function () { self.pushUndo(); t.closed = !t.closed; self.afterEdit(); }));
+tools.appendChild(btn('rl-btn', 'Remove', function () { self.pushUndo(); self.design.tiles = self.design.tiles.filter(function (x) { return x !== t; }); self.selected = null; self.afterEdit(); }));
+}
+} else if (mode === 'gears') {
+tools.appendChild(el('span', 'rl-toolname', 'Tap a slot to place the chosen gear, or tap it again to clear it.'));
+} else if (mode === 'balance' && this.selected != null) {
+var m = this.spec.scene.crates[this.selected];
+tools.appendChild(el('span', 'rl-toolname', 'Crate of mass ' + m + ' selected. Tap a slot on the cart.'));
+tools.appendChild(btn('rl-btn', 'Take off cart', function () { self.pushUndo(); self.design.placements = self.design.placements.filter(function (p) { return p.crate !== self.selected; }); self.selected = null; self.afterEdit(); }));
+}
+};
+Game.prototype.pushUndo = function () { this.undo.push(clone(this.design)); if (this.undo.length > 40) this.undo.shift(); };
+Game.prototype.doUndo = function () {
+if (this.sim) return;
+if (this.spec.mode === 'code') { this.codeUndo(); return; }
+if (!this.undo.length) { this.setMessage('Nothing to undo.'); return; }
+this.design = this.undo.pop(); this.selected = null; this.placing = null; this.afterEdit(false);
+};
+Game.prototype.resetDesign = function () {
+if (this.sim) return;
+this.pushUndo(); this.design = Engine.newDesign(this.spec); this.selected = null; this.placing = null; this.stack = []; this.afterEdit(false);
+this.setMessage('Build reset to the starting layout. Undo brings it back.');
+};
+Game.prototype.afterEdit = function (keepMessage) {
+Engine.normalizeDesign(this.spec, this.design);
+this.finalSim = null;
+store.setDraft(store.draftKey(this.level.id, this.variation, this.stage), this.design);
+this.renderTray(); this.renderTools(); this.renderEditor(); this.draw();
+if (keepMessage !== true) { /* leave message */ }
+this.successBox.innerHTML = '';
+};
+Game.prototype.sizeCanvas = function () {
+if (!this.canvas) return;
+var w = Math.max(280, Math.min(640, this.sceneWrap.clientWidth || 600)), h = Math.round(w * 0.6), dpr = window.devicePixelRatio || 1;
+this.canvas.style.width = w + 'px'; this.canvas.style.height = h + 'px';
+this.canvas.width = Math.round(w * dpr); this.canvas.height = Math.round(h * dpr);
+this.scale = w / 100; this.dpr = dpr;
+};
+Game.prototype.toScene = function (e) {
+var r = this.canvas.getBoundingClientRect();
+return { x: (e.clientX - r.left) / this.scale, y: (e.clientY - r.top) / this.scale };
+};
+Game.prototype.ctx = function () {
+var c = this.canvas.getContext('2d');
+c.setTransform(this.dpr * this.scale, 0, 0, this.dpr * this.scale, 0, 0);
+return c;
+};
+Game.prototype.draw = function () {
+if (!this.canvas || this.screen !== 'level') return;
+var shown = this.sim || this.finalSim, c = this.ctx(), snap = shown ? shown.snapshot() : null, mode = this.spec.mode;
+c.clearRect(0, 0, 100, 60);
+if (mode === 'physics' || mode === 'bridge') this.drawScene(c, snap);
+else if (mode === 'balance') this.drawBalance(c, snap);
+else if (mode === 'gears') this.drawGears(c, snap);
+else if (mode === 'circuit') this.drawCircuit(c, snap);
+else if (mode === 'code') this.drawCode(c, snap);
+};
+function sky(c) {
+var g = c.createLinearGradient(0, 0, 0, 60); g.addColorStop(0, '#dff1fa'); g.addColorStop(1, '#f7fbfd');
+c.fillStyle = g; c.fillRect(0, 0, 100, 60);
+c.fillStyle = 'rgba(4,92,130,.08)';
+[[4, 30, 14, 26], [22, 38, 10, 18], [66, 34, 12, 22], [84, 28, 12, 28]].forEach(function (r) { roundRect(c, r[0], r[1], r[2], r[3], 2); c.fill(); });
+c.fillStyle = '#BFE0B4'; c.fillRect(0, GROUND, 100, 60 - GROUND);
+c.fillStyle = '#1D4010'; c.fillRect(0, GROUND - 0.5, 100, 0.8);
+}
+function roundRect(c, x, y, w, h, r) {
+c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath();
+}
+function label(c, text, x, y, size, color, align) {
+c.font = '700 ' + (size || 2.6) + 'px Roboto, Arial, sans-serif'; c.fillStyle = color || '#173e63'; c.textAlign = align || 'center'; c.textBaseline = 'middle'; c.fillText(text, x, y);
+}
+Game.prototype.drawScene = function (c, snap) {
+var spec = this.spec, sc = spec.scene, self = this, mode = spec.mode;
+sky(c);
+(sc.static || []).forEach(function (s) {
+if (s.kind === 'ground') return;
+c.strokeStyle = '#045C82'; c.lineWidth = 1.6; c.lineCap = 'round';
+c.beginPath(); c.moveTo(s.x1, s.y1); c.lineTo(s.x2, s.y2); c.stroke();
+if (s.kind === 'platform') { c.fillStyle = 'rgba(4,92,130,.16)'; c.fillRect(Math.min(s.x1, s.x2), s.y1, Math.abs(s.x2 - s.x1), GROUND - s.y1); }
+});
+if (mode === 'bridge') {
+(sc.cliffs || []).forEach(function (cl) { c.fillStyle = '#c9c5b8'; c.fillRect(cl.x1, cl.y, cl.x2 - cl.x1, GROUND - cl.y); c.fillStyle = '#e6e3dc'; c.fillRect(cl.x1, cl.y, cl.x2 - cl.x1, 1.2); });
+}
+(sc.zones || []).forEach(function (z) {
+if (z.type === 'basket') {
+c.fillStyle = '#d4e7f2'; c.fillRect(z.x, z.y, z.w, z.h);
+c.strokeStyle = '#045C82'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(z.x, z.y); c.lineTo(z.x, z.y + z.h); c.lineTo(z.x + z.w, z.y + z.h); c.lineTo(z.x + z.w, z.y); c.stroke();
+label(c, 'Basket', z.x + z.w / 2, z.y + z.h - 2.2, 2.4, '#045C82');
+} else if (z.type === 'pad') {
+c.fillStyle = '#ffd166'; c.fillRect(z.x, z.y + z.h - 1, z.w, 1.2);
+c.fillStyle = '#e8bd4a'; for (var i = 0; i < z.w; i += 4) c.fillRect(z.x + i, z.y + z.h - 1, 2, 1.2);
+c.strokeStyle = '#045C82'; c.lineWidth = 1; c.beginPath(); c.moveTo(z.x, z.y + z.h - 3); c.lineTo(z.x, z.y + z.h); c.moveTo(z.x + z.w, z.y + z.h - 3); c.lineTo(z.x + z.w, z.y + z.h); c.stroke();
+label(c, 'Landing pad', z.x + z.w / 2, z.y + 2, 2.4, '#045C82');
+} else if (z.type === 'goal') {
+c.fillStyle = 'rgba(191,224,180,.6)'; c.fillRect(z.x, z.y, z.w, z.h);
+c.fillStyle = '#1D4010'; c.fillRect(z.x + z.w / 2 - 0.4, z.y + 2, 0.8, z.h - 2); c.fillStyle = '#E07FA3'; c.beginPath(); c.moveTo(z.x + z.w / 2, z.y + 2); c.lineTo(z.x + z.w / 2 + 5, z.y + 4); c.lineTo(z.x + z.w / 2, z.y + 6); c.fill();
+label(c, 'Far side', z.x + z.w / 2, z.y + z.h - 1.5, 2.2, '#1D4010');
+}
+});
+if (sc.spawn) { c.fillStyle = '#045C82'; c.beginPath(); c.moveTo(sc.spawn.x - 5, sc.spawn.y - 6); c.lineTo(sc.spawn.x + 5, sc.spawn.y - 6); c.lineTo(sc.spawn.x + 2.5, sc.spawn.y - 2.4); c.lineTo(sc.spawn.x - 2.5, sc.spawn.y - 2.4); c.closePath(); c.fill(); label(c, 'Supply hopper', sc.spawn.x + 7, sc.spawn.y - 4.2, 2.2, '#045C82', 'left'); }
+if (sc.launcher) {
+var L = sc.launcher, d = this.design.launcher || L;
+c.fillStyle = '#045C82'; roundRect(c, L.x - 5, L.y - 2, 10, 4, 1); c.fill();
+c.save(); c.translate(L.x, L.y - 2); c.rotate(-deg2rad(d.angle)); c.fillStyle = '#009CDE'; roundRect(c, 0, -2, 12, 4, 1.5); c.fill(); c.restore();
+for (var p = 0; p < 6; p++) { c.fillStyle = p < d.power ? '#E07FA3' : '#e6e3dc'; c.fillRect(L.x - 7 + p * 2.4, L.y + 3, 1.8, 2); }
+label(c, 'Power ' + d.power + ' · ' + d.angle + '°', L.x + 2, L.y - 9, 2.4, '#045C82');
+}
+var g = this.ghost[this.ghostKey()];
+if (g && store.progress.settings.ghost && !this.sim && !this.finalSim) { c.fillStyle = 'rgba(4,92,130,.22)'; g.forEach(function (p, i) { if (i % 2) return; c.beginPath(); c.arc(p[0], p[1], 0.6, 0, Math.PI * 2); c.fill(); }); }
+var broken = snap && snap.broken ? snap.broken : [];
+(this.design.parts || []).forEach(function (p, i) { self.drawPart(c, p, i === self.selected, broken.some(function (b) { return b.x === p.x && b.y === p.y && b.type === p.type; })); });
+if (this.placing && this.hover) { c.globalAlpha = 0.45; this.drawPart(c, this.previewPart(this.hover), false, false); c.globalAlpha = 1; }
+var b = snap ? snap.body : null;
+if (!b) b = sc.launcher ? { x: sc.launcher.x, y: sc.launcher.y - 4, r: 2.2 } : (sc.spawn ? { x: sc.spawn.x, y: sc.spawn.y, r: 2.2 } : { x: sc.rover.x, y: sc.rover.y, r: sc.rover.r });
+if (mode === 'bridge') drawRover(c, b); else drawCapsule(c, b);
+};
+Game.prototype.ghostKey = function () { return this.level.id + ':' + this.variation + ':' + this.stage; };
+Game.prototype.previewPart = function (pt) {
+var t = this.placing, p = { type: t.type, x: Math.round(pt.x), y: Math.round(pt.y) };
+if (t.type === 'ramp' || t.type === 'beam' || t.type === 'barrier') { p.angle = t.type === 'ramp' ? 15 : 0; p.len = t.len; }
+if (t.type === 'post') { p.h = t.h; p.y = GROUND; }
+if (t.type === 'bumper') { p.h = t.h; }
+if (t.type === 'fan') { p.dir = 'E'; }
+return p;
+};
+Game.prototype.drawPart = function (c, p, selected, broken) {
+var segs = Engine.partSegments(p);
+if (p.type === 'fan') {
+var z = Engine.fanZone(p);
+c.fillStyle = 'rgba(0,156,222,.10)'; c.fillRect(z.x, z.y, z.w, z.h);
+c.strokeStyle = 'rgba(0,156,222,.5)'; c.lineWidth = 0.4;
+var dx = z.fx ? Math.sign(z.fx) : 0, dy = z.fy ? Math.sign(z.fy) : 0;
+for (var i = 0; i < 3; i++) {
+var ax = z.x + z.w / 2 + (dx ? (i - 1) * 7 : (i - 1) * 4), ay = z.y + z.h / 2 + (dy ? (i - 1) * 7 : (i - 1) * 4);
+c.beginPath(); c.moveTo(ax - dx * 3, ay - dy * 3); c.lineTo(ax + dx * 3, ay + dy * 3); c.stroke();
+c.beginPath(); c.moveTo(ax + dx * 3, ay + dy * 3); c.lineTo(ax + dx * 3 - dx * 1.5 - dy * 1.5, ay + dy * 3 - dy * 1.5 + dx * 1.5); c.stroke();
+}
+c.fillStyle = '#009CDE'; c.beginPath(); c.arc(p.x, p.y, 3.2, 0, Math.PI * 2); c.fill();
+c.fillStyle = '#fff'; c.beginPath(); c.arc(p.x, p.y, 1, 0, Math.PI * 2); c.fill();
+c.strokeStyle = '#fff'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(p.x - 2.2, p.y); c.lineTo(p.x + 2.2, p.y); c.moveTo(p.x, p.y - 2.2); c.lineTo(p.x, p.y + 2.2); c.stroke();
+if (selected) { c.strokeStyle = '#ffd166'; c.lineWidth = 0.9; c.beginPath(); c.arc(p.x, p.y, 4.4, 0, Math.PI * 2); c.stroke(); }
+return;
+}
+var colors = { ramp: '#E07FA3', beam: '#c9a36b', post: '#8fa3ad', bumper: '#ffb347', barrier: '#045C82' };
+segs.forEach(function (s) {
+c.strokeStyle = broken ? '#e6e3dc' : colors[p.type]; c.lineWidth = p.type === 'post' ? 2.2 : 2.4; c.lineCap = 'round';
+if (broken) c.setLineDash([2, 2]);
+c.beginPath(); c.moveTo(s.x1, s.y1); c.lineTo(s.x2, s.y2); c.stroke(); c.setLineDash([]);
+if (p.type === 'ramp' || p.type === 'beam') { c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = 0.6; c.beginPath(); c.moveTo(s.x1, s.y1 - 0.7); c.lineTo(s.x2, s.y2 - 0.7); c.stroke(); }
+});
+if (selected) {
+var s = segs[0];
+c.strokeStyle = '#ffd166'; c.lineWidth = 0.9; c.lineCap = 'round'; c.beginPath(); c.moveTo(s.x1, s.y1); c.lineTo(s.x2, s.y2); c.stroke();
+if (p.angle != null) {
+c.fillStyle = '#ffd166'; c.beginPath(); c.arc(s.x2, s.y2, 2.2, 0, Math.PI * 2); c.fill();
+c.strokeStyle = '#173e63'; c.lineWidth = 0.5; c.beginPath(); c.arc(s.x2, s.y2, 1.1, 0.4, 5.2); c.stroke();
+label(c, p.angle + '°', p.x, p.y - 4, 2.6, '#173e63');
+}
+}
+};
+function drawCapsule(c, b) {
+c.fillStyle = 'rgba(0,0,0,.08)'; c.beginPath(); c.ellipse(b.x, Math.min(GROUND - 0.3, b.y + b.r + 0.6), b.r, 0.6, 0, 0, Math.PI * 2); c.fill();
+c.fillStyle = '#E07FA3'; c.beginPath(); c.arc(b.x, b.y, b.r, 0, Math.PI * 2); c.fill();
+c.fillStyle = 'rgba(255,255,255,.55)'; c.beginPath(); c.arc(b.x - b.r * 0.35, b.y - b.r * 0.35, b.r * 0.35, 0, Math.PI * 2); c.fill();
+c.strokeStyle = '#fff'; c.lineWidth = 0.35; c.beginPath(); c.moveTo(b.x - b.r, b.y); c.lineTo(b.x + b.r, b.y); c.stroke();
+}
+function drawRover(c, b) {
+c.fillStyle = '#045C82'; roundRect(c, b.x - b.r, b.y - b.r * 0.9, b.r * 2, b.r * 1.3, 0.8); c.fill();
+c.fillStyle = '#24332a'; c.beginPath(); c.arc(b.x - b.r * 0.6, b.y + b.r * 0.55, b.r * 0.45, 0, Math.PI * 2); c.arc(b.x + b.r * 0.6, b.y + b.r * 0.55, b.r * 0.45, 0, Math.PI * 2); c.fill();
+c.strokeStyle = '#E07FA3'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(b.x, b.y - b.r * 0.9); c.lineTo(b.x + 1, b.y - b.r * 2); c.stroke();
+c.fillStyle = '#fff'; c.fillRect(b.x + b.r * 0.2, b.y - b.r * 0.6, b.r * 0.6, b.r * 0.5);
+}
+Game.prototype.balanceLayout = function () {
+var sc = this.spec.scene, slots = {};
+var cx = 50, cy = 40, spacing = 7;
+sc.slots.forEach(function (s) { slots[s] = { x: cx + s * spacing, y: cy, blocked: sc.blocked.indexOf(s) !== -1 }; });
+var ground = sc.crates.map(function (m, i) { return { x: 8 + i * 9, y: GROUND - 1.5 - m, m: m, i: i }; });
+return { cx: cx, cy: cy, spacing: spacing, slots: slots, ground: ground };
+};
+Game.prototype.drawBalance = function (c, snap) {
+var sc = this.spec.scene, lay = this.balanceLayout(), self = this;
+sky(c);
+c.fillStyle = 'rgba(191,224,180,.6)'; roundRect(c, 84, 30, 14, 26, 3); c.fill(); c.strokeStyle = '#1D4010'; c.lineWidth = 0.6; roundRect(c, 84, 30, 14, 26, 3); c.stroke();
+label(c, 'Greenhouse', 91, 33, 2.2, '#1D4010');
+if (snap && snap.result === 'success') { c.fillStyle = '#E07FA3'; [87, 91, 95].forEach(function (x, i) { c.beginPath(); c.arc(x, 44 - i % 2 * 3, 1.6, 0, Math.PI * 2); c.fill(); }); }
+c.strokeStyle = '#045C82'; c.lineWidth = 0.8; c.beginPath(); c.moveTo(0, GROUND - 6); c.lineTo(100, GROUND - 6); c.stroke();
+var cartX = snap ? snap.cartX - 20 + lay.cx : lay.cx, tilt = snap ? snap.tilt : 0;
+c.save(); c.translate(cartX, lay.cy + 4); c.rotate(deg2rad(tilt));
+c.fillStyle = '#24332a'; c.beginPath(); c.arc(-10, 9, 2, 0, Math.PI * 2); c.arc(10, 9, 2, 0, Math.PI * 2); c.fill();
+c.fillStyle = '#045C82'; c.beginPath(); c.moveTo(-3, 6); c.lineTo(3, 6); c.lineTo(0, 0); c.closePath(); c.fill();
+c.fillStyle = '#c9a36b'; roundRect(c, -25, -4, 50, 4, 1); c.fill();
+sc.slots.forEach(function (s) {
+var x = s * lay.spacing, blocked = sc.blocked.indexOf(s) !== -1;
+c.fillStyle = blocked ? '#e05252' : (self.selected != null ? '#ffd166' : '#8fa3ad'); c.fillRect(x - 0.5, -5.5, 1, 1.5);
+label(c, blocked ? 'x' : String(s), x, -7.5, 2.2, blocked ? '#e05252' : '#62676c');
+});
+(this.design.placements || []).forEach(function (p) {
+var m = sc.crates[p.crate], x = p.slot * lay.spacing, drift = 0;
+if (snap && snap.result === 'tipped') drift = Math.sign(tilt) * clamp((snap.t - 1) * 6, 0, 12);
+drawCrate(c, x + drift, -4, m, p.crate === self.selected);
+});
+c.restore();
+lay.ground.forEach(function (g) {
+if ((self.design.placements || []).some(function (p) { return p.crate === g.i; })) return;
+drawCrate(c, g.x, GROUND - 0.5, g.m, g.i === self.selected);
+});
+if (this.drag && this.drag.crate != null) drawCrate(c, this.drag.x, this.drag.y + 2, sc.crates[this.drag.crate], true);
+if (store.progress.settings.assist) { var t = this.torqueNow(); label(c, 'Left ' + t.l + ' · Right ' + t.r, lay.cx, 24, 2.6, t.l === t.r ? '#1D4010' : '#045C82'); }
+};
+function drawCrate(c, x, yBottom, m, sel) {
+var s = 2.6 + m * 1.4;
+c.fillStyle = m === 3 ? '#045C82' : (m === 2 ? '#009CDE' : '#E07FA3'); roundRect(c, x - s / 2, yBottom - s, s, s, 0.6); c.fill();
+if (sel) { c.strokeStyle = '#ffd166'; c.lineWidth = 0.8; roundRect(c, x - s / 2, yBottom - s, s, s, 0.6); c.stroke(); }
+label(c, String(m), x, yBottom - s / 2, 2.8, '#fff');
+}
+Game.prototype.torqueNow = function () {
+var sc = this.spec.scene, l = 0, r = 0;
+(this.design.placements || []).forEach(function (p) { var m = sc.crates[p.crate]; if (p.slot < 0) l += m * -p.slot; else r += m * p.slot; });
+return { l: l, r: r };
+};
+Game.prototype.gearLayout = function () {
+var slots = this.design.slots, teeth = [this.spec.scene.motor.teeth].concat(slots.map(function (t) { return t; }));
+var x = 14, out = [], y = 42;
+for (var i = 0; i < teeth.length; i++) {
+var r = teeth[i] ? teeth[i] * 0.32 + 1.5 : 4.5;
+if (i > 0) { var pr = teeth[i - 1] ? teeth[i - 1] * 0.32 + 1.5 : 4.5; x += pr + r + 0.4; }
+out.push({ x: x, y: y, r: r, teeth: teeth[i], slot: i - 1 });
+}
+return out;
+};
+Game.prototype.drawGears = function (c, snap) {
+var sc = this.spec.scene, lay = this.gearLayout(), self = this, ev = snap ? snap.eval : Engine.gearsEval(this.spec, this.design);
+sky(c);
+c.fillStyle = 'rgba(4,92,130,.16)'; c.fillRect(78, 8, 20, GROUND - 8); c.strokeStyle = '#045C82'; c.lineWidth = 1.2; c.beginPath(); c.moveTo(70, 10); c.lineTo(98, 10); c.stroke();
+label(c, 'Observation platform', 84, 6, 2.2, '#045C82');
+var h = snap ? snap.liftHeight : 0, crateY = GROUND - 3 - h * ((GROUND - 16) / sc.lift.height);
+c.strokeStyle = '#8fa3ad'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(70, 10); c.lineTo(70, crateY - 3); c.stroke();
+drawCrate(c, 70, crateY, 3, false);
+lay.forEach(function (g, i) {
+var angle = snap ? (i === 0 ? snap.motorAngle : (g.slot === 0 && lay.length === 3 ? snap.idlerAngle : snap.liftAngle)) : 0;
+if (g.teeth) drawGear(c, g.x, g.y, g.r, g.teeth, angle, i === 0 ? '#045C82' : (g.slot === lay.length - 2 ? '#E07FA3' : '#009CDE'));
+else { c.strokeStyle = '#8fa3ad'; c.setLineDash([1.2, 1]); c.lineWidth = 0.6; c.beginPath(); c.arc(g.x, g.y, 4.5, 0, Math.PI * 2); c.stroke(); c.setLineDash([]); }
+label(c, i === 0 ? 'Motor ' + sc.motor.teeth + 't' : (g.slot === sc.slots.length - 1 ? 'Lift' + (g.teeth ? ' ' + g.teeth + 't' : '') : 'Middle' + (g.teeth ? ' ' + g.teeth + 't' : '')), g.x, g.y + g.r + 3, 2.2, '#173e63');
+});
+var lift = lay[lay.length - 1]; c.strokeStyle = '#8fa3ad'; c.lineWidth = 0.5; c.beginPath(); c.moveTo(lift.x, lift.y - lift.r); c.lineTo(70, 10); c.stroke();
+label(c, ev.lift ? 'Ratio ' + ev.ratio + ':1 · needs ' + sc.lift.needRatio + ':1 · within ' + sc.lift.timeLimit + ' s' : 'Needs ' + sc.lift.needRatio + ':1 or more · within ' + sc.lift.timeLimit + ' s', 40, 8, 2.4, '#045C82');
+if (snap && snap.eval.direction) label(c, 'Motor ↻  Lift ' + (snap.eval.direction === 1 ? '↻' : '↺'), 40, 13, 2.4, '#62676c');
+};
+function drawGear(c, x, y, r, teeth, angleDeg, color) {
+c.save(); c.translate(x, y); c.rotate(deg2rad(angleDeg));
+c.fillStyle = color; c.beginPath();
+for (var i = 0; i < teeth; i++) {
+var a0 = (i / teeth) * Math.PI * 2, a1 = ((i + 0.5) / teeth) * Math.PI * 2, ro = r + 1, ri = r - 0.2;
+c.lineTo(Math.cos(a0) * ro, Math.sin(a0) * ro); c.lineTo(Math.cos(a0 + 0.25 / teeth * Math.PI * 2 * 2) * ro, Math.sin(a0 + 0.25 / teeth * Math.PI * 2 * 2) * ro);
+c.lineTo(Math.cos(a1) * ri, Math.sin(a1) * ri); c.lineTo(Math.cos(a1 + 0.25 / teeth * Math.PI * 2 * 2) * ri, Math.sin(a1 + 0.25 / teeth * Math.PI * 2 * 2) * ri);
+}
+c.closePath(); c.fill();
+c.fillStyle = '#fff'; c.beginPath(); c.arc(0, 0, r * 0.3, 0, Math.PI * 2); c.fill();
+c.fillStyle = color; c.fillRect(-0.5, -r * 0.3, 1, r * 0.3);
+c.restore();
+}
+Game.prototype.circuitLayout = function () {
+var sc = this.spec.scene, cell = Math.min(80 / sc.cols, 44 / sc.rows), w = cell * sc.cols, h = cell * sc.rows;
+return { cell: cell, ox: (100 - w) / 2, oy: 6 + (46 - h) / 2 };
+};
+Game.prototype.drawCircuit = function (c, snap) {
+var sc = this.spec.scene, lay = this.circuitLayout(), grid = Engine.circuitGrid(this.spec, this.design), self = this;
+var ev = snap ? snap.eval : null, lit = ev && ev.ok, glow = snap ? snap.glow : 0;
+c.fillStyle = lit ? '#fff8e1' : '#e9eef2'; c.fillRect(0, 0, 100, 60);
+label(c, lit ? 'The lab is lit!' : 'Laboratory (dark)', 50, 3.5, 2.6, lit ? '#9a6a00' : '#62676c');
+for (var r = 0; r < sc.rows; r++) for (var col = 0; col < sc.cols; col++) {
+var x = lay.ox + col * lay.cell, y = lay.oy + r * lay.cell, key = r + ',' + col, blocked = sc.blocked.some(function (b) { return b.r === r && b.c === col; });
+c.fillStyle = blocked ? '#8fa3ad' : '#fff'; c.strokeStyle = '#d4e7f2'; c.lineWidth = 0.4; roundRect(c, x + 0.5, y + 0.5, lay.cell - 1, lay.cell - 1, 1); c.fill(); c.stroke();
+if (blocked) label(c, 'pipe', x + lay.cell / 2, y + lay.cell / 2, 2.2, '#fff');
+var t = grid[key];
+if (t) drawTile(c, t, x, y, lay.cell, lit, glow, self.selected && self.selected.tile && self.selected.tile.r === r && self.selected.tile.c === col);
+if (ev && ev.openAt && ev.openAt.r === r && ev.openAt.c === col && !ev.ok) { c.strokeStyle = '#e05252'; c.lineWidth = 0.8; roundRect(c, x + 0.5, y + 0.5, lay.cell - 1, lay.cell - 1, 1); c.stroke(); }
+}
+if (this.placing && this.hover) { var hc = this.cellAt(this.hover); if (hc) { c.fillStyle = 'rgba(224,127,163,.25)'; c.fillRect(lay.ox + hc.c * lay.cell, lay.oy + hc.r * lay.cell, lay.cell, lay.cell); } }
+};
+function drawTile(c, t, x, y, cell, lit, glow, selected) {
+var cx = x + cell / 2, cy = y + cell / 2, ports = Engine.tilePorts(t);
+var col = lit ? '#e8a600' : '#045C82';
+c.strokeStyle = col; c.lineWidth = 1.4; c.lineCap = 'round';
+var ends = { N: [cx, y], S: [cx, y + cell], E: [x + cell, cy], W: [x, cy] };
+if (t.type === 'switch') {
+var a = ends[ports[0]], b = ends[ports[1]];
+c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo((a[0] + cx) / 2, (a[1] + cy) / 2); c.stroke();
+c.beginPath(); c.moveTo(b[0], b[1]); c.lineTo((b[0] + cx) / 2, (b[1] + cy) / 2); c.stroke();
+c.strokeStyle = '#E07FA3'; c.beginPath(); c.moveTo((b[0] + cx) / 2, (b[1] + cy) / 2);
+if (t.closed) c.lineTo((a[0] + cx) / 2, (a[1] + cy) / 2); else c.lineTo((a[0] + cx) / 2 + (ports[0] === 'N' || ports[0] === 'S' ? 3 : 0), (a[1] + cy) / 2 - (ports[0] === 'E' || ports[0] === 'W' ? 3 : 0));
+c.stroke();
+label(c, t.closed ? 'closed' : 'open', cx, y + cell - 1.6, 1.8, '#62676c');
+} else {
+ports.forEach(function (p) { c.beginPath(); c.moveTo(cx, cy); c.lineTo(ends[p][0], ends[p][1]); c.stroke(); });
+}
+if (t.type === 'fixed' && t.kind === 'battery') {
+c.fillStyle = '#24332a'; roundRect(c, cx - 2.6, cy - 1.6, 5.2, 3.2, 0.5); c.fill(); c.fillStyle = '#fff'; label(c, '+ −', cx, cy, 2, '#fff');
+label(c, 'Battery', cx, y + cell - 1.6, 1.8, '#62676c');
+}
+if (t.type === 'fixed' && t.kind === 'lamp') {
+if (lit) { c.fillStyle = 'rgba(255,209,102,' + (0.5 * glow) + ')'; c.beginPath(); c.arc(cx, cy, 4.5, 0, Math.PI * 2); c.fill(); }
+c.fillStyle = lit ? '#ffd166' : '#e6e3dc'; c.beginPath(); c.arc(cx, cy, 2.4, 0, Math.PI * 2); c.fill(); c.strokeStyle = '#24332a'; c.lineWidth = 0.4; c.stroke();
+label(c, 'Lamp', cx, y + cell - 1.6, 1.8, '#62676c');
+}
+if (selected) { c.strokeStyle = '#ffd166'; c.lineWidth = 0.8; roundRect(c, x + 0.8, y + 0.8, cell - 1.6, cell - 1.6, 1); c.stroke(); }
+}
+Game.prototype.cellAt = function (pt) {
+var sc = this.spec.scene, lay = this.circuitLayout();
+var c = Math.floor((pt.x - lay.ox) / lay.cell), r = Math.floor((pt.y - lay.oy) / lay.cell);
+if (r < 0 || c < 0 || r >= sc.rows || c >= sc.cols) return null;
+return { r: r, c: c };
+};
+Game.prototype.codeLayout = function () {
+var sc = this.spec.scene, cell = Math.min(90 / sc.cols, 50 / sc.rows), w = cell * sc.cols, h = cell * sc.rows;
+return { cell: cell, ox: (100 - w) / 2, oy: 4 + (52 - h) / 2 };
+};
+Game.prototype.drawCode = function (c, snap) {
+var sc = this.spec.scene, lay = this.codeLayout(), run = snap ? snap.run : null, frame = snap ? snap.frame : { r: sc.start.r, c: sc.start.c, dir: sc.start.dir };
+c.fillStyle = '#eef6fb'; c.fillRect(0, 0, 100, 60);
+var delivered = {};
+if (run) run.frames.slice(0, (snap.frameIndex || 0) + 1).forEach(function (f) { if (f.deliver) delivered[f.r + ',' + f.c] = true; });
+for (var r = 0; r < sc.rows; r++) for (var col = 0; col < sc.cols; col++) {
+var x = lay.ox + col * lay.cell, y = lay.oy + r * lay.cell, ch = sc.map[r][col];
+c.fillStyle = ch === '#' ? '#8fa3ad' : ((r + col) % 2 ? '#ffffff' : '#f4f8fb'); c.strokeStyle = '#d4e7f2'; c.lineWidth = 0.4;
+roundRect(c, x + 0.4, y + 0.4, lay.cell - 0.8, lay.cell - 0.8, 1); c.fill(); c.stroke();
+if (ch === 'S') {
+var done = delivered[r + ',' + col];
+c.fillStyle = done ? '#1D4010' : '#E07FA3'; c.beginPath(); c.arc(x + lay.cell / 2, y + lay.cell / 2, lay.cell * 0.22, 0, Math.PI * 2); c.fill();
+label(c, done ? '✓' : 'S', x + lay.cell / 2, y + lay.cell / 2, lay.cell * 0.3, '#fff');
+}
+}
+var g = this.ghost[this.ghostKey()];
+if (g && store.progress.settings.ghost && !this.sim && !this.finalSim) { c.strokeStyle = 'rgba(4,92,130,.25)'; c.lineWidth = 1; c.beginPath(); g.forEach(function (p, i) { var px = lay.ox + p[0] * lay.cell + lay.cell / 2, py = lay.oy + p[1] * lay.cell + lay.cell / 2; if (i) c.lineTo(px, py); else c.moveTo(px, py); }); c.stroke(); }
+var rx = lay.ox + frame.c * lay.cell + lay.cell / 2, ry = lay.oy + frame.r * lay.cell + lay.cell / 2, s = lay.cell * 0.34;
+c.save(); c.translate(rx, ry); c.rotate({ E: 0, S: Math.PI / 2, W: Math.PI, N: -Math.PI / 2 }[frame.dir]);
+if (frame.bump) c.translate(1.2, 0);
+c.fillStyle = '#045C82'; roundRect(c, -s, -s * 0.8, s * 2, s * 1.6, 1); c.fill();
+c.fillStyle = '#24332a'; c.fillRect(-s * 0.8, -s * 1.05, s * 0.6, s * 0.3); c.fillRect(s * 0.2, -s * 1.05, s * 0.6, s * 0.3); c.fillRect(-s * 0.8, s * 0.75, s * 0.6, s * 0.3); c.fillRect(s * 0.2, s * 0.75, s * 0.6, s * 0.3);
+c.fillStyle = '#E07FA3'; c.beginPath(); c.moveTo(s * 0.2, -s * 0.5); c.lineTo(s * 0.95, 0); c.lineTo(s * 0.2, s * 0.5); c.closePath(); c.fill();
+c.restore();
+if (frame.wasted) label(c, 'no station here', rx, ry - lay.cell * 0.6, 2.2, '#e05252');
+};
+Game.prototype.renderEditor = function () {
+var self = this, ed = this.editor;
+ed.innerHTML = '';
+if (this.spec.mode !== 'code') return;
+var sc = this.spec.scene;
+var pal = el('div', 'rl-palette');
+[['F', '↑ Forward'], ['L', '↰ Turn left'], ['R', '↱ Turn right'], ['D', '⬇ Deliver']].forEach(function (b) {
+pal.appendChild(btn('rl-tray-btn', b[1], function () { self.codeAdd({ t: b[0] }); }));
+});
+if (sc.loops) {
+var minus = btn('rl-btn', '−', function () { self.repeatCount = Math.max(2, self.repeatCount - 1); self.renderEditor(); }, 'Fewer repeats');
+var count = el('span', 'rl-count', this.repeatCount + '×');
+var plus = btn('rl-btn', '+', function () { self.repeatCount = Math.min(9, self.repeatCount + 1); self.renderEditor(); }, 'More repeats');
+pal.appendChild(minus); pal.appendChild(count); pal.appendChild(plus);
+pal.appendChild(btn('rl-tray-btn', 'Repeat ' + this.repeatCount + '×', function () { self.codeAdd({ t: 'loop', n: self.repeatCount, body: [] }); }));
+var close = btn('rl-tray-btn', 'Close repeat', function () { if (self.stack.length) { self.stack.pop(); self.renderEditor(); } });
+close.disabled = !this.stack.length; pal.appendChild(close);
+}
+ed.appendChild(pal);
+var view = el('div', 'rl-program'); view.setAttribute('aria-live', 'polite');
+var prog = this.design.program || (this.design.program = []);
+var badPath = this.lastRun && this.lastRun.diag && this.lastRun.diag.path ? this.lastRun.diag.path.join('.') : null;
+(function renderList(list, into, path) {
+list.forEach(function (node, i) {
+var p = path.concat([i]).join('.');
+if (node.t === 'loop') {
+var open = self.stack.indexOf(node) !== -1, box = el('span', 'rl-loop' + (open ? ' is-open' : ''));
+box.appendChild(el('span', 'rl-loop-label', 'Repeat ' + node.n + '×'));
+var body = el('span', 'rl-loop-body'); renderList(node.body, body, path.concat([i]));
+if (node === self.stack[self.stack.length - 1]) body.appendChild(el('span', 'rl-caret'));
+box.appendChild(body); into.appendChild(box);
+} else {
+var chip = el('span', 'rl-block' + (node.t === 'D' ? ' deliver' : '') + (badPath === p ? ' is-bad' : ''), { F: '↑', L: '↰', R: '↱', D: '⬇' }[node.t]);
+chip.setAttribute('aria-label', { F: 'forward', L: 'turn left', R: 'turn right', D: 'deliver' }[node.t]);
+into.appendChild(chip);
+}
+});
+})(prog, view, []);
+if (!this.stack.length) view.appendChild(el('span', 'rl-caret'));
+if (!prog.length) view.appendChild(el('span', 'rl-empty', 'Tap the blocks to build the rover’s route'));
+ed.appendChild(view);
+var n = Engine.countBlocks(prog);
+ed.appendChild(el('div', 'rl-toolname', n + ' block' + (n === 1 ? '' : 's')));
+};
+Game.prototype.codeAdd = function (node) {
+if (this.sim) return;
+var prog = this.design.program || (this.design.program = []);
+if (Engine.countBlocks(prog) >= this.spec.scene.maxBlocks) { this.setMessage('That is a big program! Look for a pattern to repeat.'); return; }
+var target = this.stack.length ? this.stack[this.stack.length - 1].body : prog;
+target.push(node); if (node.t === 'loop') this.stack.push(node);
+audio.place(); this.afterEdit();
+};
+Game.prototype.codeUndo = function () {
+var prog = this.design.program || [], tgt = this.stack.length ? this.stack[this.stack.length - 1].body : prog;
+if (!tgt.length) { if (this.stack.length) { this.stack.pop(); var t2 = this.stack.length ? this.stack[this.stack.length - 1].body : prog; t2.pop(); } }
+else if (tgt[tgt.length - 1].t === 'loop') { this.stack.push(tgt[tgt.length - 1]); return this.codeUndo(); }
+else tgt.pop();
+this.afterEdit();
+};
+Game.prototype.bindPointer = function () {
+var self = this, cv = this.canvas;
+cv.addEventListener('pointerdown', function (e) { self.onDown(e); });
+cv.addEventListener('pointermove', function (e) { self.onMove(e); });
+cv.addEventListener('pointerup', function (e) { self.onUp(e); });
+cv.addEventListener('pointercancel', function (e) { self.onUp(e, true); });
+cv.addEventListener('pointerleave', function () { self.hover = null; if (!self.drag) self.draw(); });
+};
+Game.prototype.onDown = function (e) {
+if (this.sim) return;
+e.preventDefault();
+var pt = this.toScene(e), mode = this.spec.mode;
+try { this.canvas.setPointerCapture(e.pointerId); } catch (x) { /* ignore */ }
+if (mode === 'physics' || mode === 'bridge') {
+if (this.placing) {
+var lim = Engine.trayLimit(this.spec, this.placing.type, this.placing.len), used = Engine.trayUsed(this.design, this.placing.type, this.placing.len);
+if (used >= lim) { this.placing = null; this.renderTray(); return; }
+this.pushUndo(); var p = this.previewPart(pt); this.design.parts.push(p); this.selected = this.design.parts.length - 1;
+if (used + 1 >= lim) this.placing = null;
+audio.place(); this.afterEdit(); this.setMessage('Placed. Drag it to move, or use Rotate.'); return;
+}
+var hit = this.hitPart(pt);
+if (hit != null) {
+var part = this.design.parts[hit];
+this.selected = hit;
+var segs = Engine.partSegments(part)[0];
+var handle = part.angle != null && Math.hypot(pt.x - segs.x2, pt.y - segs.y2) < 4;
+this.pushUndo();
+this.drag = { kind: handle ? 'rotate' : 'move', idx: hit, ox: pt.x - part.x, oy: pt.y - part.y, moved: false };
+this.canvas.classList.add('grabbing'); this.renderTools(); this.draw();
+} else { this.selected = null; this.renderTools(); this.draw(); }
+} else if (mode === 'balance') {
+var lay = this.balanceLayout(), sc = this.spec.scene, self = this, found = null;
+lay.ground.forEach(function (g) { if ((self.design.placements || []).some(function (p) { return p.crate === g.i; })) return; var s = 2.6 + g.m * 1.4; if (Math.abs(pt.x - g.x) < s / 2 + 1.5 && pt.y > GROUND - s - 2 && pt.y < GROUND + 1) found = g.i; });
+(this.design.placements || []).forEach(function (p) { var x = lay.cx + p.slot * lay.spacing, s = 2.6 + sc.crates[p.crate] * 1.4; if (Math.abs(pt.x - x) < s / 2 + 1.5 && pt.y > lay.cy - s - 1 && pt.y < lay.cy + 2) found = p.crate; });
+if (found != null) { this.selected = found; this.drag = { crate: found, x: pt.x, y: pt.y, moved: false }; this.renderTools(); this.draw(); return; }
+var slot = this.slotAt(pt);
+if (slot != null && this.selected != null) { this.placeCrate(this.selected, slot); return; }
+this.selected = null; this.renderTools(); this.draw();
+} else if (mode === 'gears') {
+var lay2 = this.gearLayout();
+for (var i = 1; i < lay2.length; i++) {
+if (Math.hypot(pt.x - lay2[i].x, pt.y - lay2[i].y) < Math.max(lay2[i].r + 1.5, 6)) {
+this.pushUndo();
+var slotIdx = i - 1, cur = this.design.slots[slotIdx];
+if (this.placing && this.placing.teeth && cur !== this.placing.teeth) this.design.slots[slotIdx] = this.placing.teeth;
+else if (cur) this.design.slots[slotIdx] = null;
+else { var gs = this.spec.scene.gears; this.design.slots[slotIdx] = gs[Math.min(gs.length - 1, 2)]; }
+audio.place(); this.afterEdit(); return;
+}
+}
+} else if (mode === 'circuit') {
+var cell = this.cellAt(pt); if (!cell) return;
+var grid = Engine.circuitGrid(this.spec, this.design), t = grid[cell.r + ',' + cell.c];
+var blocked = this.spec.scene.blocked.some(function (b) { return b.r === cell.r && b.c === cell.c; });
+if (blocked) return;
+if (t) {
+if (t.type === 'fixed') { this.pushUndo(); this.design.fixedAxis[t.r + ',' + t.c] = t.axis === 'V' ? 'H' : 'V'; this.selected = { tile: Engine.circuitGrid(this.spec, this.design)[t.r + ',' + t.c] }; this.afterEdit(); return; }
+var real = this.design.tiles.filter(function (x) { return x.r === cell.r && x.c === cell.c; })[0];
+if (this.selected && this.selected.tile === real) { this.pushUndo(); if (real.type === 'switch') real.closed = !real.closed; else real.rot = ((real.rot || 0) + 1) % 4; this.afterEdit(); }
+else { this.selected = { tile: real }; this.placing = null; this.renderTray(); this.renderTools(); this.draw(); this.setMessage(real.type === 'switch' ? 'Tap again to open or close the switch.' : 'Tap again to rotate.'); }
+return;
+}
+if (this.placing) {
+var used = this.design.tiles.filter(function (x) { return x.type === self.placing.type; }).length, lim2 = Engine.trayLimit(this.spec, this.placing.type);
+if (used >= lim2) { this.placing = null; this.renderTray(); return; }
+this.pushUndo(); var tile = { r: cell.r, c: cell.c, type: this.placing.type, rot: 0, closed: true }; this.design.tiles.push(tile); this.selected = { tile: tile };
+if (used + 1 >= lim2) this.placing = null;
+audio.place(); this.afterEdit(); return;
+}
+this.selected = null; this.renderTools(); this.draw();
+}
+};
+Game.prototype.onMove = function (e) {
+var pt = this.toScene(e); this.hover = pt;
+if (this.drag) {
+e.preventDefault();
+if (this.drag.idx != null) {
+var p = this.design.parts[this.drag.idx];
+if (this.drag.kind === 'rotate') { var a = Math.atan2(pt.y - p.y, pt.x - p.x) * 180 / Math.PI; p.angle = clamp(Math.round(a / 5) * 5, -75, 75); }
+else { p.x = clamp(pt.x - this.drag.ox, 2, 98); p.y = p.type === 'post' ? GROUND : clamp(pt.y - this.drag.oy, 2, GROUND - 1); }
+this.drag.moved = true;
+} else if (this.drag.crate != null) { this.drag.x = pt.x; this.drag.y = pt.y; this.drag.moved = true; }
+this.draw();
+} else if (this.placing) this.draw();
+};
+Game.prototype.onUp = function (e, cancelled) {
+this.canvas.classList.remove('grabbing');
+if (!this.drag) return;
+var d = this.drag; this.drag = null;
+if (d.crate != null) {
+var slot = this.slotAt(this.toScene(e));
+if (!cancelled && d.moved && slot != null) this.placeCrate(d.crate, slot);
+else if (!cancelled && d.moved && this.toScene(e).y > GROUND - 8) { this.pushUndo(); this.design.placements = this.design.placements.filter(function (p) { return p.crate !== d.crate; }); this.afterEdit(); }
+else this.draw();
+return;
+}
+if (cancelled && !d.moved) { this.undo.pop(); }
+else if (!d.moved) { this.undo.pop(); }
+this.afterEdit();
+if (d.moved) this.setMessage(d.kind === 'rotate' ? 'Rotated to ' + this.design.parts[d.idx].angle + '°.' : 'Moved.');
+};
+Game.prototype.hitPart = function (pt) {
+var parts = this.design.parts || [], best = null, bestD = 4.5;
+for (var i = parts.length - 1; i >= 0; i--) {
+var p = parts[i];
+if (p.type === 'fan') { if (Math.hypot(pt.x - p.x, pt.y - p.y) < 5) return i; continue; }
+var s = Engine.partSegments(p)[0], dx = s.x2 - s.x1, dy = s.y2 - s.y1, l2 = dx * dx + dy * dy, t = l2 ? clamp(((pt.x - s.x1) * dx + (pt.y - s.y1) * dy) / l2, 0, 1) : 0;
+var d = Math.hypot(pt.x - (s.x1 + dx * t), pt.y - (s.y1 + dy * t));
+if (d < bestD) { bestD = d; best = i; }
+}
+return best;
+};
+Game.prototype.slotAt = function (pt) {
+var lay = this.balanceLayout(), sc = this.spec.scene, best = null, bestD = 4.5;
+sc.slots.forEach(function (s) { if (sc.blocked.indexOf(s) !== -1) return; var d = Math.hypot(pt.x - (lay.cx + s * lay.spacing), pt.y - lay.cy); if (d < bestD) { bestD = d; best = s; } });
+return best;
+};
+Game.prototype.placeCrate = function (crate, slot) {
+this.pushUndo();
+var pl = this.design.placements = (this.design.placements || []).filter(function (p) { return p.crate !== crate; });
+var occupant = pl.filter(function (p) { return p.slot === slot; })[0];
+if (occupant) { var old = pl.filter(function (p) { return p.crate === crate; }); pl.splice(pl.indexOf(occupant), 1); }
+pl.push({ crate: crate, slot: slot });
+this.selected = null; audio.place(); this.afterEdit();
+this.setMessage(occupant ? 'Swapped: the crate that was there is back on the ground.' : 'Crate placed at slot ' + slot + '.');
+};
+Game.prototype.run = function () {
+if (this.sim) return;
+var v = Engine.validateDesign(this.spec, this.design);
+if (!v.ok) { this.setMessage(v.issues[0]); return; }
+if (this.spec.mode === 'code') this.stack = [];
+this.selected = null; this.placing = null; this.renderTray(); this.renderTools(); this.renderEditor();
+this.successBox.innerHTML = ''; this.diagBox.innerHTML = ''; this.finalSim = null;
+this.sim = Engine.createSim(this.spec, this.design);
+this.runBtn.disabled = true; this.undoBtn.disabled = true; this.resetBtn.disabled = true;
+this.setMessage('Running…'); audio.run();
+this.acc = 0; this.lastFrame = 0; this.bounceCount = 0;
+var self = this;
+this.raf = requestAnimationFrame(function (t) { self.frame(t); });
+};
+Game.prototype.frame = function (t) {
+if (!this.sim) return;
+if (!this.lastFrame) this.lastFrame = t;
+var dt = Math.min(0.1, (t - this.lastFrame) / 1000); this.lastFrame = t;
+this.acc += dt * (REDUCED ? 1.6 : 1);
+var running = true;
+while (this.acc >= Engine.DT && running) { running = this.sim.step(); this.acc -= Engine.DT; }
+var ev = this.sim.events; if (ev && ev.length > this.bounceCount) { for (var i = this.bounceCount; i < ev.length; i++) if (ev[i].type === 'bounce') audio.bounce(); this.bounceCount = ev.length; }
+this.draw();
+if (running) { var self = this; this.raf = requestAnimationFrame(function (t2) { self.frame(t2); }); }
+else this.finishRun();
+};
+Game.prototype.pauseSim = function () { if (this.raf) { cancelAnimationFrame(this.raf); this.raf = null; } };
+Game.prototype.resumeSim = function () { if (this.sim && !this.raf) { this.lastFrame = 0; var self = this; this.raf = requestAnimationFrame(function (t) { self.frame(t); }); } };
+Game.prototype.stopSim = function () { this.pauseSim(); this.sim = null; };
+Game.prototype.finishRun = function () {
+var sim = this.sim, spec = this.spec, lvl = this.level, self = this;
+this.pauseSim(); this.sim = null;
+this.runBtn.disabled = false; this.undoBtn.disabled = false; this.resetBtn.disabled = false;
+var run = { ok: sim.result === 'success', result: sim.result, diag: sim.diag, t: sim.t, trail: sim.trail, events: sim.events, sim: sim };
+this.lastRun = run;
+if (spec.mode === 'physics' || spec.mode === 'bridge' || spec.mode === 'code') this.ghost[this.ghostKey()] = sim.trail;
+store.progress.runs++;
+this.renderTray(); this.renderTools(); this.renderEditor();
+if (!run.ok) {
+store.progress.fails++; this.failedRuns[lvl.id]++;
+store.save();
+this.setMessage('Not yet — your build is still here.');
+this.say(run.diag.text, 'puzzled'); audio.fail();
+this.renderDiag();
+this.drawFinal(sim);
+return;
+}
+var badges = [], extra = { failedRuns: this.failedRuns[lvl.id] };
+lvl.challenges.forEach(function (ch) { if (Engine.checkRule(spec, self.design, run, ch.rule, extra)) badges.push(ch.badge); });
+var parts = (this.design.parts || []).length || (this.design.tiles || []).length || Engine.countBlocks(this.design.program || []) || (this.design.slots || []).filter(Boolean).length;
+var stageDone = lvl.mode === 'sequence' && this.stage < lvl.stages.length - 1;
+if (stageDone) {
+var lv = Progress.level(store.progress, lvl.id); lv.stage = Math.max(lv.stage, this.stage + 1);
+store.save();
+this.setMessage('Checkpoint saved!'); this.say('Stage ' + (this.stage + 1) + ' done: ' + run.diag.text + ' Ready for the next stage?', 'happy'); audio.success();
+var box = el('div', 'rl-success'); box.innerHTML = '<h3>Stage ' + (this.stage + 1) + ' complete</h3><p class="rl-reward">Checkpoint saved. ' + esc(lvl.stages[this.stage + 1].name) + ' is next.</p>';
+var r = el('div', 'rl-row'); r.appendChild(btn('rl-btn primary', 'Continue →', function () { self.stage++; self.loadStage(); })); r.appendChild(btn('rl-btn', 'Run again', function () { self.run(); })); box.appendChild(r);
+this.successBox.innerHTML = ''; this.successBox.appendChild(box);
+this.drawFinal(sim);
+return;
+}
+var wasDone = !!(store.progress.levels[lvl.id] && store.progress.levels[lvl.id].done);
+var prevBadges = clone((store.progress.levels[lvl.id] || { badges: {} }).badges);
+Progress.recordSuccess(store.progress, lvl.id, this.variation, badges, { time: run.t, parts: parts });
+var pr = Progress.practice(store.progress, Progress.weekKey(new Date()), store.owned, store.hasPass);
+if (pr && pr.level.id === lvl.id && pr.variation === this.variation && Engine.checkRule(spec, this.design, run, pr.challenge.rule, extra)) store.progress.practice[pr.key] = true;
+if (lvl.mode === 'sequence') { Progress.level(store.progress, lvl.id).stage = 0; }
+store.save();
+this.refreshHeader();
+this.setMessage('Delivered!'); this.say(run.diag.text + ' ' + lvl.explain, 'happy'); audio.success();
+this.renderSuccess(run, badges, prevBadges, wasDone);
+this.renderChallenges(); this.renderShelf();
+this.drawFinal(sim);
+if (!REDUCED) this.confetti();
+try { this.root.dispatchEvent(new CustomEvent('ascend:game-complete', { bubbles: true, detail: { game: 'rescue-lab', level: lvl.id, variation: this.variation, badges: badges, time: run.t } })); } catch (e) { /* ignore */ }
+};
+Game.prototype.drawFinal = function (sim) { this.finalSim = sim; this.draw(); };
+Game.prototype.renderDiag = function () {
+var run = this.lastRun, box = this.diagBox, self = this;
+box.innerHTML = '';
+if (!run || run.ok) return;
+var d = el('div', 'rl-diag bad');
+d.innerHTML = '<p><strong>What happened:</strong> ' + esc(run.diag.text) + '</p>' + (run.diag.hint ? '<p class="rl-hint">' + esc(run.diag.hint) + '</p>' : '');
+var row = el('div', 'rl-row left');
+row.appendChild(btn('rl-btn blue', '↻ Retry', function () { self.run(); }));
+if (store.progress.settings.assist && this.failedRuns[this.level.id] >= 2) row.appendChild(btn('rl-btn', 'Give me a nudge', function () { self.nudge(); }));
+d.appendChild(row);
+box.appendChild(d);
+};
+Game.prototype.nudge = function () {
+var lvl = this.level, mode = this.spec.mode, run = this.lastRun, text;
+if (mode === 'physics' && this.spec.scene.launcher) text = 'Change only one dial at a time and watch where the capsule lands. If it flies past, try one step less power; if it drops short, one step more.';
+else if (mode === 'physics' && lvl.id === 5) text = 'Put a fan close to where the capsule falls, pointing toward the basket. The longer the capsule stays in the breeze, the farther it drifts.';
+else if (mode === 'physics') text = 'Keep the left end of the ramp under the hopper and tilt it between 10° and 25°. Then move the whole ramp left or right to fine-tune.';
+else if (mode === 'bridge') text = 'A post under the middle of the gap gives a long beam somewhere to rest. Beam ends should sit on a cliff or a post.';
+else if (mode === 'balance') { var t = this.torqueNow(); text = 'Turning effect is mass × distance. Right now left = ' + t.l + ' and right = ' + t.r + '. Move a crate on the heavier side closer to the middle, or one on the lighter side farther out.'; }
+else if (mode === 'gears') text = 'Only the lift gear’s size changes the ratio: lift teeth ÷ motor teeth. A middle gear only changes the direction.';
+else if (mode === 'circuit') text = run && run.diag.code === 'open' ? 'Look at the cell outlined in red: one of its sides has no matching wire end. Rotate that tile or its neighbour.' : 'Every tile in the loop must connect on two sides to its neighbours, and the switch has to be closed.';
+else text = 'Run it, watch the very first wrong move, and change just that block. The block that caused a bump is outlined in red.';
+this.say(text, 'intro');
+};
+Game.prototype.renderSuccess = function (run, badges, prevBadges, wasDone) {
+var lvl = this.level, self = this, box = el('div', 'rl-success'), area = Levels.AREAS[lvl.id - 1];
+var newBadges = badges.filter(function (b) { return !prevBadges[b]; });
+box.innerHTML = '<h3>' + (wasDone ? 'Delivered again!' : 'Mission complete!') + '</h3>' +
+'<p class="rl-reward">' + esc(lvl.reward) + (wasDone ? '' : ' Check the station map.') + '</p>' +
+'<p class="rl-explain">' + esc(lvl.explain) + '</p>' +
+(newBadges.length ? '<p class="rl-reward">New badge' + (newBadges.length > 1 ? 's' : '') + ': ' + newBadges.map(function (b) { return '★ ' + b; }).join(', ') + '</p>' : '') +
+(!wasDone ? '<p class="rl-fine">Habitat decoration earned: ' + esc(area.decor) + '</p>' : '');
+var reflect = el('details'); reflect.innerHTML = '<summary>What changed? (optional)</summary><p>' + esc(lvl.reflect) + '</p>';
+var ta = el('textarea'); ta.rows = 2; ta.placeholder = 'Type a thought, or skip it.'; ta.setAttribute('aria-label', lvl.reflect); reflect.appendChild(ta);
+box.appendChild(reflect);
+var row = el('div', 'rl-row');
+var nextLvl = Levels.LEVELS[lvl.id] || null;
+row.appendChild(btn('rl-btn primary', nextLvl ? 'Continue →' : 'Back to the station', function () { if (nextLvl) self.openLevel(nextLvl.id, 0); else self.showMap(); }));
+var untried = lvl.challenges.filter(function (c) { return !(store.progress.levels[lvl.id].badges[c.badge]); })[0];
+if (untried) row.appendChild(btn('rl-btn blue', 'Try a challenge', function () { self.successBox.innerHTML = ''; self.say('Challenge: ' + untried.text, 'intro'); self.challengeBox.scrollIntoView({ block: 'nearest' }); }));
+row.appendChild(btn('rl-btn', 'Save design', function () {
+var name = 'Design ' + (((store.progress.levels[lvl.id] || {}).designs || []).length + 1) + (badges.length ? ' ★' : '');
+Progress.saveDesign(store.progress, lvl.id, self.variation, self.design, name, { time: Math.round(run.t * 100) / 100, parts: (self.design.parts || []).length, badges: badges }, now());
+store.save(); self.renderShelf(); self.setMessage('Saved to your inventions shelf as “' + name + '”.');
+}));
+if (nextLvl) row.appendChild(btn('rl-btn', 'Station map', function () { self.showMap(); }));
+box.appendChild(row);
+this.successBox.innerHTML = ''; this.successBox.appendChild(box);
+this.diagBox.innerHTML = '';
+};
+Game.prototype.renderChallenges = function () {
+var lvl = this.level, box = this.challengeBox, lv = store.progress.levels[lvl.id] || { badges: {} };
+box.innerHTML = '<h4>Optional badge challenges (designed for the main mission)</h4>';
+var rescue = el('div', 'rl-challenge' + (lv.badges.rescue ? ' earned' : ''));
+rescue.innerHTML = '<span class="rl-cbadge">rescue</span><span>Complete the mission. ' + (lv.badges.rescue ? 'Earned!' : '') + '</span>';
+box.appendChild(rescue);
+lvl.challenges.forEach(function (c) {
+var d = el('div', 'rl-challenge' + (lv.badges[c.badge] ? ' earned' : ''));
+d.innerHTML = '<span class="rl-cbadge">' + esc(c.badge) + '</span><span>' + esc(c.text) + (lv.badges[c.badge] ? ' Earned!' : '') + '</span>';
+box.appendChild(d);
+});
+};
+Game.prototype.renderShelf = function () {
+var lvl = this.level, box = this.shelfBox, self = this, lv = store.progress.levels[lvl.id];
+box.innerHTML = '';
+if (!lv || !lv.designs.length) return;
+box.appendChild(el('h4', null, 'Your inventions shelf'));
+var items = el('div', 'rl-shelf-items');
+lv.designs.forEach(function (d) {
+var it = el('span', 'rl-shelf-item');
+it.appendChild(el('span', null, d.name + (d.stats && d.stats.time ? ' · ' + d.stats.time + ' s' : '') + (lvl.variations.length > 1 ? ' · ' + lvl.variations[d.variation].name : '')));
+it.appendChild(btn(null, 'Load', function () { if (self.sim) return; self.pushUndo(); self.variation = d.variation; self.spec = Engine.resolve(lvl, self.variation, self.stage); self.design = clone(d.design); self.stack = []; self.renderLevel(); self.setMessage('Loaded “' + d.name + '”. Run it or change it.'); }));
+items.appendChild(it);
+});
+box.appendChild(items);
+};
+Game.prototype.confetti = function () {
+var m = el('div', 'rl-modal'), c = el('div', 'rl-confetti'), colors = ['#009CDE', '#1D4010', '#E07FA3', '#ffd166', '#BFE0B4'], self = this;
+for (var i = 0; i < 40; i++) { var p = el('i'); p.style.left = (i * 2.5) % 100 + '%'; p.style.background = colors[i % colors.length]; p.style.animationDelay = (i % 7) * 0.12 + 's'; c.appendChild(p); }
+m.appendChild(c);
+m.innerHTML += '<h3>' + esc(this.level.reward) + '</h3><p class="rl-sub">' + esc(GUIDE) + ' is doing a happy wiggle.</p>';
+m.appendChild(btn('rl-btn primary', 'Yay!', function () { self.closeOverlay(); }));
+this.showOverlay(m);
+setTimeout(function () { if (self.overlay.classList.contains('show') && self.overlay.contains(m)) self.closeOverlay(); }, 2600);
+};
+function init() {
+store.loadLocal();
+var roots = document.querySelectorAll('.rl-root');
+for (var i = 0; i < roots.length; i++) if (!roots[i].__rl) roots[i].__rl = new Game(roots[i]);
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+window.AscendRescueLab = { store: store };
+})();
+</script>
+<!-- /wp:html -->
