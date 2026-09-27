@@ -97,6 +97,7 @@
 .rl-chip.owned{background:var(--soft);color:var(--dblue);border-color:var(--softline);}
 .rl-chip.today{background:var(--dpink);color:#fff;border-color:var(--dpink);}
 .rl-chip.locked{background:#fff;color:#6d6656;}
+.rl-chip.next{background:#fff;color:var(--dblue);border-color:var(--dblue);}
 .rl-chip.done{background:var(--green);color:#fff;border-color:var(--green);}
 .rl-chip.mastery{background:var(--gold);color:#5b4700;border-color:#e8bd4a;}
 
@@ -1681,6 +1682,8 @@
     unlock: function (id, cb) {
       var s = this.state();
       if (s.owned[id]) return cb({ ok: true, body: this.payload(s) });
+      var next = Progress.nextLocked({ owned: s.owned, config: CONFIG });
+      if (!next || next.id !== id) return cb({ error: 'Pond Keys open puzzles in order. Puzzle ' + (next ? next.id : '') + ' is next.' });
       if (s.keys < CONFIG.keyCost) return cb({ error: 'No demo keys left.' });
       s.keys -= CONFIG.keyCost; s.owned[id] = 'key'; this.save(s); cb({ ok: true, body: this.payload(s) });
     },
@@ -1832,7 +1835,7 @@
     this.footBody.innerHTML = '<p>Rescue Lab practises engineering thinking with real physics: build a path, run it, watch what happens and change one thing. Each puzzle ends with a recap of the pellet’s journey and the science behind it: gravity and slopes, bouncing, wind and fans, drag and buoyancy in water, currents, waterfalls and timing around moving things.</p>' +
       '<p>So far: ' + plural(sum.fed, 'puzzle') + ' solved, ' + plural(sum.stars, 'star') + ', ' + plural(sum.designs, 'saved invention') + ', ' + plural(sum.runs, 'experiment run') + '.' + (sum.ideas.length ? ' Ideas practised: ' + esc(sum.ideas.join('; ')) + '.' : '') + '</p>' +
       '<p>These are practice observations from play, not a graded assessment, attendance or course credit.</p>' +
-      '<p>How puzzles open: the first ' + CONFIG.freeLevels + ' are free. ' + (CONFIG.dailyUnlock ? 'After that, one more opens free each day the student visits (missed days do not add up). ' : '') + 'A Pond Key opens a puzzle right away and it stays open for good. The Full Pond Pass opens everything. Special pellet colours can also be bought with Pond Keys; everything else is earned by playing.</p>';
+      '<p>How puzzles open: the first ' + CONFIG.freeLevels + ' are free. ' + (CONFIG.dailyUnlock ? 'After that, one more opens free each day the student visits (missed days do not add up). ' : '') + 'A Pond Key opens the next puzzle in line right away, and it stays open for good. The Full Pond Pass opens everything. Special pellet colours can also be bought with Pond Keys; everything else is earned by playing.</p>';
   };
 
   Game.prototype.toggleHelp = function () {
@@ -1870,6 +1873,7 @@
     if (CFG.preview) area.appendChild(this.demoCard());
     else if (!CFG.loggedIn) { var n2 = el('div', 'rl-notice'); n2.innerHTML = 'The first ' + CONFIG.freeLevels + ' puzzles are free to play now. <a href="' + esc(CFG.loginUrl || '/login/') + '">Log in</a> to keep progress, get a free puzzle every day and use Pond Keys.'; area.appendChild(n2); }
 
+    var nextInLine = Progress.nextLocked(store.access);
     Levels.WORLDS.forEach(function (w) {
       var levels = Levels.LEVELS.filter(function (l) { return l.world === w.id; });
       var done = levels.filter(function (l) { return (store.progress.levels[l.id] || {}).done; }).length;
@@ -1887,7 +1891,7 @@
         else if (st.access === 'free') chip = ['free', 'Free'];
         else if (!locked && String(store.dailyOpened) === String(lvl.id)) chip = ['today', 'New today'];
         else if (!locked) chip = ['owned', 'Open'];
-        else chip = ['locked', 'Locked'];
+        else chip = nextInLine && nextInLine.id === lvl.id ? ['next', 'Next in line'] : ['locked', 'Locked'];
         b.innerHTML = '<span class="rl-lnum">' + lvl.id + '</span><span class="rl-lname">' + esc(lvl.name) + '</span><span class="rl-lstars" aria-hidden="true">' + starText(st.badgeCount) + '</span><span class="rl-chip ' + chip[0] + '">' + chip[1] + '</span>';
         b.setAttribute('aria-label', 'Puzzle ' + lvl.id + ', ' + lvl.name + ', ' + (locked ? 'locked' : st.badgeCount + ' of 3 stars'));
         grid.appendChild(b);
@@ -2010,25 +2014,30 @@
   };
 
   /* ------------------------------------------------------- unlock flow */
-  Game.prototype.openUnlock = function (lvl) {
-    var self = this, m = el('div', 'rl-modal'), cost = CONFIG.keyCost, nl = Progress.nextLocked(store.access);
-    var html = '<h3>Puzzle ' + lvl.id + ': ' + esc(lvl.name) + '</h3><p class="rl-sub">' + esc(lvl.intro) + '</p>' +
+  /* Keys open puzzles in order: the dialog always offers the next puzzle in
+     line, even when the child tapped one further ahead. */
+  Game.prototype.openUnlock = function (tapped) {
+    var self = this, m = el('div', 'rl-modal'), cost = CONFIG.keyCost, nl = Progress.nextLocked(store.access), lvl = nl || tapped;
+    var html = '';
+    if (nl && tapped.id !== nl.id) html += '<p class="rl-fine">Puzzles open in order. Puzzle ' + tapped.id + ' opens after puzzle ' + nl.id + '.</p>';
+    html += '<h3>Puzzle ' + lvl.id + ': ' + esc(lvl.name) + '</h3><p class="rl-sub">' + esc(lvl.intro) + '</p>' +
       '<ul><li><strong>Idea:</strong> ' + esc(lvl.idea) + '</li><li><strong>Tools:</strong> ' + esc(lvl.tray.map(function (t) { return trayLabel(t) + ' ×' + t.count; }).join(', ')) + '</li><li><strong>Included:</strong> the puzzle and both star challenges, replayable forever</li></ul>';
-    if (CONFIG.dailyUnlock && nl) html += '<p class="rl-fine">' + (nl.id === lvl.id ? 'This is the next free daily puzzle. It opens free on your next day of play.' : 'Free daily puzzles open in order. Puzzle ' + nl.id + ' is next in line.') + '</p>';
+    if (CONFIG.dailyUnlock && nl) html += '<p class="rl-fine">This is the next puzzle in line. It opens free on your next day of play, or now with a Pond Key.</p>';
     var canUnlock = false;
     if (store.demo) { html += '<p class="rl-keys">Demo: ' + plural(cost, 'key') + ' · demo keys left: ' + store.keys + '</p><p class="rl-fine">Pretend keys. Nothing is bought in the preview.</p>'; canUnlock = store.keys >= cost; }
     else if (!CFG.loggedIn) html += '<p class="rl-keys">Cost: ' + plural(cost, 'Pond Key') + '</p><p class="rl-fine">Log in to the student account to use keys. A parent buys keys in the Ascend shop; they never expire.</p>';
     else if (!store.keysAvailable) html += '<p class="rl-fine">The key system is not reachable right now, so this puzzle cannot be opened with a key yet. Your progress is safe.</p>';
-    else { html += '<p class="rl-keys">Cost: ' + plural(cost, 'Pond Key') + ' · You have ' + (store.keys == null ? '…' : store.keys) + (store.keys != null && store.keys >= cost ? ' → ' + (store.keys - cost) + ' after' : '') + '</p><p class="rl-fine">One key opens this puzzle for good on this student account. Replaying never costs another key.</p>'; canUnlock = store.keys != null && store.keys >= cost; }
+    else { html += '<p class="rl-keys">Cost: ' + plural(cost, 'Pond Key') + ' · You have ' + (store.keys == null ? '…' : store.keys) + (store.keys != null && store.keys >= cost ? ' → ' + (store.keys - cost) + ' after' : '') + '</p><p class="rl-fine">A key opens the next puzzle for good on this student account. Replaying never costs another key.</p>'; canUnlock = store.keys != null && store.keys >= cost; }
     m.innerHTML = html;
     var row = el('div', 'rl-row');
     if (!CFG.loggedIn && !CFG.preview) { var a = el('a', 'rl-btn pass', 'Log in'); a.href = CFG.loginUrl || '/login/'; row.appendChild(a); }
-    else if (canUnlock) {
-      var u = btn('rl-btn pass', 'Open with ' + plural(cost, 'key'), function () {
+    else if (canUnlock && nl) {
+      var label = 'Open puzzle ' + nl.id + ' with ' + plural(cost, 'key');
+      var u = btn('rl-btn pass', label, function () {
         u.disabled = true; u.textContent = 'Opening…';
-        authority.unlock(lvl.id, function (res) {
-          if (res.ok) { store.apply(res.body); store.saveLocal(); self.closeOverlay(); self.refreshHeader(); self.openLevel(lvl.id); self.live.textContent = 'Puzzle ' + lvl.id + ' is open for good.'; }
-          else { u.disabled = false; u.textContent = 'Open with ' + plural(cost, 'key'); m.appendChild(el('p', 'rl-fine', res.error === 'network' ? 'No connection. Nothing was spent. Try again when you are back online.' : res.error + ' No key was taken.')); }
+        authority.unlock(nl.id, function (res) {
+          if (res.ok) { store.apply(res.body); store.saveLocal(); self.closeOverlay(); self.refreshHeader(); self.openLevel(nl.id); self.live.textContent = 'Puzzle ' + nl.id + ' is open for good.'; }
+          else { u.disabled = false; u.textContent = label; m.appendChild(el('p', 'rl-fine', res.error === 'network' ? 'No connection. Nothing was spent. Try again when you are back online.' : res.error + ' No key was taken.')); }
         });
       });
       row.appendChild(u);

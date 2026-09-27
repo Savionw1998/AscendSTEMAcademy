@@ -52,21 +52,24 @@ $GLOBALS['__today'] = '2026-10-05';
 check( 'after 8 missed days only one opens (no rollover)', ascend_rl_claim_daily( 1 ) === 6 && ascend_rl_claim_daily( 1 ) === 0 );
 check( 'daily opens are recorded as daily', ascend_rl_owned( 1 ) === array( 4 => 'daily', 5 => 'daily', 6 => 'daily' ) );
 
-// keys: any locked puzzle, idempotent, never below zero
-$GLOBALS['__keys'][1] = 2;
-check( 'unlocking puzzle 20 spends one key', ascend_rl_unlock_level( 1, 20 ) === array( 'spent' => 1 ) && ascend_games_skips( 1 ) === 1 );
-check( 'unlocking puzzle 20 again spends nothing', ascend_rl_unlock_level( 1, 20 ) === array( 'spent' => 0 ) && ascend_games_skips( 1 ) === 1 );
-check( 'free puzzle never costs a key', ascend_rl_unlock_level( 1, 2 ) === array( 'spent' => 0 ) && ascend_games_skips( 1 ) === 1 );
-ascend_rl_unlock_level( 1, 21 );
-$r = ascend_rl_unlock_level( 1, 22 );
+// keys: only the next puzzle in line, idempotent, never below zero
+$GLOBALS['__keys'][1] = 3;
+$r = ascend_rl_unlock_level( 1, 20 );
+check( 'a key cannot skip ahead to puzzle 20', is_wp_error( $r ) && $r->get_error_code() === 'not_next' && ascend_games_skips( 1 ) === 3 );
+check( 'next locked puzzle is 7', ascend_rl_next_locked( 1 ) === 7 );
+check( 'unlocking puzzle 7 spends one key', ascend_rl_unlock_level( 1, 7 ) === array( 'spent' => 1 ) && ascend_games_skips( 1 ) === 2 );
+check( 'unlocking puzzle 7 again spends nothing', ascend_rl_unlock_level( 1, 7 ) === array( 'spent' => 0 ) && ascend_games_skips( 1 ) === 2 );
+check( 'free puzzle never costs a key', ascend_rl_unlock_level( 1, 2 ) === array( 'spent' => 0 ) && ascend_games_skips( 1 ) === 2 );
+ascend_rl_unlock_level( 1, 8 ); ascend_rl_unlock_level( 1, 9 );
+$r = ascend_rl_unlock_level( 1, 10 );
 check( 'no keys left gives no_keys and spends nothing', is_wp_error( $r ) && $r->get_error_code() === 'no_keys' && ascend_games_skips( 1 ) === 0 );
 $GLOBALS['__today'] = '2026-10-06';
-check( 'daily skips puzzles already opened with keys', ascend_rl_claim_daily( 1 ) === 7 );
+check( 'daily opens the next one after key-opened puzzles', ascend_rl_claim_daily( 1 ) === 10 );
 check( 'bad puzzle id is refused', is_wp_error( ascend_rl_unlock_level( 1, 41 ) ) );
 
 // concurrent unlock: a held lock refuses the second request instead of double spending
 $GLOBALS['__keys'][2] = 1; $GLOBALS['wpdb']->locks['ascend_rl_2'] = true;
-$r = ascend_rl_unlock_level( 2, 10 );
+$r = ascend_rl_unlock_level( 2, 4 );
 check( 'a second concurrent request is refused while the first holds the lock', is_wp_error( $r ) && $r->get_error_code() === 'busy' && ascend_games_skips( 2 ) === 1 );
 unset( $GLOBALS['wpdb']->locks['ascend_rl_2'] );
 
@@ -90,7 +93,7 @@ $c = ascend_rl_config();
 check( 'config from JSON string is cleaned', $c['freeLevels'] === 5 && $c['keyCost'] === 1 && $c['dailyUnlock'] === false && $c['skinPrices'] === array( 'galaxy' => 3, 'pearl' => 1, 'disco' => 1 ) );
 $GLOBALS['__today'] = '2026-10-07';
 check( 'daily off means no daily puzzle', ascend_rl_claim_daily( 1 ) === 0 );
-check( 'free count follows config', ascend_rl_is_open( 9, 5 ) && ! ascend_rl_is_open( 9, 6 ) );
+check( 'free count follows config', ascend_rl_is_open( 9, 5 ) && ! ascend_rl_is_open( 9, 6 ) && ascend_rl_next_locked( 9 ) === 6 );
 update_option( 'ascend_rl_level_text', array( '12' => array( 'name' => ' <b>Gusty</b> ', 'bogus' => 'x' ), '99' => array( 'name' => 'nope' ) ) );
 check( 'level text overrides are cleaned', get_option( 'ascend_rl_level_text' ) === array( '12' => array( 'name' => 'Gusty' ) ) );
 check( 'options are exposed to Royal MCP', count( array_intersect( ascend_rl_options(), apply_filters( 'royal_mcp_writable_options', array() ) ) ) === 4 );

@@ -86,6 +86,7 @@
 .rl-chip.owned{background:var(--soft);color:var(--dblue);border-color:var(--softline);}
 .rl-chip.today{background:var(--dpink);color:#fff;border-color:var(--dpink);}
 .rl-chip.locked{background:#fff;color:#6d6656;}
+.rl-chip.next{background:#fff;color:var(--dblue);border-color:var(--dblue);}
 .rl-chip.done{background:var(--green);color:#fff;border-color:var(--green);}
 .rl-chip.mastery{background:var(--gold);color:#5b4700;border-color:#e8bd4a;}
 

@@ -3,7 +3,7 @@
  * Plugin Name:       Ascend STEM-a-lotl: Rescue Lab
  * Plugin URI:        https://ascendstemacademy.com/
  * Description:       A physics puzzle game for the Axolotl Games family: 40 puzzles where kids build ramps, bouncers, fans and blocks to roll a food pellet to Lucas the axolotl through wind, bees, water, fish and waterfalls. Shortcode: [ascend_rescue_lab]. Parent summary: [ascend_rescue_lab_summary].
- * Version:           2.0.0
+ * Version:           2.1.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            Ascend STEM Academy
@@ -17,7 +17,8 @@
  *   - Daily unlock: on each calendar day (site timezone) that a logged-in
  *     student visits, the lowest-numbered locked puzzle opens for free.
  *     One per day. Days the student does not visit are not banked.
- *   - Pond Keys: one key (keyCost) opens any locked puzzle right away, for good.
+ *   - Pond Keys: one key (keyCost) opens the next locked puzzle right away,
+ *     for good. Keys only ever open puzzles in order, never one further ahead.
  *   - Full Pond Pass: opens every puzzle.
  *   - Special pellet skins can be bought with Pond Keys (skinPrices).
  *
@@ -37,7 +38,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ASCEND_RL_VERSION', '2.0.0' );
+define( 'ASCEND_RL_VERSION', '2.1.0' );
 define( 'ASCEND_RL_LEVELS', 40 );
 define( 'ASCEND_RL_PROGRESS_META', 'ascend_rl_progress' );
 define( 'ASCEND_RL_OWNED_META', 'ascend_rl_owned' );
@@ -231,6 +232,21 @@ function ascend_rl_is_open( $user_id, $level, $cfg = null ) {
 	return $level <= $cfg['freeLevels'] || ascend_rl_has_pass( $user_id ) || isset( ascend_rl_owned( $user_id )[ $level ] );
 }
 
+/** The next puzzle in line: the lowest-numbered one that is still locked, or 0. */
+function ascend_rl_next_locked( $user_id, $cfg = null ) {
+	$cfg = $cfg ? $cfg : ascend_rl_config();
+	if ( ascend_rl_has_pass( $user_id ) ) {
+		return 0;
+	}
+	$owned = ascend_rl_owned( $user_id );
+	for ( $id = $cfg['freeLevels'] + 1; $id <= ASCEND_RL_LEVELS; $id++ ) {
+		if ( ! isset( $owned[ $id ] ) ) {
+			return $id;
+		}
+	}
+	return 0;
+}
+
 function ascend_rl_owned_skins( $user_id ) {
 	$raw = get_user_meta( $user_id, ASCEND_RL_SKINS_META, true );
 	return array_values( array_intersect( is_array( $raw ) ? $raw : array(), ascend_rl_premium_skins() ) );
@@ -288,7 +304,10 @@ function ascend_rl_claim_daily( $user_id ) {
 	return is_wp_error( $result ) ? 0 : (int) $result;
 }
 
-/** Spend keys for one puzzle. Idempotent: an owned puzzle is never charged twice. */
+/**
+ * Spend keys for one puzzle. Keys only open the next puzzle in line, so the
+ * campaign stays in order. Idempotent: an open puzzle is never charged twice.
+ */
 function ascend_rl_unlock_level( $user_id, $level ) {
 	$level = (int) $level;
 	$cfg   = ascend_rl_config();
@@ -305,6 +324,10 @@ function ascend_rl_unlock_level( $user_id, $level ) {
 		$owned = ascend_rl_owned( $user_id );
 		if ( isset( $owned[ $level ] ) ) {
 			return array( 'spent' => 0 );
+		}
+		$next = ascend_rl_next_locked( $user_id, $cfg );
+		if ( $level !== $next ) {
+			return new WP_Error( 'not_next', 'Pond Keys open puzzles in order. Puzzle ' . $next . ' is next.' );
 		}
 		if ( (int) ascend_games_skips( $user_id ) < $cfg['keyCost'] ) {
 			return new WP_Error( 'no_keys', 'Not enough Pond Keys on this account.' );
@@ -460,13 +483,14 @@ function ascend_rl_state_payload( $user_id, $daily_opened = 0 ) {
 		'today'         => current_time( 'Y-m-d' ),
 		'lastDaily'     => (string) get_user_meta( $user_id, ASCEND_RL_DAILY_META, true ),
 		'dailyOpened'   => $daily_opened ? $daily_opened : null,
+		'nextLocked'    => ascend_rl_next_locked( $user_id, $cfg ),
 	);
 }
 
 /* ------------------------------------------------------------------- REST */
 
 function ascend_rl_error_response( WP_Error $e ) {
-	$status = array( 'no_keys' => 402, 'bad_level' => 400, 'bad_skin' => 400 );
+	$status = array( 'no_keys' => 402, 'bad_level' => 400, 'bad_skin' => 400, 'not_next' => 409 );
 	return new WP_REST_Response( array( 'code' => $e->get_error_code(), 'message' => $e->get_error_message() ), $status[ $e->get_error_code() ] ?? 409 );
 }
 

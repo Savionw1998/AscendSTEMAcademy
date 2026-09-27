@@ -116,11 +116,15 @@ const waitRun = page => page.waitForFunction(() => { const g = document.querySel
       await page.screenshot({ path: path.join(shots, '06-demo-map.png'), fullPage: true });
       await page.evaluate(`${G}.openUnlock(window.AscendRLLevels.LEVELS[29])`);
       await page.waitForSelector('.rl-overlay.show');
-      check('demo: the unlock dialog says keys are pretend', /Pretend keys/.test(await page.textContent('.rl-modal')));
+      const modal = await page.textContent('.rl-modal');
+      check('demo: tapping puzzle 30 explains puzzles open in order and offers puzzle 6', /opens after puzzle 6/.test(modal) && /Open puzzle 6 with 1 key/.test(modal));
+      check('demo: the unlock dialog says keys are pretend', /Pretend keys/.test(modal));
       await page.screenshot({ path: path.join(shots, '07-unlock.png') });
-      await page.click('text=Open with 1 key');
+      await page.click('text=Open puzzle 6 with 1 key');
       await page.waitForSelector('canvas.rl-scene');
-      check('demo: a key opens puzzle 30 straight away', await page.evaluate(`${G}.level.id === 30`));
+      check('demo: the key opens puzzle 6, the next in line', await page.evaluate(`${G}.level.id === 6`));
+      const skipped = await page.evaluate(() => new Promise(r => { const s = JSON.parse(localStorage.getItem('ascend_rescue_lab_demo_v2')); r(!s.owned[30]); }));
+      check('demo: puzzle 30 stays locked', skipped);
       await page.evaluate(`${G}.showMap()`);
       await page.click('.rl-skin:has-text("Galaxy")');
       await page.waitForSelector('.rl-overlay.show');

@@ -27,7 +27,8 @@ a time limit, gentle slopes, avoiding bees or fish, riding the wind, and so on).
 - Puzzles 1–3 are free for everyone, including guests.
 - **Daily puzzle:** each calendar day (site timezone) a logged-in student visits, the
   lowest-numbered locked puzzle opens free. One per day. Days they don't visit are not banked.
-- **Pond Keys:** one key opens any locked puzzle straight away, for good. Replays never cost a key.
+- **Pond Keys:** one key opens the next locked puzzle straight away, for good. Keys only open puzzles
+  in order, never one further ahead. Replays never cost a key.
 - **Full Pond Pass:** opens every puzzle.
 - The server decides all of this. A local edit cannot open a puzzle.
 
@@ -93,8 +94,8 @@ when it touches the ring around his mouth slowly enough.
 
 ```
 node --test ascend-stem-a-lotl-rescue-lab/tests/          # 59 tests
-php ascend-stem-a-lotl-rescue-lab/tests/plugin-test.php    # 25 checks
-NODE_PATH=/opt/node22/lib/node_modules node ascend-stem-a-lotl-rescue-lab/tools/smoke.js   # 40 browser checks
+php ascend-stem-a-lotl-rescue-lab/tests/plugin-test.php    # 27 checks
+NODE_PATH=/opt/node22/lib/node_modules node ascend-stem-a-lotl-rescue-lab/tools/smoke.js   # 42 browser checks
 ```
 
 - Every puzzle and all 80 challenges replay a verified design, and no starting layout wins by itself.
@@ -104,8 +105,8 @@ NODE_PATH=/opt/node22/lib/node_modules node ascend-stem-a-lotl-rescue-lab/tools/
   keys spent once, a busy lock refuses a second concurrent request, config and text are cleaned, and options
   are exposed to MCP.
 - In Chromium on a phone viewport with touch and on desktop, the checks cover the first minute, the miss,
-  tilt and feed flow, drag, undo and keyboard editing, resume after reload, the daily demo, a key unlock
-  and a pellet purchase. All 40 reference runs also feed Lucas in the browser.
+  tilt and feed flow, drag, undo and keyboard editing, resume after reload, the daily demo, a key opening
+  only the next puzzle, and a pellet purchase. All 40 reference runs also feed Lucas in the browser.
 
 Not verified here: the live site. This environment can't reach ascendstemacademy.com or install plugins,
 so the REST routes, real Pond Key spending, WooCommerce and real devices need a check after upload.
