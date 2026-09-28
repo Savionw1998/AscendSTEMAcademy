@@ -21,8 +21,9 @@ namespace W3TC {
 }
 
 namespace {
-	define( 'ABSPATH', __DIR__ );
+	define( 'ABSPATH', sys_get_temp_dir() . '/ascend-app-test-' . getmypid() . '/' ); // the web root, for manifest.json
 	define( 'DAY_IN_SECONDS', 86400 );
+	define( 'HOUR_IN_SECONDS', 3600 );
 	define( 'YEAR_IN_SECONDS', 365 * 86400 );
 	$GLOBALS['__filters'] = array();
 	$GLOBALS['__users']   = array();
@@ -35,6 +36,18 @@ namespace {
 	function __( $s ) { return $s; }
 	function wp_json_encode( $v ) { return json_encode( $v ); }
 	function home_url( $p = '' ) { return 'https://ascendstemacademy.com' . $p; }
+	function wp_parse_url( $u, $c = -1 ) { return parse_url( $u, $c ); }
+	$GLOBALS['__options'] = array();
+	$GLOBALS['__ajax']    = false;
+	$GLOBALS['__flushed'] = array();
+	function get_option( $k, $d = false ) { return $GLOBALS['__options'][ $k ] ?? $d; }
+	function update_option( $k, $v, $autoload = null ) { $GLOBALS['__options'][ $k ] = $v; return true; }
+	function wp_doing_ajax() { return $GLOBALS['__ajax']; }
+	function wp_is_writable( $f ) { return is_writable( $f ) && ! ( $GLOBALS['__read_only'] ?? false ); }
+	function current_user_can( $c ) { return true; }
+	function esc_html__( $s ) { return $s; }
+	function w3tc_flush_posts() { $GLOBALS['__flushed'][] = 'posts'; }
+	function w3tc_flush_url( $u ) { $GLOBALS['__flushed'][] = $u; }
 
 	require __DIR__ . '/../ascend-app-sessions.php';
 
@@ -124,6 +137,83 @@ namespace {
 	check( 'manifest response: URLs stay unescaped', false === strpos( ascend_app_merge_manifest_json( $live, $ours ), '\\/' ) );
 	$html = '<!doctype html><title>Page not found</title>';
 	check( 'a response that is not a manifest is left alone', $html === ascend_app_merge_manifest_json( $html, $ours ) && '{"a":1}' === ascend_app_merge_manifest_json( '{"a":1}', $ours ) );
+
+	// /manifest.json served by WordPress: buffered from the moment this plugin loads, merged on the way out.
+	$_SERVER['REQUEST_METHOD']     = 'GET';
+	$_SERVER['REQUEST_URI']        = '/manifest.json?v=3';
+	$_SERVER['HTTP_IF_NONE_MATCH'] = '"old"';
+	ob_start();
+	$level = ob_get_level();
+	ascend_app_rewrite_manifest_response();
+	$buffered = ob_get_level() > $level;
+	echo $live;
+	if ( $buffered ) {
+		ob_end_flush();
+	}
+	$out = json_decode( ob_get_clean(), true );
+	check( 'GET /manifest.json: buffered and rewritten on the way out', $buffered && $out['shortcuts'] === $ours['shortcuts'] && 'Ascend STEM' === $out['short_name'] );
+	check( 'GET /manifest.json: never page-cached, never a 304 for the old version', defined( 'DONOTCACHEPAGE' ) && ! isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) );
+	check( 'GET /manifest.json: recorded as served by WordPress', ascend_app_manifest_status()['served_by_wordpress'] > 0 );
+	foreach ( array( array( 'GET', '/manifest.json.bak' ), array( 'GET', '/' ), array( 'POST', '/manifest.json' ) ) as $req ) {
+		list( $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'] ) = $req;
+		$level = ob_get_level();
+		ascend_app_rewrite_manifest_response();
+		$ok = ob_get_level() === $level;
+		if ( ! $ok ) {
+			ob_end_clean();
+		}
+		check( "{$req[0]} {$req[1]}: left alone", $ok );
+	}
+
+	// /manifest.json as a real file in the web root: updated from admin pages.
+	mkdir( ABSPATH );
+	$file = ABSPATH . 'manifest.json';
+	ascend_app_update_static_manifest();
+	check( 'no manifest.json file: nothing to do', 'none' === ascend_app_manifest_status()['static_file'] );
+	file_put_contents( $file, '{"hello":"world"}' );
+	ascend_app_update_static_manifest();
+	check( 'some other JSON file: left alone', 'not a web manifest' === ascend_app_manifest_status()['static_file'] && '{"hello":"world"}' === file_get_contents( $file ) );
+	file_put_contents( $file, $live );
+	$GLOBALS['__read_only'] = true;
+	ascend_app_update_static_manifest();
+	ob_start();
+	ascend_app_manifest_notice();
+	$notice = ob_get_clean();
+	check( 'a read-only file: left alone, recorded, and the admin is told', 'not writable' === ascend_app_manifest_status()['static_file'] && $live === file_get_contents( $file ) && false !== strpos( $notice, 'cannot be changed' ) );
+	$GLOBALS['__read_only'] = false;
+	$GLOBALS['__ajax']      = true;
+	ascend_app_update_static_manifest();
+	check( 'not during AJAX requests', $live === file_get_contents( $file ) );
+	$GLOBALS['__ajax'] = false;
+	ascend_app_update_static_manifest();
+	$out = json_decode( file_get_contents( $file ), true );
+	check( 'a writable file: icons and shortcuts updated, other fields kept', $out['shortcuts'] === $ours['shortcuts'] && $out['icons'] === $ours['icons'] && 'Ascend STEM' === $out['short_name'] && '#009CDE' === $out['theme_color'] );
+	check( 'the original is kept next to it, and the update is recorded', $live === file_get_contents( $file . '.before-ascend-app' ) && 'updated' === ascend_app_manifest_status()['static_file'] );
+	ob_start();
+	ascend_app_manifest_notice();
+	check( 'no admin notice once updated', '' === ob_get_clean() );
+	$mtime = filemtime( $file );
+	$raw   = file_get_contents( $file );
+	ascend_app_update_static_manifest();
+	check( 'already up to date: not written again', 'up to date' === ascend_app_manifest_status()['static_file'] && $raw === file_get_contents( $file ) && filemtime( $file ) === $mtime );
+	file_put_contents( $file, $live ); // the PWA plugin writing its own version again
+	ascend_app_update_static_manifest();
+	check( 'overwritten again later: updated again, the first original kept', json_decode( file_get_contents( $file ), true )['shortcuts'] === $ours['shortcuts'] && $live === file_get_contents( $file . '.before-ascend-app' ) );
+	array_map( 'unlink', glob( ABSPATH . '*' ) );
+	rmdir( ABSPATH );
+
+	// Stored copies in W3 Total Cache: emptied once per plugin version.
+	$GLOBALS['__ajax'] = true;
+	ascend_app_flush_stored_copies();
+	check( 'cache not emptied during AJAX requests', array() === $GLOBALS['__flushed'] );
+	$GLOBALS['__ajax'] = false;
+	ascend_app_flush_stored_copies();
+	check( 'first admin page after an update: page cache and the manifest URL emptied', array( 'posts', 'https://ascendstemacademy.com/manifest.json' ) === $GLOBALS['__flushed'] );
+	ascend_app_flush_stored_copies();
+	check( 'only once per version', 2 === count( $GLOBALS['__flushed'] ) );
+	$GLOBALS['__options']['ascend_app_flushed_version'] = '1.0.0';
+	ascend_app_flush_stored_copies();
+	check( 'again after the next update', 4 === count( $GLOBALS['__flushed'] ) );
 
 	echo "\n" . ( $n - $fails ) . "/$n passed\n";
 	exit( $fails ? 1 : 0 );

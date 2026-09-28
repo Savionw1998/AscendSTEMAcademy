@@ -21,9 +21,9 @@ build had and changes only what was asked for:
 
 ## Before you build
 
-1. The website must already serve the new icons and shortcuts: activate the `ascend-app-sessions`
-   plugin, purge W3 Total Cache, and open <https://ascendstemacademy.com/manifest.json>. It should list
-   the four shortcuts. (Bubblewrap downloads the icons from the website while it builds.)
+1. The website must already serve the new icons and shortcuts: install `ascend-app-sessions` 1.0.1 or
+   newer, open any admin page once, then open <https://ascendstemacademy.com/manifest.json?check=1>.
+   It should list the four shortcuts. (Bubblewrap downloads the icons from the website while it builds.)
 2. **The signing key.** Google Play only accepts an update signed with the same upload key as the
    version it already has. Version 3 was signed on 2026-09-09 with a key whose SHA-256 fingerprint is
    `94:51:38:F0:F3:F5:D4:F9:BE:89:9B:59:5F:BE:21:FB:F4:76:B8:A6:83:D7:6E:EA:D0:11:1C:B9:25:7D:FB:E5`.

@@ -24,7 +24,7 @@ if ( $installing ) {
 update_option( 'permalink_structure', '/%postname%/' );
 update_option( 'timezone_string', 'America/New_York' );
 
-foreach ( array( 'ultimate-member/ultimate-member.php', 'ascend-app-sessions/ascend-app-sessions.php' ) as $plugin ) {
+foreach ( array( 'ultimate-member/ultimate-member.php', 'ascend-app-sessions/ascend-app-sessions.php', 'ascend-pwa/ascend-pwa.php' ) as $plugin ) {
 	$r = activate_plugin( $plugin );
 	if ( is_wp_error( $r ) ) {
 		echo $plugin . ': ' . $r->get_error_message() . "\n";

@@ -37,10 +37,12 @@ async function login(page, user, pass, { remember } = {}) {
   await Promise.all([page.waitForNavigation(), page.click('#um-submit-btn')]);
 }
 // A real display-mode: standalone window (Chromium --app), the closest local stand-in for the TWA.
+// Needs full Chromium: Playwright's default headless shell has no --app mode.
 const fs = require('fs'), os = require('os'), path = require('path');
 async function openApp(urlPath, { cookies = [], viewport = { width: 412, height: 860 } } = {}) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pw-app-'));
-  const ctx = await chromium.launchPersistentContext(dir, { executablePath: EXE, headless: true, viewport, args: ['--app=' + BASE + '/blank-for-app-window'] });
+  const browser = EXE ? { executablePath: EXE } : { channel: 'chromium' };
+  const ctx = await chromium.launchPersistentContext(dir, Object.assign(browser, { headless: true, viewport, args: ['--app=' + BASE + '/blank-for-app-window'] }));
   if (cookies.length) await ctx.addCookies(cookies.map((c) => Object.assign({ url: BASE }, c)));
   const page = ctx.pages()[0] || (await ctx.waitForEvent('page'));
   await page.goto(BASE + urlPath);

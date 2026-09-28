@@ -3,7 +3,7 @@
  * Plugin Name:       Ascend App Sessions
  * Plugin URI:        https://ascendstemacademy.com/
  * Description:       Site-side support for the Ascend STEM Academy Android app: 90-day renewing logins for families in the app, logins that return to the page that asked for them, the app's shortcut icons, and an app-only tab bar and header.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.3
  * Requires PHP:      8.0
  * Author:            Ascend STEM Academy
@@ -44,8 +44,10 @@
  *
  *   assets/icons/ holds the manifest icons and the four shortcut icons, cut from
  *   the logo by tools/make-icons.py. They are put into the Ascend PWA plugin's
- *   /manifest.json response on its way out (the rest of its manifest is kept),
- *   so that plugin needs no change. The Android app is rebuilt from android/.
+ *   /manifest.json (the rest of its manifest is kept): into the response on its
+ *   way out when WordPress serves it, or into the file itself when it is a real
+ *   file on the server (checked on admin pages). That plugin needs no change.
+ *   The Android app is rebuilt from android/.
  *
  * APP MODE UI (assets/app.css, assets/app.js)
  *
@@ -68,7 +70,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'ASCEND_APP_VERSION', '1.0.0' );
+define( 'ASCEND_APP_VERSION', '1.0.1' );
 define( 'ASCEND_APP_URL', plugin_dir_url( __FILE__ ) );
 define( 'ASCEND_APP_COOKIE', 'asa_app' );
 

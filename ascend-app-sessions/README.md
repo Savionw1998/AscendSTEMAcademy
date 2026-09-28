@@ -80,19 +80,32 @@ The icons are in `assets/icons/`, cut from the new logo (`branding/logo-source-1
 Each shortcut has a 96×96 round icon (`any`) and a 96×96 full-bleed one (`maskable`): Bubblewrap
 uses the maskable one for the launcher shortcut and needs the `any` one for older Android versions.
 
-**Nothing to change in the Ascend PWA plugin.** It serves the manifest at
-`https://ascendstemacademy.com/manifest.json` (the URL the published app was built from). This plugin
-puts its `icons` and `shortcuts` into that response on the way out, keeps every other field as the
-PWA plugin set it, drops the old `Content-Length`/`ETag`/`Last-Modified`, and keeps the response
-out of the page cache. The same arrays are also available to any code as
-`apply_filters( 'ascend_app_manifest', $manifest )`.
+**Nothing to change in the Ascend PWA plugin.** It provides the manifest at
+`https://ascendstemacademy.com/manifest.json` (the URL the published app was built from; Chrome only
+updates installed copies of the app from the same URL). Its source is not in this repository, so this
+plugin handles both ways that URL can be answered, and keeps every other field of the manifest as
+the PWA plugin set it:
 
-After deploying, open `https://ascendstemacademy.com/manifest.json`: it must list the four
-shortcuts. If it still shows the old ones after purging the cache, that file is not served by
-WordPress (a static file on the server); then either add the `apply_filters` line above where the PWA
-plugin builds its manifest, or copy `icons` and `shortcuts` from a local copy of this plugin's output
-into that file. Keep the manifest's URL the same: Chrome only updates installed copies of the app from
-the same manifest URL.
+- **By WordPress** (the PWA plugin answers the request, from a hook or straight from its own main
+  file): from the moment this plugin loads, which is before `ascend-pwa` since plugins load in
+  alphabetical order, the response is buffered, and its `icons` and `shortcuts` are replaced on the
+  way out. The old `Content-Length`/`ETag`/`Last-Modified` are dropped, a browser's old ETag never
+  gets a "304 Not Modified", and the response is never page-cached.
+- **As a real `manifest.json` file** in the site's root folder (the web server sends it without
+  running WordPress): on every admin page, the file's `icons` and `shortcuts` are updated if they
+  differ, so this also catches the PWA plugin writing its own version again later. The first time,
+  the original is saved as `manifest.json.before-ascend-app`. If the file cannot be written, an admin
+  notice says so.
+
+What happened is recorded in the option `ascend_app_manifest_status`: `served_by_wordpress` (time of
+the last such request, at most hourly) and `static_file` (`none`, `updated`, `up to date`,
+`not writable` or `not a web manifest`). The first admin page after installing or updating the plugin
+also empties W3 Total Cache's page cache once (`ascend_app_flushed_version`), so no copy stored before
+is served again. The same arrays are available to any code as `apply_filters( 'ascend_app_manifest', $manifest )`.
+
+To check the live manifest, add any query string, e.g. `https://ascendstemacademy.com/manifest.json?check=1`:
+the PWA plugin's service worker and page caches key on the exact URL, so this shows what the server
+sends now.
 
 The Android app is rebuilt from `android/twa-manifest.json`; see `android/README.md`.
 
@@ -149,7 +162,8 @@ expire) and removes the app UI; the PWA plugin's filter line then changes nothin
    - App look: open the site in a standalone window, e.g. `google-chrome --app=https://ascendstemacademy.com/guess-a-lotl/`
      (or Chrome menu → Cast, save and share → Install page as app): tab bar, solid header, no menu,
      no Register button. A normal tab must look exactly as before.
-4. Open `https://ascendstemacademy.com/manifest.json`: four shortcuts (DevTools → Application →
+4. Open any admin page once (it updates a static `manifest.json` and empties the page cache), then
+   `https://ascendstemacademy.com/manifest.json?check=1`: four shortcuts (DevTools → Application →
    Manifest: no errors).
 5. Rebuild the Android app and upload it to Play: `android/README.md`.
 
@@ -160,7 +174,7 @@ php ascend-app-sessions/tests/plugin-test.php     # rules, with stand-ins for Wo
 ascend-app-sessions/tests/browser/setup-site.sh    # throwaway WP 7.1.2 + UM 2.13.1 site on :8080
 node ascend-app-sessions/tests/browser/step1.js    # needs Playwright (npm i -g playwright)
 node ascend-app-sessions/tests/browser/step2.js
-node ascend-app-sessions/tests/browser/step3.js    # /manifest.json, via a stand-in for the Ascend PWA plugin
+node ascend-app-sessions/tests/browser/step3.js    # /manifest.json: a stand-in Ascend PWA plugin, served 3 ways
 node ascend-app-sessions/tests/browser/step4.js    # app-mode UI vs the website
 ```
 
