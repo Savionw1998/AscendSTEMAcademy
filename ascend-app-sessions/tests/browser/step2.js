@@ -1,8 +1,6 @@
 // Step 2: return to where you tapped.
-const { execFileSync } = require('child_process');
-const { openApp, EXE, chromium, BASE, SITE, check, done, sessions, newContext, login } = require('./lib');
+const { restrictTimeCard: restrict, openApp, EXE, chromium, BASE, check, done, sessions, newContext, login } = require('./lib');
 
-const restrict = (on) => execFileSync('php', ['restrict.php', '6097', on ? 'on' : 'off'], { cwd: SITE, env: Object.assign({}, process.env, { ASA_PORT: new URL(BASE).port }) });
 const path = (url) => new URL(url).pathname + new URL(url).search;
 const TC = BASE + '/time-card-tracker/';
 
@@ -73,6 +71,10 @@ async function submitLogin(page, user) {
   check('off-site redirect_to: ignored, dashboard instead', new URL(u).host === new URL(BASE).host && path(u).startsWith('/user/'), u);
   u = await loginFrom(BASE + '/login/?redirect_to=' + encodeURIComponent(BASE + '/logout/'));
   check('redirect_to=/logout/: ignored (no instant logout)', path(u).startsWith('/user/'), u);
+  u = await loginFrom(BASE + '/login/?redirect_to=guess-a-lotl');
+  check('redirect_to relative to the login page: ignored', path(u).startsWith('/user/'), u);
+  u = await loginFrom(BASE + '/login/?redirect_to=' + encodeURIComponent('//evil.example/x'));
+  check('protocol-relative off-site redirect_to: ignored', new URL(u).host === new URL(BASE).host && path(u).startsWith('/user/'), u);
   u = await loginFrom(BASE + '/login/?redirect_to=%2Fguess-a-lotl%2F');
   check('relative redirect_to works', path(u) === '/guess-a-lotl/', u);
 
@@ -122,4 +124,4 @@ async function submitLogin(page, user) {
   restrict(false); // leave the fixture as live
   await browser.close();
   done();
-})().catch((e) => { console.error(e); process.exit(2); });
+})().catch((e) => { console.error(e); restrict(false); process.exit(2); });

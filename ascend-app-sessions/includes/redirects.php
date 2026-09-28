@@ -32,7 +32,11 @@ function ascend_app_login_url( $return_to ) {
  * the login, logout, registration or password-reset pages. '' when it is not.
  */
 function ascend_app_safe_return_url( $url ) {
-	$url = wp_validate_redirect( esc_url_raw( wp_unslash( (string) $url ) ), '' );
+	$url = trim( wp_unslash( (string) $url ) );
+	if ( ! preg_match( '#^(https?://|/(?!/))#i', $url ) ) {
+		return ''; // only full URLs and site paths, never paths relative to the login page
+	}
+	$url = wp_validate_redirect( esc_url_raw( $url ), '' );
 	if ( '' === $url ) {
 		return '';
 	}
@@ -57,6 +61,9 @@ function ascend_app_login_return_url( $url ) {
 		return $url;
 	}
 	$requested = $_REQUEST['redirect_to'] ?? ''; // phpcs:ignore WordPress.Security.NonceVerification
+	if ( ! is_string( $requested ) ) {
+		return ascend_app_dashboard_url();
+	}
 	if ( '' !== $requested ) {
 		$back = ascend_app_safe_return_url( $requested );
 		return '' !== $back ? $back : ascend_app_dashboard_url();

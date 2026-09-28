@@ -11,10 +11,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Replace the "Keep me signed in" checkbox with an always-on hidden field.
+ * Replace the "Keep me signed in" checkbox with an always-on hidden field (also on login forms
+ * that have no checkbox, so an app login is never a browser-session login).
  */
 function ascend_app_login_form_args( $args ) {
-	if ( ascend_app_is_app() && isset( $args['mode'] ) && 'login' === $args['mode'] && ! empty( $args['show_rememberme'] ) ) {
+	if ( ascend_app_is_app() && isset( $args['mode'] ) && 'login' === $args['mode'] ) {
 		$args['show_rememberme']       = 0;
 		$args['ascend_app_rememberme'] = 1;
 	}
