@@ -97,6 +97,8 @@ the PWA plugin set it:
   the original is saved as `manifest.json.before-ascend-app`. If the file cannot be written, an admin
   notice says so.
 
+On ascendstemacademy.com it is the second case: a real file, first updated on 2026-09-28 by version 1.0.1.
+
 What happened is recorded in the option `ascend_app_manifest_status`: `served_by_wordpress` (time of
 the last such request, at most hourly) and `static_file` (`none`, `updated`, `up to date`,
 `not writable` or `not a web manifest`). The first admin page after installing or updating the plugin
