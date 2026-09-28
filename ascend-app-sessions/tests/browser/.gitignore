@@ -1,0 +1,3 @@
+# Local test site and cloned sources (setup-site.sh)
+.site/
+.src/

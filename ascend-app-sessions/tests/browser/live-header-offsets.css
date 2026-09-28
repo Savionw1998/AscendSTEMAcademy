@@ -1,0 +1,13 @@
+/* Verbatim excerpt of the live Customizer CSS (post 7210, read 2026-09-28): the rules that push content below the floating header. */
+.ast-separate-container:is(.single-post,.blog,.archive,.search) #content{padding-top:48px}
+@media (max-width:921px){.ast-separate-container:is(.single-post,.blog,.archive,.search) #content{padding-top:96px}}
+:is(.page-id-6011,.page-id-6017,.page-id-5982,.page-id-5952) #content{padding-top:100px}
+@media (max-width:921px){:is(.page-id-6011,.page-id-6017,.page-id-5982,.page-id-5952) #content{padding-top:90px}}
+@media (min-width:768px){.page-id-6097 #content{padding-top:110px}}
+@media (max-width:767px){.page-id-6097 #content{padding-top:20px}.elementor-6097>.e-con{padding-left:16px;padding-right:16px}}
+@media (max-width:921px){:is(.page-id-4303,.page-id-4304,.page-id-4307,.page-id-4308) #content{padding-top:72px}}
+.asa-why .asa-hero,.asa-why .asa-store-hero{margin-top:112px;border-radius:36px}
+@media (max-width:921px){.asa-why .asa-hero,.asa-why .asa-store-hero{margin-top:100px;border-radius:28px}.asa-why .asa-hero{padding:48px 0 64px}}
+.woocommerce-shop .asa-why .asa-store-hero{margin-top:24px}
+/* Not Customizer CSS: what Elementor generates for Time Card's container (_elementor_data 241cfa88, margin_mobile top 80px). */
+@media (max-width:767px){.elementor-6097 .elementor-element.elementor-element-241cfa88{--margin-top:80px;margin-top:var(--margin-top)}}
