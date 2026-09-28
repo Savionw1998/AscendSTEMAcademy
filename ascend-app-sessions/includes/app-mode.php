@@ -88,10 +88,33 @@ function ascend_app_print_detection_script() {
 add_action( 'wp_head', 'ascend_app_print_detection_script', 1 );
 
 /**
- * Front-end script: login-form fallback for cached pages (and, later, app-mode UI).
+ * The app's bottom tab bar. `paths` are the URL paths on which a tab shows as current.
+ */
+function ascend_app_tabs() {
+	$core  = function ( $page, $fallback ) {
+		$url = function_exists( 'um_get_core_page' ) ? um_get_core_page( $page ) : '';
+		return $url ? $url : home_url( $fallback );
+	};
+	$path  = fn( $url ) => (string) wp_parse_url( $url, PHP_URL_PATH );
+	$games = array_map( fn( $slug ) => $path( home_url( "/{$slug}/" ) ), array( 'guess-a-lotl', 'hex-a-lotl', 'connect-a-lotl', 'cross-a-lotl', 'grow-a-lotl', 'stem-a-lotl-rescue-lab' ) );
+	$tabs  = array(
+		array( 'label' => 'Dashboard', 'icon' => 'dashboard', 'url' => $core( 'user', '/user/' ) ),
+		array( 'label' => 'Time Card', 'icon' => 'timecard', 'url' => home_url( '/time-card-tracker/' ) ),
+		array( 'label' => 'Games', 'icon' => 'games', 'url' => home_url( '/guess-a-lotl/' ), 'paths' => $games ),
+		array( 'label' => 'Account', 'icon' => 'account', 'url' => $core( 'account', '/account/' ) ),
+	);
+	$tabs  = array_map( fn( $tab ) => $tab + array( 'paths' => array( $path( $tab['url'] ) ) ), $tabs );
+	return (array) apply_filters( 'ascend_app_tabs', $tabs );
+}
+
+/**
+ * Front-end CSS and JS. Both only change anything inside the app, and are the same for every
+ * visitor, so cached pages are fine.
  */
 function ascend_app_enqueue_assets() {
+	wp_enqueue_style( 'ascend-app', ASCEND_APP_URL . 'assets/app.css', array(), ASCEND_APP_VERSION );
 	wp_enqueue_script( 'ascend-app', ASCEND_APP_URL . 'assets/app.js', array(), ASCEND_APP_VERSION, array( 'in_footer' => true, 'strategy' => 'defer' ) );
+	wp_add_inline_script( 'ascend-app', 'window.ascendAppTabs = ' . wp_json_encode( ascend_app_tabs() ) . ';', 'before' );
 }
 add_action( 'wp_enqueue_scripts', 'ascend_app_enqueue_assets' );
 

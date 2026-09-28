@@ -118,11 +118,31 @@ bubblewrap build
 should change. If the project was made with PWABuilder instead, generate a new Android package at
 pwabuilder.com with the same package ID, the existing signing key and a higher version code.
 
+## App mode UI
+
+`assets/app.css` and `assets/app.js`. Every rule is inside `@media (display-mode: standalone)` and
+the tab bar is only added in a standalone window, so the website looks exactly as before, including
+in a browser tab that carries the `asa_app` cookie.
+
+- **Bottom tab bar:** Dashboard (`/user/`), Time Card (`/time-card-tracker/`), Games
+  (`/guess-a-lotl/`, current on every game page) and Account (`/account/`). Change it with the
+  `ascend_app_tabs` filter.
+- **Header:** Astra's transparent header floats over the page (`position: absolute`). In the app it
+  sits in the page flow instead, solid white and 56px tall, with a 40px-tall logo, and the Header
+  menu (desktop and mobile) and its menu button are hidden.
+- **Floating-header workarounds:** with the header in the flow, the Customizer CSS rules that push
+  content below it (`#content` top padding on posts, games, Time Card and the login/account pages;
+  `.asa-hero` / `.asa-store-hero` top margin; the Time Card container's 80px Elementor margin) are
+  reset to a 16px gap in the app. On the website they still apply, because there the header still
+  floats.
+- **Login page:** the Register button is hidden and Login takes the full width.
+- Astra's scroll-to-top button and the side cart's basket button are lifted above the tab bar.
+
 ## W3 Total Cache: required settings
 
 The plugin defines `DONOTCACHEPAGE` for app requests and logged-in requests (and sends no-cache
-headers for app requests), so W3TC never stores those pages. W3TC serves pages it already stored *before* WordPress
-loads, though, so it must also be told to skip them. In **Performance → Page Cache**:
+headers for app requests), so W3TC never stores those pages. W3TC serves pages it already stored
+*before* WordPress loads, though, so it must also be told to skip them. In **Performance → Page Cache**:
 
 1. General: **Don't cache pages for logged in users** stays ticked (W3TC's default).
 2. Advanced → **Rejected cookies**: add a line `asa_app`.
@@ -133,8 +153,28 @@ page stored before the plugin was active is served to the app.
 
 ## Install
 
-Upload the `ascend-app-sessions` folder to `wp-content/plugins/` and activate it. Deactivating it
-restores WordPress's default login lengths (existing 90-day logins run until they expire).
+Upload the `ascend-app-sessions` folder to `wp-content/plugins/` and activate it (to make a zip
+without the tests: `zip -r ascend-app-sessions.zip ascend-app-sessions -x 'ascend-app-sessions/tests/*' 'ascend-app-sessions/tools/*'`).
+Deactivating it restores WordPress's default login lengths (existing 90-day logins run until they
+expire) and removes the app UI; the PWA plugin's filter line then changes nothing.
+
+## Deploy and check on the live site
+
+1. Activate the plugin. Set the two W3 Total Cache settings (above), save, purge all caches.
+2. Optional: `define( 'ASCEND_APP_PACKAGE', '<applicationId>' );` in `wp-config.php`.
+3. Decide on the Time Card restriction (above) and, if wanted, the form 4414 setting.
+4. Check in desktop Chrome, before touching the Android build:
+   - DevTools console on ascendstemacademy.com:
+     `document.cookie = "asa_app=1; Max-Age=31536000; Path=/; SameSite=Lax; Secure"`, then open
+     `/login/`: no "Keep me signed in"; log in with a family (Student) test account; DevTools →
+     Application → Cookies: `wordpress_logged_in_…` expires in about 90 days. Open `/`: you land on
+     `/user/`. Log out, open `/time-card-tracker/` (once it is restricted): login, then back.
+   - App look: open the site in a standalone window, e.g. `google-chrome --app=https://ascendstemacademy.com/guess-a-lotl/`
+     (or Chrome menu → Cast, save and share → Install page as app): tab bar, solid header, no menu,
+     no Register button. A normal tab must look exactly as before.
+5. Add the one `ascend_app_manifest` line to the Ascend PWA plugin; check DevTools → Application →
+   Manifest shows no errors and the four shortcuts.
+6. Rebuild the Android app with Bubblewrap (above) and upload the `.aab` to Play.
 
 ## Tests
 
@@ -144,6 +184,7 @@ ascend-app-sessions/tests/browser/setup-site.sh    # throwaway WP 7.1.2 + UM 2.1
 node ascend-app-sessions/tests/browser/step1.js    # needs Playwright (npm i -g playwright)
 node ascend-app-sessions/tests/browser/step2.js
 node ascend-app-sessions/tests/browser/step3.js    # manifest, via a stand-in for the Ascend PWA plugin
+node ascend-app-sessions/tests/browser/step4.js    # app-mode UI vs the website
 ```
 
 The browser tests use a real `display-mode: standalone` window (Chromium's `--app` mode) as the

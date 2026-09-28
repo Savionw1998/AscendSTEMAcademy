@@ -1,0 +1,103 @@
+/*
+ * App mode: only inside the Android app (display-mode: standalone). The website is untouched.
+ */
+@media (display-mode: standalone) {
+
+	/* Header: solid, compact and in the page flow. Astra's transparent header floats it over the
+	   content (position: absolute), which is what the "start below the floating header" padding in
+	   the Customizer CSS works around. */
+	.ast-theme-transparent-header #masthead {
+		position: relative !important;
+	}
+	#masthead .main-header-bar,
+	#masthead .ast-primary-header-bar {
+		background: #fff !important;
+		border-bottom: 1px solid #D5EAD8 !important;
+	}
+	#masthead .ast-builder-grid-row {
+		min-height: 56px !important;
+	}
+	#masthead .site-logo-img img,
+	#masthead .custom-logo {
+		max-height: 40px !important;
+		width: auto !important;
+	}
+
+	/* The public marketing menu (Header menu, desktop and mobile) and its menu button. */
+	#masthead .ast-builder-menu-1,
+	#masthead .ast-mobile-header-content,
+	#masthead [data-section="section-header-mobile-trigger"] {
+		display: none !important;
+	}
+
+	/* With the header in the flow, the offsets that pushed content below it are no longer needed. */
+	#content {
+		padding-top: 16px !important;
+	}
+	.asa-why .asa-hero,
+	.asa-why .asa-store-hero {
+		margin-top: 16px !important;
+	}
+	.elementor-6097 .elementor-element.elementor-element-241cfa88 {
+		margin-top: 0 !important;
+	}
+
+	/* Login: no Register button; Login takes the full width. */
+	.um-login .um-col-alt .um-right.um-half {
+		display: none !important;
+	}
+	.um-login .um-col-alt .um-left.um-half {
+		width: 100% !important;
+		float: none !important;
+	}
+
+	/* Bottom tab bar (added by app.js). */
+	html.asa-has-tabbar body {
+		padding-bottom: calc(64px + env(safe-area-inset-bottom)) !important;
+	}
+	.asa-tabbar {
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 999;
+		display: flex;
+		background: #fff;
+		border-top: 1px solid #D5EAD8;
+		padding-bottom: env(safe-area-inset-bottom);
+		box-shadow: 0 -2px 10px rgba(29, 64, 16, .06);
+	}
+	.asa-tabbar a {
+		flex: 1 1 0;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 3px;
+		min-height: 56px;
+		color: #5B6572;
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 1.2;
+		text-decoration: none;
+		-webkit-tap-highlight-color: transparent;
+	}
+	.asa-tabbar a[aria-current="page"] {
+		color: #009CDE;
+	}
+	.asa-tabbar svg {
+		width: 24px;
+		height: 24px;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	/* Keep bottom-corner buttons (Astra's scroll-to-top, the side cart) above the tab bar. */
+	#ast-scroll-top,
+	.xoo-wsc-basket {
+		bottom: calc(72px + env(safe-area-inset-bottom)) !important;
+	}
+}

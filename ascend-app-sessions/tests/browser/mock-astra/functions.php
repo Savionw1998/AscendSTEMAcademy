@@ -22,7 +22,6 @@ body{margin:0;background:#EDFBE2;font-family:system-ui,sans-serif;color:#1D4010}
 .site-branding img{max-height:70px;display:block}
 .main-header-menu{display:flex;gap:18px;list-style:none;margin:0;padding:0}
 .main-header-menu a{color:#1D4010;font-weight:700;text-decoration:none}
-.ast-header-button-1 a{background:#009CDE;color:#fff;border-radius:999px;padding:10px 18px;text-decoration:none}
 #ast-mobile-header{display:none}
 .ast-mobile-header-content{display:none}
 .menu-toggle{background:#009CDE;color:#fff;border:0;border-radius:4px;padding:10px 12px}
