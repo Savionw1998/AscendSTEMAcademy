@@ -1,0 +1,81 @@
+{
+  "packageId": "com.ascendstemacademy.twa",
+  "host": "ascendstemacademy.com",
+  "name": "Ascend STEM Academy",
+  "launcherName": "Ascend STEM",
+  "display": "standalone",
+  "themeColor": "#009CDE",
+  "themeColorDark": "#000000",
+  "navigationColor": "#009CDE",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#FFFFFF",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/icon-512.png?v=1.0.0",
+  "maskableIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/icon-maskable-512.png?v=1.0.0",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "1.1.0",
+  "appVersionCode": 4,
+  "shortcuts": [
+    {
+      "name": "Time Card",
+      "shortName": "Time Card",
+      "url": "https://ascendstemacademy.com/time-card-tracker/",
+      "chosenIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/shortcut-time-card.png?v=1.0.0",
+      "chosenMaskableIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/shortcut-time-card-maskable.png?v=1.0.0"
+    },
+    {
+      "name": "Students",
+      "shortName": "Students",
+      "url": "https://ascendstemacademy.com/user/",
+      "chosenIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/shortcut-students.png?v=1.0.0",
+      "chosenMaskableIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/shortcut-students-maskable.png?v=1.0.0"
+    },
+    {
+      "name": "Parents",
+      "shortName": "Parents",
+      "url": "https://ascendstemacademy.com/account/",
+      "chosenIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/shortcut-parents.png?v=1.0.0",
+      "chosenMaskableIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/shortcut-parents-maskable.png?v=1.0.0"
+    },
+    {
+      "name": "Games",
+      "shortName": "Games",
+      "url": "https://ascendstemacademy.com/guess-a-lotl/",
+      "chosenIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/shortcut-games.png?v=1.0.0",
+      "chosenMaskableIconUrl": "https://ascendstemacademy.com/wp-content/plugins/ascend-app-sessions/assets/icons/shortcut-games-maskable.png?v=1.0.0"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://ascendstemacademy.com/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://ascendstemacademy.com/",
+  "minSdkVersion": 21,
+  "orientation": "portrait",
+  "fingerprints": [
+    {
+      "name": "Key that signed AscendSTEM-v3 (2026-09-09)",
+      "value": "94:51:38:F0:F3:F5:D4:F9:BE:89:9B:59:5F:BE:21:FB:F4:76:B8:A6:83:D7:6E:EA:D0:11:1C:B9:25:7D:FB:E5"
+    }
+  ],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [],
+  "appVersion": "1.1.0"
+}

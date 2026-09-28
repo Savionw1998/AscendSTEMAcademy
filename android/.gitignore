@@ -1,0 +1,15 @@
+# Signing keys and their passwords never go in the repository
+*.keystore
+*.jks
+*.pem
+*.p12
+signing-key-info.txt
+
+# Build output
+*.aab
+*.apk
+*.idsig
+.gradle/
+build/
+app/build/
+local.properties
