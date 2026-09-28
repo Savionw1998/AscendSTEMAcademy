@@ -34,6 +34,7 @@ namespace {
 	function get_userdata( $id ) { return isset( $GLOBALS['__users'][ $id ] ) ? (object) array( 'roles' => $GLOBALS['__users'][ $id ] ) : false; }
 	function __( $s ) { return $s; }
 	function wp_json_encode( $v ) { return json_encode( $v ); }
+	function home_url( $p = '' ) { return 'https://ascendstemacademy.com' . $p; }
 
 	require __DIR__ . '/../ascend-app-sessions.php';
 
@@ -90,6 +91,28 @@ namespace {
 	check( 'W3TC caching logged-in pages: asks to turn that off too', 2 === count( ascend_app_w3tc_problems() ) );
 	$c->values = array( 'pgcache.enabled' => true, 'pgcache.reject.logged' => true, 'pgcache.reject.cookie' => array( 'wptouch_switch_toggle', ' asa_app ' ) );
 	check( 'W3TC configured: nothing to fix', array() === ascend_app_w3tc_problems() );
+
+	// Web manifest: icons and shortcuts handed to the Ascend PWA plugin.
+	$m = apply_filters( 'ascend_app_manifest', array( 'name' => 'Ascend STEM Academy', 'start_url' => '/', 'shortcuts' => array( 'old' ) ) );
+	check( 'manifest filter keeps the PWA plugin\'s other fields', 'Ascend STEM Academy' === $m['name'] && '/' === $m['start_url'] );
+	check( 'shortcuts replaced: Time Card, Students, Parents, Games', array( 'Time Card', 'Students', 'Parents', 'Games' ) === array_column( $m['shortcuts'], 'name' ) );
+	check( 'shortcut URLs', array( 'https://ascendstemacademy.com/time-card-tracker/', 'https://ascendstemacademy.com/user/', 'https://ascendstemacademy.com/account/', 'https://ascendstemacademy.com/guess-a-lotl/' ) === array_column( $m['shortcuts'], 'url' ) );
+	$ok = true;
+	foreach ( $m['shortcuts'] as $sc ) {
+		foreach ( $sc['icons'] as $icon ) {
+			$file = __DIR__ . '/../assets/icons/' . basename( strtok( $icon['src'], '?' ) );
+			$dim  = is_file( $file ) ? getimagesize( $file ) : false;
+			$ok   = $ok && $dim && 96 === $dim[0] && 96 === $dim[1] && 'image/png' === $dim['mime'] && '96x96' === $icon['sizes'];
+		}
+		$ok = $ok && array( 'any', 'maskable' ) === array_column( $sc['icons'], 'purpose' );
+	}
+	check( 'every shortcut has a 96x96 PNG, round and maskable, and the files exist', $ok );
+	$ok = count( $m['icons'] ) === 3;
+	foreach ( $m['icons'] as $icon ) {
+		$dim = getimagesize( __DIR__ . '/../assets/icons/' . basename( strtok( $icon['src'], '?' ) ) );
+		$ok  = $ok && $icon['sizes'] === $dim[0] . 'x' . $dim[1] && 'image/png' === $dim['mime'];
+	}
+	check( 'app icons: 192, 512 and maskable 512, sizes match the files', $ok && array( 'any', 'any', 'maskable' ) === array_column( $m['icons'], 'purpose' ) );
 
 	echo "\n" . ( $n - $fails ) . "/$n passed\n";
 	exit( $fails ? 1 : 0 );

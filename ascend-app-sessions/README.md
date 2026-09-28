@@ -2,7 +2,7 @@
 
 Site-side support for the Ascend STEM Academy Android app, which is a Trusted Web Activity (TWA)
 around ascendstemacademy.com. Standalone plugin; nothing here edits Ultimate Member, the Ascend PWA
-plugin or the theme.
+plugin or the theme (the PWA plugin needs one line to use the new icons and shortcuts, below).
 
 ## Keeping families signed in
 
@@ -62,6 +62,62 @@ Two settings on the live site, checked 2026-09-28:
   `https://ascendstemacademy.com/user/` if you want the admin screen to match what happens:
   `wp post meta update 4414 _um_login_after_login redirect_url && wp post meta update 4414 _um_login_redirect_url https://ascendstemacademy.com/user/`
 
+## App shortcuts and icons
+
+The icons are in `assets/icons/`, cut from the new logo (`branding/logo-source-1024.png`) by
+`tools/make-icons.py`:
+
+| File | Use |
+|---|---|
+| `icon-192.png`, `icon-512.png` | App icon (`purpose: any`); Bubblewrap also makes the splash screen from the 512 |
+| `icon-maskable-512.png` | Full-bleed app icon (`purpose: maskable`); becomes the Android adaptive launcher icon |
+| `shortcut-time-card[-maskable].png` | Time Card → `/time-card-tracker/` (maths symbols, blue) |
+| `shortcut-students[-maskable].png` | Students → `/user/` (graduation cap, blue) |
+| `shortcut-parents[-maskable].png` | Parents → `/account/` (gear, green) |
+| `shortcut-games[-maskable].png` | Games → `/guess-a-lotl/` (atom, green) |
+
+Each shortcut has a 96×96 round icon (`any`) and a 96×96 full-bleed one (`maskable`): Bubblewrap
+uses the maskable one for the launcher shortcut and needs the `any` one for older Android versions.
+
+**The Ascend PWA plugin must take these.** Its source is not in this repository, so it is not
+changed here. Where it builds the manifest array, add one line before it outputs the JSON:
+
+```php
+$manifest = apply_filters( 'ascend_app_manifest', $manifest );
+```
+
+That replaces `icons` and `shortcuts` and leaves every other field as the PWA plugin set it.
+Check it in Chrome DevTools → Application → Manifest (no errors, four shortcuts). Keep the
+manifest's URL the same: Chrome only updates installed copies of the app from the same manifest URL.
+
+### Android app (Trusted Web Activity, Bubblewrap)
+
+Bubblewrap builds the launcher icon, splash screen and `shortcuts.xml` from the icon and shortcut
+URLs in `twa-manifest.json`, so deploy the site change first, then in the Android project folder:
+
+```bash
+# Take icons and shortcuts from the live web manifest; keep everything else as it is.
+# Also raises appVersionCode by 1.
+bubblewrap merge --appVersionName=<new version name> \
+  --ignore name --ignore short_name --ignore display --ignore displayOverride \
+  --ignore fullScopeUrl --ignore startUrl --ignore themeColor --ignore backgroundColor \
+  --ignore monochromeIcons --ignore protocol_handlers --ignore file_handlers \
+  --ignore launchHandlerClientMode
+
+# Regenerate the Android project from twa-manifest.json (the version was already raised).
+bubblewrap update --skipVersionUpgrade
+
+# Build and sign with the existing upload key.
+bubblewrap build
+```
+
+`build` asks for the keystore and key passwords (or reads `BUBBLEWRAP_KEYSTORE_PASSWORD` and
+`BUBBLEWRAP_KEY_PASSWORD`) and writes `app-release-bundle.aab` (for Play) and
+`app-release-signed.apk` (to side-load and test). Check `git diff twa-manifest.json` after
+`merge`: only `iconUrl`, `maskableIconUrl`, `shortcuts`, `appVersionCode` and `appVersionName`
+should change. If the project was made with PWABuilder instead, generate a new Android package at
+pwabuilder.com with the same package ID, the existing signing key and a higher version code.
+
 ## W3 Total Cache: required settings
 
 The plugin defines `DONOTCACHEPAGE` for app requests and logged-in requests (and sends no-cache
@@ -87,6 +143,7 @@ php ascend-app-sessions/tests/plugin-test.php     # rules, with stand-ins for Wo
 ascend-app-sessions/tests/browser/setup-site.sh    # throwaway WP 7.1.2 + UM 2.13.1 site on :8080
 node ascend-app-sessions/tests/browser/step1.js    # needs Playwright (npm i -g playwright)
 node ascend-app-sessions/tests/browser/step2.js
+node ascend-app-sessions/tests/browser/step3.js    # manifest, via a stand-in for the Ascend PWA plugin
 ```
 
 The browser tests use a real `display-mode: standalone` window (Chromium's `--app` mode) as the

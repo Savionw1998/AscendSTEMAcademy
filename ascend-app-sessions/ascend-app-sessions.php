@@ -40,6 +40,12 @@
  *     and the login form sends them back there (else to the /user/ dashboard).
  *   - In the app, a signed-in family opening the start URL (/) goes to /user/.
  *
+ * APP ICONS AND SHORTCUTS
+ *
+ *   assets/icons/ holds the manifest icons and the four shortcut icons, cut from
+ *   the logo by tools/make-icons.py. The Ascend PWA plugin takes them with
+ *   $manifest = apply_filters( 'ascend_app_manifest', $manifest );
+ *
  * CACHING (W3 Total Cache)
  *
  *   App requests and logged-in requests define DONOTCACHEPAGE (app requests
@@ -63,3 +69,4 @@ require_once __DIR__ . '/includes/app-mode.php';
 require_once __DIR__ . '/includes/sessions.php';
 require_once __DIR__ . '/includes/login-form.php';
 require_once __DIR__ . '/includes/redirects.php';
+require_once __DIR__ . '/includes/manifest.php';
