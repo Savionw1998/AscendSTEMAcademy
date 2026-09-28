@@ -8,10 +8,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * The app's Android package name, or '' to accept any android-app:// referrer.
+ * The app's Android package name (the published app's applicationId), or '' to accept any
+ * android-app:// referrer.
  */
 function ascend_app_package() {
-	$package = defined( 'ASCEND_APP_PACKAGE' ) ? (string) ASCEND_APP_PACKAGE : '';
+	$package = defined( 'ASCEND_APP_PACKAGE' ) ? (string) ASCEND_APP_PACKAGE : 'com.ascendstemacademy.twa';
 	return (string) apply_filters( 'ascend_app_package', $package );
 }
 

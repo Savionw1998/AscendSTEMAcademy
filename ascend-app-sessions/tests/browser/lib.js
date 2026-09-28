@@ -56,9 +56,9 @@ async function setCookieOf(resp) {
   }
   return (await resp.allHeaders())['set-cookie'] || '';
 }
-// Switch Ultimate Member's restriction on the Time Card (6097) on or off; live has it off.
-function restrictTimeCard(on) {
-  execFileSync('php', ['restrict.php', '6097', on ? 'on' : 'off'], { cwd: SITE, env: Object.assign({}, process.env, { ASA_PORT: new URL(BASE).port }) });
+// Set Ultimate Member's restriction on the Time Card (6097): 'off', 'message' or 'redirect' (live).
+function restrictTimeCard(mode) {
+  execFileSync('php', ['restrict.php', '6097', mode], { cwd: SITE, env: Object.assign({}, process.env, { ASA_PORT: new URL(BASE).port }) });
 }
 const now = () => Math.floor(Date.now() / 1000);
 

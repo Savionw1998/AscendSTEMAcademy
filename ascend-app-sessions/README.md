@@ -2,14 +2,15 @@
 
 Site-side support for the Ascend STEM Academy Android app, which is a Trusted Web Activity (TWA)
 around ascendstemacademy.com. Standalone plugin; nothing here edits Ultimate Member, the Ascend PWA
-plugin or the theme (the PWA plugin needs one line to use the new icons and shortcuts, below).
+plugin or the theme. The app itself is rebuilt from `android/` (see `android/README.md`).
 
 ## Keeping families signed in
 
 WordPress logins last 2 days, or 14 with "Keep me signed in". Families open the app less often than
 that, so shortcuts kept landing on /login/.
 
-- **App detection.** The TWA opens the site with an `android-app://<package>` referrer, and inside
+- **App detection.** The TWA opens the site with an `android-app://com.ascendstemacademy.twa`
+  referrer (the published app's package ID; other apps' referrers do not count), and inside
   the app the page matches `(display-mode: standalone)`. When either is true, a small script at the
   top of `<head>` sets the first-party cookie `asa_app=1` (1 year, `SameSite=Lax`, `Secure` on https,
   renewed on every app page load). PHP also sets it when it sees the referrer on an uncached request.
@@ -27,11 +28,10 @@ that, so shortcuts kept landing on /login/.
   (UM prints `autocomplete="off"` on the username and nothing on the password). `assets/app.js`
   does the same in the browser for login pages served from the page cache.
 
-Optional: define the app's package name in `wp-config.php` so only the app's own referrer counts
-(otherwise any `android-app://` referrer does, e.g. a link opened from the Gmail app):
+If the package ID ever changes, set it in `wp-config.php` (`''` accepts any `android-app://` referrer):
 
 ```php
-define( 'ASCEND_APP_PACKAGE', 'com.example.package' ); // applicationId from the Android project
+define( 'ASCEND_APP_PACKAGE', 'com.ascendstemacademy.twa' );
 ```
 
 ## Return to where you tapped
@@ -50,13 +50,14 @@ define( 'ASCEND_APP_PACKAGE', 'com.example.package' ); // applicationId from the
   instead of to the home page.
 - **Start URL.** In the app, a family that is already signed in and opens `/` goes to `/user/`.
 
-Two settings on the live site, checked 2026-09-28:
+Two settings on the live site:
 
-- **Time Card (page 6097) is not restricted right now.** Its Ultimate Member box still lists the
-  roles, but "Restrict access to this post?" is unticked (`_um_custom_access_settings` is false), so
-  the page is public and the redirect above does not apply to it. To send logged-out visitors to the
-  login page again, tick it (Pages → Time Card → Ultimate Member: Content Restriction), or:
-  `wp post meta patch update 6097 um_content_restriction _um_custom_access_settings 1`
+- **Time Card (page 6097)** had its restriction switched off (public). On 2026-09-28 it was switched
+  back on, as agreed: logged-in Student, Faculty and staff accounts only, and "What happens when users
+  without access try to view the post?" = **Redirect user → Login page**. So Ultimate Member itself
+  sends logged-out visitors to `/login/?redirect_to=…/time-card-tracker/`, even without this plugin,
+  and the login form (above) brings them back. To make it public again: Pages → Time Card →
+  Ultimate Member: Content Restriction → untick "Restrict access to this post?".
 - **Login form 4414** has "Redirection after Login" = "Redirect to profile". The plugin decides the
   destination, so this setting no longer matters; set it to "Redirect to URL" with
   `https://ascendstemacademy.com/user/` if you want the admin screen to match what happens:
@@ -79,44 +80,21 @@ The icons are in `assets/icons/`, cut from the new logo (`branding/logo-source-1
 Each shortcut has a 96×96 round icon (`any`) and a 96×96 full-bleed one (`maskable`): Bubblewrap
 uses the maskable one for the launcher shortcut and needs the `any` one for older Android versions.
 
-**The Ascend PWA plugin must take these.** Its source is not in this repository, so it is not
-changed here. Where it builds the manifest array, add one line before it outputs the JSON:
+**Nothing to change in the Ascend PWA plugin.** It serves the manifest at
+`https://ascendstemacademy.com/manifest.json` (the URL the published app was built from). This plugin
+puts its `icons` and `shortcuts` into that response on the way out, keeps every other field as the
+PWA plugin set it, drops the old `Content-Length`/`ETag`/`Last-Modified`, and keeps the response
+out of the page cache. The same arrays are also available to any code as
+`apply_filters( 'ascend_app_manifest', $manifest )`.
 
-```php
-$manifest = apply_filters( 'ascend_app_manifest', $manifest );
-```
+After deploying, open `https://ascendstemacademy.com/manifest.json`: it must list the four
+shortcuts. If it still shows the old ones after purging the cache, that file is not served by
+WordPress (a static file on the server); then either add the `apply_filters` line above where the PWA
+plugin builds its manifest, or copy `icons` and `shortcuts` from a local copy of this plugin's output
+into that file. Keep the manifest's URL the same: Chrome only updates installed copies of the app from
+the same manifest URL.
 
-That replaces `icons` and `shortcuts` and leaves every other field as the PWA plugin set it.
-Check it in Chrome DevTools → Application → Manifest (no errors, four shortcuts). Keep the
-manifest's URL the same: Chrome only updates installed copies of the app from the same manifest URL.
-
-### Android app (Trusted Web Activity, Bubblewrap)
-
-Bubblewrap builds the launcher icon, splash screen and `shortcuts.xml` from the icon and shortcut
-URLs in `twa-manifest.json`, so deploy the site change first, then in the Android project folder:
-
-```bash
-# Take icons and shortcuts from the live web manifest; keep everything else as it is.
-# Also raises appVersionCode by 1.
-bubblewrap merge --appVersionName=<new version name> \
-  --ignore name --ignore short_name --ignore display --ignore displayOverride \
-  --ignore fullScopeUrl --ignore startUrl --ignore themeColor --ignore backgroundColor \
-  --ignore monochromeIcons --ignore protocol_handlers --ignore file_handlers \
-  --ignore launchHandlerClientMode
-
-# Regenerate the Android project from twa-manifest.json (the version was already raised).
-bubblewrap update --skipVersionUpgrade
-
-# Build and sign with the existing upload key.
-bubblewrap build
-```
-
-`build` asks for the keystore and key passwords (or reads `BUBBLEWRAP_KEYSTORE_PASSWORD` and
-`BUBBLEWRAP_KEY_PASSWORD`) and writes `app-release-bundle.aab` (for Play) and
-`app-release-signed.apk` (to side-load and test). Check `git diff twa-manifest.json` after
-`merge`: only `iconUrl`, `maskableIconUrl`, `shortcuts`, `appVersionCode` and `appVersionName`
-should change. If the project was made with PWABuilder instead, generate a new Android package at
-pwabuilder.com with the same package ID, the existing signing key and a higher version code.
+The Android app is rebuilt from `android/twa-manifest.json`; see `android/README.md`.
 
 ## App mode UI
 
@@ -161,20 +139,19 @@ expire) and removes the app UI; the PWA plugin's filter line then changes nothin
 ## Deploy and check on the live site
 
 1. Activate the plugin. Set the two W3 Total Cache settings (above), save, purge all caches.
-2. Optional: `define( 'ASCEND_APP_PACKAGE', '<applicationId>' );` in `wp-config.php`.
-3. Decide on the Time Card restriction (above) and, if wanted, the form 4414 setting.
-4. Check in desktop Chrome, before touching the Android build:
+2. Optional: the form 4414 setting (above). (The Time Card restriction is already on.)
+3. Check in desktop Chrome, before touching the Android build:
    - DevTools console on ascendstemacademy.com:
      `document.cookie = "asa_app=1; Max-Age=31536000; Path=/; SameSite=Lax; Secure"`, then open
      `/login/`: no "Keep me signed in"; log in with a family (Student) test account; DevTools →
      Application → Cookies: `wordpress_logged_in_…` expires in about 90 days. Open `/`: you land on
-     `/user/`. Log out, open `/time-card-tracker/` (once it is restricted): login, then back.
+     `/user/`. Log out, open `/time-card-tracker/`: login, then back.
    - App look: open the site in a standalone window, e.g. `google-chrome --app=https://ascendstemacademy.com/guess-a-lotl/`
      (or Chrome menu → Cast, save and share → Install page as app): tab bar, solid header, no menu,
      no Register button. A normal tab must look exactly as before.
-5. Add the one `ascend_app_manifest` line to the Ascend PWA plugin; check DevTools → Application →
-   Manifest shows no errors and the four shortcuts.
-6. Rebuild the Android app with Bubblewrap (above) and upload the `.aab` to Play.
+4. Open `https://ascendstemacademy.com/manifest.json`: four shortcuts (DevTools → Application →
+   Manifest: no errors).
+5. Rebuild the Android app and upload it to Play: `android/README.md`.
 
 ## Tests
 
@@ -183,7 +160,7 @@ php ascend-app-sessions/tests/plugin-test.php     # rules, with stand-ins for Wo
 ascend-app-sessions/tests/browser/setup-site.sh    # throwaway WP 7.1.2 + UM 2.13.1 site on :8080
 node ascend-app-sessions/tests/browser/step1.js    # needs Playwright (npm i -g playwright)
 node ascend-app-sessions/tests/browser/step2.js
-node ascend-app-sessions/tests/browser/step3.js    # manifest, via a stand-in for the Ascend PWA plugin
+node ascend-app-sessions/tests/browser/step3.js    # /manifest.json, via a stand-in for the Ascend PWA plugin
 node ascend-app-sessions/tests/browser/step4.js    # app-mode UI vs the website
 ```
 

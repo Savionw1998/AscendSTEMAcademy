@@ -13,17 +13,30 @@ async function submitLogin(page, user) {
 (async () => {
   const browser = await chromium.launch({ executablePath: EXE });
 
-  // Live today: the Time Card's UM restriction switch is off, so the page is public.
-  restrict(false);
+  // Live since 2026-09-28: UM itself sends logged-out visitors to login ("Redirect user"); the
+  // login form then brings them back.
+  restrict('redirect');
   {
     const ctx = await newContext(browser);
     const resp = await ctx.request.get(TC, { maxRedirects: 0 });
-    check('restriction off (live today): Time Card is not redirected', resp.status() === 200);
+    check('live setting: logged out, 302 to /login/?redirect_to=<page>', resp.status() === 302 && (resp.headers()['location'] || '') === BASE + '/login/?redirect_to=' + encodeURIComponent(TC), resp.headers()['location']);
+    const page = await ctx.newPage();
+    await page.goto(TC);
+    await submitLogin(page, 'family1');
+    check('live setting: back on the Time Card after login', page.url() === TC && (await page.locator('#tc-content').isVisible()), page.url());
     await ctx.close();
   }
-  restrict(true);
+  restrict('off');
+  {
+    const ctx = await newContext(browser);
+    const resp = await ctx.request.get(TC, { maxRedirects: 0 });
+    check('restriction off: page is public, no redirect', resp.status() === 200);
+    await ctx.close();
+  }
 
-  // Restricted page -> login with redirect_to -> back to the page.
+  // Pages restricted with "Show access restricted message": this plugin sends logged-out visitors
+  // to login -> back to the page.
+  restrict('message');
   {
     const ctx = await newContext(browser);
     const resp = await ctx.request.get(TC, { maxRedirects: 0 });
@@ -111,6 +124,7 @@ async function submitLogin(page, user) {
   // The whole thing in a standalone app window: tap Time Card logged out, log in, come back.
   {
     sessions('family1', true);
+    restrict('redirect');
     const { ctx, page } = await openApp('/time-card-tracker/');
     check('app window: Time Card tap lands on login', path(page.url()).startsWith('/login/?redirect_to='));
     check('app window: "Keep me signed in" is not shown', !(await page.locator('.um-login .um-field-c:has(input[name=rememberme])').isVisible()));
@@ -121,7 +135,7 @@ async function submitLogin(page, user) {
     await ctx.close();
   }
 
-  restrict(false); // leave the fixture as live
+  restrict('redirect'); // leave the fixture as live
   await browser.close();
   done();
-})().catch((e) => { console.error(e); restrict(false); process.exit(2); });
+})().catch((e) => { console.error(e); restrict('redirect'); process.exit(2); });

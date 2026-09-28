@@ -94,11 +94,11 @@ fx_page( 5952, 'guess-a-lotl', 'Guess-a-lotl', '<p id="game-content">GUESS-A-LOT
 fx_page( 5982, 'hex-a-lotl', 'Hex-a-lotl', '<p>HEX GAME</p>' );
 fx_page( 2785, 'contact-us', 'Contact', '<div class="asa-why"><section class="asa-hero"><div class="asa-wrap"><h1>CONTACT</h1></div></section></div>' );
 
-// Time Card restriction exactly as live.
+// Time Card restriction exactly as live (since 2026-09-28: logged-in roles only, UM redirects others to login).
 update_post_meta( 6097, 'um_content_restriction', array(
-	'_um_custom_access_settings' => false, '_um_accessible' => 2,
+	'_um_custom_access_settings' => true, '_um_accessible' => 2,
 	'_um_access_roles' => array( 'administrator' => '1', 'editor' => '1', 'author' => '1', 'um_student' => '1', 'um_faculty' => '1' ),
-	'_um_access_hide_from_queries' => false, '_um_noaccess_action' => 0, '_um_restrict_by_custom_message' => 0,
+	'_um_access_hide_from_queries' => false, '_um_noaccess_action' => 1, '_um_restrict_by_custom_message' => 0,
 	'_um_restrict_custom_message' => '', '_um_access_redirect' => 0, '_um_access_redirect_url' => '',
 ) );
 

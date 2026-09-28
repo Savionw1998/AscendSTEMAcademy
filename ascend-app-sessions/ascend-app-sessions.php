@@ -14,14 +14,14 @@
  * HOW THE SITE KNOWS IT IS INSIDE THE APP
  *
  *   The Android app is a Trusted Web Activity. It opens the site with an
- *   android-app://<package> referrer, and inside it the page matches
+ *   android-app://com.ascendstemacademy.twa referrer, and inside it the page matches
  *   (display-mode: standalone). When either is true, a tiny script at the top
  *   of <head> sets the first-party cookie asa_app=1 (1 year, SameSite=Lax,
  *   Secure). PHP also sets it when it sees the referrer on an uncached request.
  *   The script is the same for every visitor, so page caching cannot break it.
  *
- *   Set ASCEND_APP_PACKAGE in wp-config.php to the app's package name to only
- *   trust that app's referrer; left undefined, any android-app:// referrer counts.
+ *   Only that package's referrer counts. If the package ID ever changes, set
+ *   ASCEND_APP_PACKAGE in wp-config.php ('' accepts any android-app:// referrer).
  *
  * WHAT APP SESSIONS GET
  *
@@ -43,8 +43,9 @@
  * APP ICONS AND SHORTCUTS
  *
  *   assets/icons/ holds the manifest icons and the four shortcut icons, cut from
- *   the logo by tools/make-icons.py. The Ascend PWA plugin takes them with
- *   $manifest = apply_filters( 'ascend_app_manifest', $manifest );
+ *   the logo by tools/make-icons.py. They are put into the Ascend PWA plugin's
+ *   /manifest.json response on its way out (the rest of its manifest is kept),
+ *   so that plugin needs no change. The Android app is rebuilt from android/.
  *
  * APP MODE UI (assets/app.css, assets/app.js)
  *

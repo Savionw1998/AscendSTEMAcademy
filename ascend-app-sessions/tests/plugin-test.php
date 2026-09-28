@@ -49,13 +49,14 @@ namespace {
 		}
 	}
 
-	// Referrer detection.
-	check( 'any android-app referrer counts when no package is set', ascend_app_referrer_is_app( 'android-app://com.example.app/' ) );
-	check( 'web referrers do not count', ! ascend_app_referrer_is_app( 'https://www.google.com/' ) && ! ascend_app_referrer_is_app( '' ) );
-	add_filter( 'ascend_app_package', fn() => 'com.ascendstemacademy.twa' );
-	check( 'with a package set, only that package counts', ascend_app_referrer_is_app( 'android-app://com.ascendstemacademy.twa/' ) && ! ascend_app_referrer_is_app( 'android-app://com.google.android.gm/' ) );
+	// Referrer detection. The default package is the published app's applicationId.
+	check( 'the app\'s own referrer counts', ascend_app_referrer_is_app( 'android-app://com.ascendstemacademy.twa/' ) );
+	check( 'other apps\' referrers do not (e.g. a link opened from Gmail)', ! ascend_app_referrer_is_app( 'android-app://com.google.android.gm/' ) );
 	check( 'a package is matched exactly, not by prefix', ! ascend_app_referrer_is_app( 'android-app://com.ascendstemacademy.twa.evil/' ) );
+	check( 'web referrers do not count', ! ascend_app_referrer_is_app( 'https://www.google.com/' ) && ! ascend_app_referrer_is_app( '' ) );
 	check( 'the in-page script carries the package', false !== strpos( ascend_app_detection_script(), '"com.ascendstemacademy.twa"' ) );
+	add_filter( 'ascend_app_package', fn() => '' );
+	check( 'with the package set to \'\', any android-app referrer counts', ascend_app_referrer_is_app( 'android-app://com.example.app/' ) );
 
 	// Who gets the 90-day app login.
 	$GLOBALS['__users'] = array(
@@ -113,6 +114,16 @@ namespace {
 		$ok  = $ok && $icon['sizes'] === $dim[0] . 'x' . $dim[1] && 'image/png' === $dim['mime'];
 	}
 	check( 'app icons: 192, 512 and maskable 512, sizes match the files', $ok && array( 'any', 'any', 'maskable' ) === array_column( $m['icons'], 'purpose' ) );
+
+	// The live /manifest.json response, as the Ascend PWA plugin sends it, with ours merged in.
+	$ours = ascend_app_manifest( array() );
+	$live = json_encode( array( 'name' => 'Ascend STEM Academy', 'short_name' => 'Ascend STEM', 'start_url' => '/', 'theme_color' => '#009CDE', 'icons' => array( array( 'src' => '/old.png' ) ) ) );
+	$out  = json_decode( ascend_app_merge_manifest_json( $live, $ours ), true );
+	check( 'manifest response: icons and shortcuts replaced', $out['icons'] === $ours['icons'] && $out['shortcuts'] === $ours['shortcuts'] );
+	check( 'manifest response: the PWA plugin\'s own fields kept', 'Ascend STEM' === $out['short_name'] && '#009CDE' === $out['theme_color'] && '/' === $out['start_url'] );
+	check( 'manifest response: URLs stay unescaped', false === strpos( ascend_app_merge_manifest_json( $live, $ours ), '\\/' ) );
+	$html = '<!doctype html><title>Page not found</title>';
+	check( 'a response that is not a manifest is left alone', $html === ascend_app_merge_manifest_json( $html, $ours ) && '{"a":1}' === ascend_app_merge_manifest_json( '{"a":1}', $ours ) );
 
 	echo "\n" . ( $n - $fails ) . "/$n passed\n";
 	exit( $fails ? 1 : 0 );

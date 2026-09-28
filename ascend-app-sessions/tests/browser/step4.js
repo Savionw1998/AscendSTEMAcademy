@@ -21,7 +21,7 @@ const layout = (page) => page.evaluate(() => {
 const current = (l) => (l.tabs.find((t) => t.current) || {}).label || null;
 
 (async () => {
-  restrictTimeCard(false); // as live
+  restrictTimeCard('off'); // the website checks below look at the Time Card page logged out
   // Website: a normal browser tab, even with the asa_app cookie (it is shared with the app).
   const browser = await chromium.launch({ executablePath: EXE });
   const web = await newContext(browser, { app: true });
@@ -56,6 +56,7 @@ const current = (l) => (l.tabs.find((t) => t.current) || {}).label || null;
   await page.goto(BASE + '/contact-us/');
   check('app: hero no longer pushed down (16px)', (await page.evaluate(() => getComputedStyle(document.querySelector('.asa-hero')).marginTop)) === '16px');
 
+  restrictTimeCard('redirect'); // back to the live setting
   await page.goto(BASE + '/login/');
   a = await layout(page);
   check('app login: Register button hidden', !a.register);
@@ -83,4 +84,4 @@ const current = (l) => (l.tabs.find((t) => t.current) || {}).label || null;
   await big.ctx.close();
 
   done();
-})().catch((e) => { console.error(e); process.exit(2); });
+})().catch((e) => { console.error(e); restrictTimeCard('redirect'); process.exit(2); });
