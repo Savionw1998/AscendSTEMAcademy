@@ -40,7 +40,7 @@ ln -sfn "$PLUGIN" "$SITE/wp-content/plugins/ascend-app-sessions"
 mkdir -p "$SITE/wp-content/themes/astra" "$SITE/wp-content/mu-plugins" "$SITE/wp-content/database"
 cp "$HERE"/mock-astra/* "$SITE/wp-content/themes/astra/"
 cp "$HERE"/mu-plugins/* "$SITE/wp-content/mu-plugins/"
-cp "$HERE/router.php" "$HERE/fixture.php" "$HERE/sessions.php" "$HERE/live-header-offsets.css" "$SITE/"
+cp "$HERE/router.php" "$HERE/fixture.php" "$HERE/sessions.php" "$HERE/restrict.php" "$HERE/live-header-offsets.css" "$SITE/"
 
 cat > "$SITE/wp-config.php" <<EOF
 <?php

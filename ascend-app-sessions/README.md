@@ -34,6 +34,34 @@ Optional: define the app's package name in `wp-config.php` so only the app's own
 define( 'ASCEND_APP_PACKAGE', 'com.example.package' ); // applicationId from the Android project
 ```
 
+## Return to where you tapped
+
+- **Restricted pages → login → back.** A logged-out visitor opening a page that Ultimate Member
+  restricts with "Show access restricted message" (the "Restricted content" page) is sent to
+  `/login/?redirect_to=<that page>` instead. Pages set to "Redirect user" are left to Ultimate
+  Member, which already does this. Logged-in visitors without the right role still get the message,
+  since sending them to the login page would loop.
+- **After login.** Ultimate Member's login form carries the destination in a hidden `redirect_to`
+  field and follows it before it looks at the form's "after login" setting or the
+  `um_login_redirect_url` filter (`um_user_login()` in UM 2.13.1), so the plugin sets that field
+  (`um_browser_url_redirect_to__filter`): the page the visitor was sent from if it is on this site
+  and is not the login, logout, registration or password-reset page, otherwise the dashboard (`/user/`).
+- **Dashboard while logged out.** `/user/` sends logged-out visitors to the login page and back,
+  instead of to the home page.
+- **Start URL.** In the app, a family that is already signed in and opens `/` goes to `/user/`.
+
+Two settings on the live site, checked 2026-09-28:
+
+- **Time Card (page 6097) is not restricted right now.** Its Ultimate Member box still lists the
+  roles, but "Restrict access to this post?" is unticked (`_um_custom_access_settings` is false), so
+  the page is public and the redirect above does not apply to it. To send logged-out visitors to the
+  login page again, tick it (Pages → Time Card → Ultimate Member: Content Restriction), or:
+  `wp post meta patch update 6097 um_content_restriction _um_custom_access_settings 1`
+- **Login form 4414** has "Redirection after Login" = "Redirect to profile". The plugin decides the
+  destination, so this setting no longer matters; set it to "Redirect to URL" with
+  `https://ascendstemacademy.com/user/` if you want the admin screen to match what happens:
+  `wp post meta update 4414 _um_login_after_login redirect_url && wp post meta update 4414 _um_login_redirect_url https://ascendstemacademy.com/user/`
+
 ## W3 Total Cache: required settings
 
 The plugin defines `DONOTCACHEPAGE` for app requests and logged-in requests (and sends no-cache
@@ -58,6 +86,7 @@ restores WordPress's default login lengths (existing 90-day logins run until the
 php ascend-app-sessions/tests/plugin-test.php     # rules, with stand-ins for WordPress and W3TC
 ascend-app-sessions/tests/browser/setup-site.sh    # throwaway WP 7.1.2 + UM 2.13.1 site on :8080
 node ascend-app-sessions/tests/browser/step1.js    # needs Playwright (npm i -g playwright)
+node ascend-app-sessions/tests/browser/step2.js
 ```
 
 The browser tests use a real `display-mode: standalone` window (Chromium's `--app` mode) as the

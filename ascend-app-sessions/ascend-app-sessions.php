@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Ascend App Sessions
  * Plugin URI:        https://ascendstemacademy.com/
- * Description:       Keeps families signed in to the Ascend STEM Academy Android app. Detects app sessions, gives family accounts 90-day logins that renew while they keep using the app, and makes the Ultimate Member login form remember them.
+ * Description:       Site-side support for the Ascend STEM Academy Android app: 90-day renewing logins for families in the app, a login form that remembers them, and logins that return to the page that asked for them.
  * Version:           1.0.0
  * Requires at least: 6.3
  * Requires PHP:      8.0
@@ -33,6 +33,13 @@
  *   - The Ultimate Member login form ticks and hides "Keep me signed in" and
  *     tells password managers which fields are the username and password.
  *
+ * RETURN TO WHERE YOU TAPPED
+ *
+ *   - Logged-out visitors to a page Ultimate Member restricts go to
+ *     /login/?redirect_to=<page> instead of the "Restricted content" message,
+ *     and the login form sends them back there (else to the /user/ dashboard).
+ *   - In the app, a signed-in family opening the start URL (/) goes to /user/.
+ *
  * CACHING (W3 Total Cache)
  *
  *   App requests and logged-in requests define DONOTCACHEPAGE (app requests
@@ -55,3 +62,4 @@ define( 'ASCEND_APP_COOKIE', 'asa_app' );
 require_once __DIR__ . '/includes/app-mode.php';
 require_once __DIR__ . '/includes/sessions.php';
 require_once __DIR__ . '/includes/login-form.php';
+require_once __DIR__ . '/includes/redirects.php';

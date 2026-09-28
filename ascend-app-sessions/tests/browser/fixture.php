@@ -39,6 +39,16 @@ wp_update_custom_css_post( file_get_contents( __DIR__ . '/live-header-offsets.cs
 add_role( 'um_student', 'Student', array( 'read' => true ) );
 add_role( 'um_faculty', 'Faculty', array( 'read' => true ) );
 update_option( 'um_roles', array( 'student', 'faculty' ) );
+// Ultimate Member role settings that affect redirects, as live (um_role_*_meta).
+foreach ( array( 'student' => array( 'Student', 1 ), 'faculty' => array( 'Faculty', 4 ) ) as $slug => $role ) {
+	update_option( "um_role_{$slug}_meta", array(
+		'_um_is_custom' => '1', 'name' => $role[0], '_um_priority' => $role[1], '_um_can_access_wpadmin' => false,
+		'_um_can_not_see_adminbar' => true, '_um_can_edit_profile' => true, '_um_can_delete_profile' => true,
+		'_um_can_view_all' => 'faculty' === $slug, '_um_default_homepage' => true, '_um_redirect_homepage' => '',
+		'_um_status' => 'approved', '_um_after_login' => 'redirect_profile', '_um_login_redirect_url' => '',
+		'_um_after_logout' => 'redirect_home', '_um_logout_redirect_url' => '', 'wp_capabilities' => array( 'read' => true ),
+	) );
+}
 
 function fx_page( $id, $slug, $title, $content ) {
 	if ( get_post( $id ) ) {
@@ -117,6 +127,7 @@ function fx_user( $login, $role ) {
 fx_user( 'family1', 'um_student' );
 fx_user( 'teacher1', 'um_faculty' );
 fx_user( 'editor1', 'editor' );
+fx_user( 'subscriber1', 'subscriber' ); // logged in, but not a role the Time Card allows
 update_user_meta( 1, 'account_status', 'approved' );
 
 // Menus: public "Header" menu in the primary and mobile locations, as live.
