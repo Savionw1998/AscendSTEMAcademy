@@ -473,3 +473,14 @@ The connector returned no token for these changes. How to reverse each one:
 11. **Elementor kits 5 and 2629.** They are harmless. Delete them only if you want to, and never delete kit 2730.
 12. **Enrollment records 4–16.** Tick "Received by the office" for documents that are already in Drive.
 13. **Phase 6 (retire Elementor).** Start only after item 1 is done and a rescan comes back clean.
+
+### Update, 30 Sep 09:40 EDT: Phase 4 files already gone
+
+At the owner's request, Claude opened `ascendstemacademy.com/wp-content/` in cPanel File Manager. Hidden files were shown.
+
+- **Already gone:** `db.php`, the `.sc_2372c1d3/` folder, `advanced-cache.php2`, `object-cache.php2` and `object-cache.php-`. They are not in `~/.quarantine` or `~/.trash` either, so they were removed before today, most likely during the 10–15 Sep cleanup.
+- **Why the audit listed them:** it took them from the Ascend Sentinel scan of 7 Sep, which was out of date.
+- **Still present:** only `mu-plugins-/`, the renamed copy of mu-plugins.
+- **cPanel Trash:** it holds an `advanced-cache.php` and an `object-cache.php` from 10 Sep.
+
+Nothing was deleted or moved today. Items 1 and 2 in "Left for the owner" are therefore closed, apart from `mu-plugins-/`. The Wordfence step (item 3) still stands.
