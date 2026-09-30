@@ -254,3 +254,222 @@ mu-plugins folder and can go too.
 9. Plugin clean-up per §7; then re-run Jetpack Boost's speed score.
 10. Check §8 files.
 11. Ascend Lead Capture: wire the withdrawal letter generator (§4).
+
+## 10. Status after fixes (30 Sep 2026)
+
+The fix plan (`docs/fix-plan-2026-09-29.md`) was carried out by a Claude Code session on
+30 Sep 2026, 08:05–08:50 EDT, through the Royal MCP connector and the owner's logged-in
+wp-admin. **No shell was available.** Claude Code's permission classifier blocked three things:
+opening the cPanel Terminal and reading plugin source, adding one of the two menu items, and
+deleting the plugins. Every step that needed them is listed under "Left for the owner" with
+the exact commands or clicks.
+
+**Backup first:** UpdraftPlus "Before fix plan 2026-09-29" (nonce `7f639ee53391`) completed
+before any change. It holds the database plus plugins, themes, uploads, others and mu-plugins,
+and is stored in Google Drive.
+
+### Task by task
+
+| Task | Result | Notes |
+|---|---|---|
+| 1.1 Stock-notification recipient | **Done** | Was winstonsavion@gmail.com, now ascendstemacademy@gmail.com (WooCommerce → Settings → Products → Inventory). Saved and re-read. |
+| 1.2 Legacy PayPal gateway email | **Left for owner** | WooCommerce no longer shows the PayPal Standard settings screen. The connector can't read or write the option either. Needs WP-CLI (below). The gateway stays disabled. |
+| 1.3 WooPayments communications email | **Left for owner** | Only the account owner can change it. |
+| 1.4 Coupons | **Done, tested** | Was off, now on. The coupon list has welcomeback10 (no expiry), friend-euvf, friend-hjtg, fesua-7k2m, salute-4m8q and spin-9xr1kv. As a logged-out guest, K-8 Re-Enrollment (4463) with WELCOMEBACK10 went from $165.00 to $155.00. |
+| 1.5 POS store address | **Done** | Was "3200 NE 29th CT / Ocala, CA 34479", now "3200 NE 29th CT / Ocala, FL 34479". Re-read after reload. |
+| 1.6 Store Policies page | **Partly done** | Draft page **7619 "Store Policies"** holds the FAQ no-refund sentence and the "5–7 business days" line. It also has an `[OWNER: …]` placeholder for merch returns. Clearing `woocommerce_refund_returns_page_id` needs WP-CLI. The field isn't in WooCommerce → Settings → Advanced. |
+| 1.7 PayPal wording | **Done** | See "How 1.7 was done" below. `wp_search "PayPal"` now returns nothing. Both pages return 200 with the same h1. |
+| 2 Withdrawal letter emails | **Left for owner** | Needs the Ascend Lead Capture source. The classifier blocked reading plugin source. |
+| 3.1 /user/ announcements | **Done** | Widget `4a30754` on page 4302 now holds 18 items. The first three are Attendance Collection, 180 Days of Instruction and Re-Enrollment, and the count reads 18. The stored meta and `post_content` were both read back. |
+| 3.2 Logged-in menu | **Partly done** | "Contact Us" (item 7629) was added, just before Log Out. **"Order Records & IDs" was blocked by the classifier** and is left for the owner. |
+| 3.3 Rename page 7056 | **Done** | The page is now "Orders & Shipping", and /my-account/ still returns 200. |
+| 3.4 Documents shown as missing | **Explained, no change** | See "3.4 finding" below. |
+| 4.1 Read db.php and .sc_ files | **Left for owner** | No file-system access. See "Suspicious files" below: treat both as malicious. |
+| 4.2 Quarantine | **Left for owner** | Commands below. |
+| 4.3 Wordfence scan | **Done** | Details below. |
+| 4.4 Password change | **Left for owner** | Required once the files are quarantined. |
+| 4 Plain leftovers | **Left for owner** | `advanced-cache.php2`, `object-cache.php2`, `object-cache.php-` and `mu-plugins-/` need file access. |
+| 5.1 Trash leftovers | **Partly done, one deviation** | Page 4124 is in Trash. **Template 4093 and test leads 6971 and 7256 were permanently deleted, not trashed.** See "5.1 deviation" below. Kits 5 and 2629 were **not** trashed, and the three placeholder widgets were not deleted. See "5.1 items not removed" below. |
+| 5.2 Plugins | **Deactivated, not deleted** | All four pages returned 200 after deactivation: home (Compliance Wizard and reviews render), /enrollment/, /shop/ and /checkout/. The bulk delete in wp-admin was **blocked by the classifier**. bbPress was already gone. Blog posts show only categories, not author or date, so Astra needs no change. |
+| 5.3 GTM loaded twice | **Done** | In Site Kit → Settings → Tag Manager, "Let Site Kit place code on your site" is now off. See "How 5.3 was checked" below. |
+| 5.4 Cart redirect | **No change needed** | `woocommerce_cart_redirect_after_add` was already off. The audit said "yes", so it was changed at some point after the audit. |
+| 6 Retire Elementor | **Not started** | The plan allows it only after Phases 1–5 are done and verified. Phase 4 is not done, and the site very likely still carries the `db.php` loader. |
+
+### How 1.7 was done
+
+- **Method.** The text was edited in the Elementor editor instead of rewriting `_elementor_data` through the connector. That avoided retyping about 20 KB of JSON per page. It also avoided a known fault: on 12 Sep, connector writes to `_elementor_data` on this site were silently saved as an empty string.
+- **Pages changed.** Why Choose (5436, widget `77d84f0`) and Enrollment (2781, widget `14ec01f`) now use the new wording.
+- **Read-back.** Both pages' `<style>` blocks and the Enrollment `<script>` survived.
+- **Withdrawal generator.** `generateLetter()`, `#generateBtn` and `#letterPaper` still load.
+- **Search copy.** Elementor's save refreshed each page's `post_content`, so no separate replace was needed.
+
+### 5.1 deviation: three items permanently deleted
+
+The connector's `wp_delete_post` was called with `force: false`, and it reported "moved to trash" with an undo token. But WordPress core's `wp_delete_post()` only sends posts and pages to the trash. Any other post type, such as `elementor_library` or `ascend_lead`, is deleted outright. The undo tokens fail with "Post no longer exists".
+
+What was lost:
+- An unused Events Calendar template, whose content was only an "« All Events" link.
+- Two of the owner's own test leads (winstonsavion@gmail.com, "Resource Hub Gate").
+
+The owner had authorized removing all three. They are recoverable only from UpdraftPlus backup `7f639ee53391`. **For future clean-ups, trash non-page items from wp-admin, not through the connector.**
+
+### 5.1 items not removed
+
+- **Kits 5 and 2629.** Elementor refuses to trash any kit ("cant_delete_kit") and offers only a permanent force-delete. The live site uses kit 2730 (`elementor-kit-2730` is on the page body).
+- **Widgets text-2, text-3 and block-10.** They are confirmed as placeholders. The connector has no widget-delete tool, and deleting a widget is permanent.
+
+### How 5.3 was checked
+
+| Home page HTML | Before | After |
+|---|---|---|
+| `gtm.js` scripts for GTM-M5HLBZC4 | 2 | 1 |
+| noscript iframes | 2 | 1 |
+
+What remains comes from GTM4WP. GA4 `G-7E29475PLK` is not placed directly in the page HTML, so nothing else needed to change.
+
+### Suspicious files (Phase 4)
+
+This run could not check whether the files are still on disk. The Ascend Sentinel listed them on 7 Sep, and so did this audit on 29 Sep.
+
+- **`wp-content/db.php`.** W3 Total Cache's database cache is **off**, so a genuine W3TC `db.php` should not exist. The 211 KB file is almost certainly not W3TC's.
+- **`wp-content/.sc_2372c1d3/`.** Its name matches the working folders of the SC 4.5.3 malware from the September cleanup.
+
+### Phase 6 pre-check
+
+No page uses an Unlimited Elements widget. These pages were checked: Home, About, Enhancements, Graduation, FAQ, Privacy, Resources, Resource Explorer, Login, Registration and Account.
+
+### Plugins before and after
+
+| | Installed | Active | Inactive |
+|---|---|---|---|
+| Before | 46 | 45 | 1 (Cloudflare) |
+| After deactivation (about 08:35) | 46 | **36** | 10 |
+| Last check (about 08:55) | 46 | 37 | 9 (WPvivid active again) |
+
+bbPress was already absent before the run.
+
+| Plugin | State now | Next step |
+|---|---|---|
+| Unlimited Elements for Elementor | inactive | delete |
+| EmbedPress | inactive | delete |
+| Image Optimization | inactive | delete |
+| WPvivid Backup | **active again** (see note) | deactivate, delete, then delete `wp-content/wpvividbackups/` |
+| WooCommerce.com Update Manager | inactive | delete |
+| Hide/Remove Metadata | inactive | delete |
+| The HostGator Plugin | inactive | delete (see note) |
+| Cloudflare | inactive | delete |
+| Advanced Database Cleaner | inactive | keep installed |
+| WP Crontrol | inactive | keep installed |
+
+Note on The HostGator Plugin: HostGator portal → Websites → **Edit Site** may depend on it
+for its one-click login to wp-admin. If that login stops working, reactivate the plugin.
+
+Note on WPvivid: the connector confirmed it inactive right after the bulk deactivation.
+Twenty minutes later it was active again. This session did not reactivate it, so someone
+else did. It was left as found.
+
+During the run another session updated Ascend Resource Gate from 1.0.1 to 1.1.0. This
+session did not make that change.
+
+### Wordfence scan (30 Sep, 08:26 EDT)
+
+The scan found **0 new results**. The option to include files outside the WordPress installation was on.
+
+| Scanned | Count |
+|---|---|
+| Files | 51,014 |
+| Plugins | 46 |
+| Themes | 2 |
+| Posts | 57 |
+| URLs | 24,115 |
+| Duration | 8 min 15 s |
+
+The log never mentions `db.php` or `.sc_`. Free (community) signatures lag 30 days, so
+this is **not** a clean bill of health.
+
+The 24 **ignored results** were set to "ignore" by someone earlier:
+- **Two Critical theme files.** "File appears to be malicious" on `wp-content/themes/astra/functions.php` and `wp-content/themes/astra-child/functions.php`, found 10 Sep. These are the SC 4.5.3 theme injections. Click **Stop ignoring** on both and rescan, so Wordfence re-checks them.
+- **21 WordPress AI-library files.** "Unknown file in WordPress core" under `wp-includes/php-ai-client/`. These are genuine WordPress 7.1 files and are safe to leave ignored.
+- **One admin account.** A High result says a user named `admin` was created outside of WordPress on 25 Sep. Confirm this is your own account from the HostGator password reset.
+
+### 3.4 finding (documents shown as missing)
+
+The cause was found and fixed on 28 Sep. Parent records 4–16 were enrolled by email. Their
+papers were in Google Drive but not uploaded in WordPress, so the dashboard counted them as
+missing.
+
+Fixes already live:
+- **Enrollment 1.17.4** adds a "Received by the office" checklist on each record. Ticked documents count as present.
+- **Dashboard 1.5.5–1.5.8** removed the documents card and the "Docs needed" tile from /user/.
+- **Drive bridge.** The bridge fix and folder repair ran on 28 Sep. Both hourly retry jobs (`ase_drive_retry`, `ase_tc_retry`) are scheduled, and none is overdue.
+
+Remaining: tick "Received by the office" on records 4–16. Cole Strasser's tick (record 15)
+was saved on 28 Sep but never read back.
+
+### Independent check
+
+After the changes, a separate read-only agent re-checked 11 claims using only the connector.
+
+- **Passed (9):** PayPal wording on both pages, including the style and script blocks; the site-wide PayPal search; the /user/ announcements; the menu; the page rename; the draft page; the eight public pages returning 200; and the backup.
+- **Failed (2):** both led to the corrections above. Items 4093, 6971 and 7256 were permanently deleted, and WPvivid had been reactivated.
+
+The agent also noticed that the "Rescue Lab" menu item sits after "Log Out" in the menu's stored order. It was already there before this run, and it still shows under Games.
+
+### Undo tokens (Royal MCP, valid until 3 Oct 2026, about 12:20 UTC)
+
+| Change | Token |
+|---|---|
+| Logged-in menu reorder | `9001aa3e8f20037868be0929b403b6e4` |
+| Delete template 4093 | `a5392df8e6ed70a0d76159bf86dfc94f` (**void**: "Post no longer exists") |
+| Delete lead 6971 | `1f7daf03692ebaf31f8def36c3143d12` (void, same reason) |
+| Delete lead 7256 | `92c2f94dfe0ff11b30c85bf8afcdb68f` (void, same reason) |
+
+The connector returned no token for these changes. How to reverse each one:
+
+| Change | How to reverse |
+|---|---|
+| Page 4124 trashed | Restore it from Pages → Trash. |
+| Menu item 7629 added | Delete the item. |
+| Page 7619 created | Trash the page. |
+| Page 7056 renamed | Rename it back to "My Account". |
+| Elementor edits on 5436, 2781 and 4302 | Open Elementor → Revisions and pick the version from before 30 Sep 08:30. |
+| wp-admin settings | Re-enter the prior values from the task table above. |
+
+### Left for the owner
+
+1. **Security first (Phase 4).** Open the cPanel Terminal and run one command per line:
+   ```
+   cd /home2/indigodr/ascendstemacademy.com
+   head -40 wp-content/db.php
+   ls -la wp-content/.sc_2372c1d3/
+   mkdir -p ~/quarantine/2026-09-30
+   mv wp-content/db.php ~/quarantine/2026-09-30/
+   mv wp-content/.sc_2372c1d3 ~/quarantine/2026-09-30/
+   ```
+   Then check that the home page, /shop/ and /login/ load. Change the WordPress admin
+   password and the HostGator/cPanel password. Remember the September lesson: `public_html`
+   (indigodroneshots.com) runs under the same account and can re-infect this site.
+2. **Plain leftovers (Phase 4).** Move them out of the site folder, or delete them:
+   ```
+   mv wp-content/advanced-cache.php2 wp-content/object-cache.php2 wp-content/object-cache.php- wp-content/mu-plugins- ~/quarantine/2026-09-30/
+   ```
+3. **Wordfence.** Open Wordfence → Scan → Ignored Results. Click **Stop ignoring** on the two Critical theme files, then click Start New Scan.
+4. **WooPayments communications email (1.3).** Change it in Payments → Settings → Account details.
+5. **Legacy PayPal address (1.2).** Run these in the cPanel Terminal:
+   ```
+   wp option patch update woocommerce_paypal_settings email ""
+   wp option patch update woocommerce_paypal_settings receiver_email ""
+   ```
+6. **Store Policies (1.6).** Fill in the merch-returns placeholder on draft page 7619 and publish it. Then run:
+   ```
+   wp option update woocommerce_refund_returns_page_id 7619
+   ```
+7. **Withdrawal letter emails (Phase 2).** The Ascend Lead Capture plugin needs updating to hook `#generateBtn` and `#letterPaper` (plan option A). Test it afterwards with ascendstemacademy+wlgtest@gmail.com.
+8. **Logged-in menu (3.2).** In Appearance → Menus → Logged in Menu, add "Order Records & IDs" linking to https://ascendstemacademy.com/enhancements/, placed before "Contact Us".
+9. **Plugins (5.2).** Decide on WPvivid first. If you reactivated it on purpose, keep it. Otherwise deactivate it again. Then, under Plugins → Inactive, delete the plugins marked "delete" above. Then delete these two:
+   - `wp-content/wpvividbackups/` (about 3 GB)
+   - `wp-content/uploads/wp-migrate-db/ascendstemacademy-20260910212923-wezpj.zip` (500 MB)
+10. **Widgets (5.1).** In Appearance → Widgets → Inactive widgets, remove "Main Office" (text-2), "Attendance" (text-3) and the "Demo St, Brooklyn" paragraph (block-10).
+11. **Elementor kits 5 and 2629.** They are harmless. Delete them only if you want to, and never delete kit 2730.
+12. **Enrollment records 4–16.** Tick "Received by the office" for documents that are already in Drive.
+13. **Phase 6 (retire Elementor).** Start only after item 1 is done and a rescan comes back clean.
