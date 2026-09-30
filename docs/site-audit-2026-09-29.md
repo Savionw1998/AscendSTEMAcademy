@@ -277,7 +277,7 @@ and is stored in Google Drive.
 | 1.3 WooPayments communications email | **Left for owner** | Only the account owner can change it. |
 | 1.4 Coupons | **Done, tested** | Was off, now on. The coupon list has welcomeback10 (no expiry), friend-euvf, friend-hjtg, fesua-7k2m, salute-4m8q and spin-9xr1kv. As a logged-out guest, K-8 Re-Enrollment (4463) with WELCOMEBACK10 went from $165.00 to $155.00. |
 | 1.5 POS store address | **Done** | Was "3200 NE 29th CT / Ocala, CA 34479", now "3200 NE 29th CT / Ocala, FL 34479". Re-read after reload. |
-| 1.6 Store Policies page | **Partly done** | Draft page **7619 "Store Policies"** holds the FAQ no-refund sentence and the "5–7 business days" line. It also has an `[OWNER: …]` placeholder for merch returns. Clearing `woocommerce_refund_returns_page_id` needs WP-CLI. The field isn't in WooCommerce → Settings → Advanced. |
+| 1.6 Store Policies page | **Partly done** | Draft page **7619 "Store Policies"** holds the FAQ no-refund sentence and the "5–7 business days" line. Merch returns now read "All merchandise sales are final. We do not accept returns." (owner's wording, 30 Sep). It is still a draft until the owner says to publish. Clearing `woocommerce_refund_returns_page_id` needs WP-CLI. The field isn't in WooCommerce → Settings → Advanced. |
 | 1.7 PayPal wording | **Done** | See "How 1.7 was done" below. `wp_search "PayPal"` now returns nothing. Both pages return 200 with the same h1. |
 | 2 Withdrawal letter emails | **Left for owner** | Needs the Ascend Lead Capture source. The classifier blocked reading plugin source. |
 | 3.1 /user/ announcements | **Done** | Widget `4a30754` on page 4302 now holds 18 items. The first three are Attendance Collection, 180 Days of Instruction and Re-Enrollment, and the count reads 18. The stored meta and `post_content` were both read back. |
@@ -460,7 +460,7 @@ The connector returned no token for these changes. How to reverse each one:
    wp option patch update woocommerce_paypal_settings email ""
    wp option patch update woocommerce_paypal_settings receiver_email ""
    ```
-6. **Store Policies (1.6).** Fill in the merch-returns placeholder on draft page 7619 and publish it. Then run:
+6. **Store Policies (1.6).** The no-returns wording is in. Publish draft page 7619 (or say so and Claude will). Then run:
    ```
    wp option update woocommerce_refund_returns_page_id 7619
    ```
