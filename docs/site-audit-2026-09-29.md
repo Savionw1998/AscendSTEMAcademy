@@ -485,7 +485,7 @@ At the owner's request, Claude opened `ascendstemacademy.com/wp-content/` in cPa
 
 Nothing was deleted or moved today. Items 1 and 2 in "Left for the owner" are therefore closed, apart from `mu-plugins-/`. The Wordfence step (item 3) still stands.
 
-**Correction and close-out, 30 Sep ~10:00 EDT.** The files were not gone from before today. The owner deleted `db.php` and the related malware files himself on 30 Sep, before Claude's File Manager check. He then un-ignored the two Critical theme results and ran a new Wordfence scan: 0 results, 22 ignored, and the two theme files were not re-flagged. Only the known-harmless `wp-includes/php-ai-client/` files remain ignored.
+**Correction and close-out, 30 Sep ~10:00 EDT.** The files were not gone from before today. The owner deleted `db.php` and the related malware files on 30 Sep, before Claude's File Manager check. The owner then un-ignored the two Critical theme results and ran a new Wordfence scan: 0 results, 22 ignored, and the two theme files were not re-flagged. Only the known-harmless `wp-includes/php-ai-client/` files remain ignored.
 
 | Scan | Files scanned | Plugins | Results | Time |
 |---|---|---|---|---|
