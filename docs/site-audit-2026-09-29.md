@@ -460,7 +460,7 @@ The connector returned no token for these changes. How to reverse each one:
    wp option patch update woocommerce_paypal_settings email ""
    wp option patch update woocommerce_paypal_settings receiver_email ""
    ```
-6. **Store Policies (1.6).** Page 7619 is published at /store-policies/. To make it WooCommerce's refund page, run:
+6. **Store Policies (1.6). DONE 30 Sep.** Page 7619 is published at /store-policies/, and the owner ran this command to make it WooCommerce's refund page:
    ```
    wp option update woocommerce_refund_returns_page_id 7619
    ```
